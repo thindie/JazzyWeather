@@ -11,7 +11,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import javax.inject.Inject
 
-
+private const val LOCATION_HOLDER = 1
 class PlaceDetector @Inject constructor(
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
     private val application: Application,
@@ -33,6 +33,7 @@ class PlaceDetector @Inject constructor(
 
     companion object {
         private const val MESSAGE = "cannot find coordinates by tag"
+
     }
 }
 
@@ -54,12 +55,11 @@ private fun String.getCoordinates(): Possibility? {
         return null
     } else {
         Possibility(
-            place = splitted[0],
+            place = splitted[LOCATION_HOLDER],
             latitude = latitude!!,
             longitude = longitude!!
         )
     }
-
-}
+ }
 
 

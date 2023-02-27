@@ -8,7 +8,8 @@ import androidx.room.Query
 @Dao
 interface FavoriteWeatherDao {
     @Query("SELECT * FROM favoriteWeather ORDER BY place DESC")
-    suspend fun getAllFavorites() : List<WeatherDBModel>
+    suspend fun getAllFavorites(): List<WeatherDBModel>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFavorite(weatherDBModel: WeatherDBModel)
 

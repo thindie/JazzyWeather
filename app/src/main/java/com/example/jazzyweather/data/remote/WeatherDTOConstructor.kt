@@ -1,8 +1,8 @@
 package com.example.jazzyweather.data.remote
 
-import com.example.jazzyweather.domain.Results
 import com.example.jazzyweather.data.remote.utils.CurrentWeather
 import com.example.jazzyweather.data.remote.utils.Daily
+import com.example.jazzyweather.domain.Results
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 
