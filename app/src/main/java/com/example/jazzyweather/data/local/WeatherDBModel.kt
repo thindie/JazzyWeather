@@ -7,6 +7,14 @@ import androidx.room.PrimaryKey
 data class WeatherDBModel(
     @PrimaryKey
     val place: String,
+    val latitude: Float,
+    val longitude: Float,
+    val temperature: Double,
+    val time: String,
+    val weathercode: String,
+    val windspeed: Double,
+    val sunrise: List<String>,
+    val sunset: List<String>,
 ) {
 
 }
