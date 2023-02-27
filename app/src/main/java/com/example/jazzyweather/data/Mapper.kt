@@ -1,9 +1,11 @@
 package com.example.jazzyweather.data
 
+import com.example.jazzyweather.data.local.WeatherDBModel
 import com.example.jazzyweather.data.remote.WeatherDTO
+import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Weather
 
-fun Coordinates.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather {
+fun Possibility.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather {
     return Weather(
         place = place,
         latitude = this.latitude,
@@ -30,6 +32,63 @@ fun Coordinates.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather
 
         )
 }
+
+fun WeatherDBModel.fromDBtoDomain(): Weather {
+    return Weather(
+        place = this.place,
+        latitude = this.latitude,
+        longitude = this.longitude,
+        temperature = this.temperature,
+        time = this.time,
+        weathercode = this.weathercode,
+        winddirection = this.winddirection,
+        windspeed = this.windspeed,
+        apparent_temperature_max = this.apparent_temperature_max,
+        apparent_temperature_min = this.apparent_temperature_min,
+        precipitation_sum = this.precipitation_sum,
+        rain_sum = this.rain_sum,
+        showers_sum = this.showers_sum,
+        snowfall_sum = this.snowfall_sum,
+        sunrise = this.sunrise,
+        sunset = this.sunset,
+        temperature_2m_max = this.temperature_2m_max,
+        temperature_2m_min = this.temperature_2m_min,
+        times = this.times,
+        weathercodes = this.weathercodes,
+        windgusts_10m_max = this.windgusts_10m_max,
+        windspeed_10m_max = this.windspeed_10m_max,
+
+        )
+}
+
+fun Weather.fromDomainToDB(): WeatherDBModel {
+    return WeatherDBModel(
+        place = this.place,
+        latitude = this.latitude,
+        longitude = this.longitude,
+        temperature = this.temperature,
+        time = this.time,
+        weathercode = this.weathercode,
+        winddirection = this.winddirection,
+        windspeed = this.windspeed,
+        apparent_temperature_max = this.apparent_temperature_max,
+        apparent_temperature_min = this.apparent_temperature_min,
+        precipitation_sum = this.precipitation_sum,
+        rain_sum = this.rain_sum,
+        showers_sum = this.showers_sum,
+        snowfall_sum = this.snowfall_sum,
+        sunrise = this.sunrise,
+        sunset = this.sunset,
+        temperature_2m_max = this.temperature_2m_max,
+        temperature_2m_min = this.temperature_2m_min,
+        times = this.times,
+        weathercodes = this.weathercodes,
+        windgusts_10m_max = this.windgusts_10m_max,
+        windspeed_10m_max = this.windspeed_10m_max,
+
+        )
+}
+
 
 val weatherMap = mapOf(
     0 to "Clear sky",
