@@ -12,6 +12,7 @@ import java.io.InputStreamReader
 import javax.inject.Inject
 
 private const val LOCATION_HOLDER = 1
+
 class PlaceDetector @Inject constructor(
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
     private val application: Application,
@@ -19,15 +20,18 @@ class PlaceDetector @Inject constructor(
     suspend fun produce(toFind: String) =
         withContext(IO) {
             val inputStream = application.resources.openRawResource(R.raw.latit_longit)
-            var result: Possibility? = null
+            val possibleLocationsList = mutableListOf<Possibility>()
             BufferedReader(InputStreamReader(inputStream)).readLines().filter {
                 it.lowercase().contains(toFind.lowercase().trim())
             }.map {
-                result = it.getCoordinates()
+                val result = it.getCoordinates(); if (result != null) possibleLocationsList.add(
+                result
+            )
             }
 
-            return@withContext if (result == null) Results.Error(Exception(MESSAGE)) else Results.Success(
-                result
+            return@withContext if (possibleLocationsList.isEmpty()) Results.Error(Exception(MESSAGE))
+            else Results.Success(
+                possibleLocationsList.toList()
             )
         }
 
@@ -60,6 +64,6 @@ private fun String.getCoordinates(): Possibility? {
             longitude = longitude!!
         )
     }
- }
+}
 
 

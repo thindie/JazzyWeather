@@ -17,5 +17,56 @@ sealed class Results<out T> {
     }
 }
 
+fun <T, R> Results<T>.checkAndTransit(mapper: (T) -> R): Results<R> {
+    val t = this
+    when (t) {
+        is Results.Success -> {
+            return Results.Success(mapper(t.data))
+        }
+        is Results.Error -> {
+            return Results.Error(t.e)
+        }
+    }
+}
+
+fun <T : Any?> T.encapsulateResult(): Results<T> {
+    val t: T = this
+    if (t as Any? == null) {
+        return Results.Error(
+            NullPointerException("Bad Results - null obj on encapsulation")
+        )
+    }
+    if (t is Collection<*>) {
+        if ((t as Collection<*>).isEmpty()) {
+            return Results.Error(
+                NullPointerException("Bad Results - empty Iterable<{$t}> here. data lost / or not received")
+            )
+        }
+    }
 
 
+    return Results.Success(t)
+}
+
+fun <T> Results<T>.unpackResult(): T? {
+    when (this) {
+        is Results.Success -> {
+            if (this.data == null) {
+                return null
+            }
+            if (this.data is Collection<*>) {
+                return if ((this.data as Collection<*>).isEmpty()) {
+                    null
+                } else this.data
+            }
+            if (this.data !is Collection<*>) {
+                return this.data
+            }
+            return this.data
+        }
+        is Results.Error -> {
+            return null
+        }
+    }
+
+}

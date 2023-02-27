@@ -1,11 +1,6 @@
-package com.example.jazzyweather.data.local
+package com.example.jazzyweather.domain
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "favoriteWeather")
-data class WeatherDBModel(
-    @PrimaryKey
+data class WeatherOffline(
     val place: String,
     val latitude: Float,
     val longitude: Float,
