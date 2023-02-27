@@ -1,6 +1,7 @@
 package com.example.jazzyweather.data.remote.utils
 
-data class WeatherRawDto(
+data class WeatherRawDTO(
+    val current_weather: CurrentWeather,
     val daily: Daily,
     val daily_units: DailyUnits,
     val elevation: Double,
