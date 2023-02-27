@@ -29,14 +29,14 @@ object NetworkModule {
 
 
     @Provides
-    fun provideRetrofit(okHttpClient: OkHttpClient) : Retrofit = Retrofit.Builder()
+    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .client(okHttpClient)
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     @Provides
-    fun provideApiService(retrofit: Retrofit) : WeatherApiService {
-       return retrofit.create(WeatherApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): WeatherApiService {
+        return retrofit.create(WeatherApiService::class.java)
     }
 }

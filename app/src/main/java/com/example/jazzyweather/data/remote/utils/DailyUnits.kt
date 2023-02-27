@@ -14,5 +14,5 @@ data class DailyUnits(
     val time: String,
     val weathercode: String,
     val windgusts_10m_max: String,
-    val windspeed_10m_max: String
+    val windspeed_10m_max: String,
 )

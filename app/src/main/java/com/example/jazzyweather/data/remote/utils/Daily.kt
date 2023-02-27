@@ -14,5 +14,5 @@ data class Daily(
     val time: List<String>,
     val weathercode: List<Int>,
     val windgusts_10m_max: List<Double>,
-    val windspeed_10m_max: List<Double>
+    val windspeed_10m_max: List<Double>,
 )

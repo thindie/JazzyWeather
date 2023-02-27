@@ -21,5 +21,5 @@ data class Weather(
     val temperature_2m_min: List<Double>,
     val weathercodes: List<Int>,
     val windgusts_10m_max: List<Double>,
-    val windspeed_10m_max: List<Double>
+    val windspeed_10m_max: List<Double>,
 )

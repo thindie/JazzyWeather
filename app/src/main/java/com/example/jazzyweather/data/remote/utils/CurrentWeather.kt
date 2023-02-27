@@ -5,5 +5,5 @@ data class CurrentWeather(
     val time: String,
     val weathercode: Int,
     val winddirection: Double,
-    val windspeed: Double
+    val windspeed: Double,
 )

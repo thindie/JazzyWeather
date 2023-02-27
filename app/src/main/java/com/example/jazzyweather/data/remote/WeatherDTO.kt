@@ -19,5 +19,5 @@ data class WeatherDTO(
     val times: List<String>,
     val weathercodes: List<Int>,
     val windgusts_10m_max: List<Double>,
-    val windspeed_10m_max: List<Double>
+    val windspeed_10m_max: List<Double>,
 )

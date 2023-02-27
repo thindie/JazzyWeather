@@ -13,7 +13,7 @@ interface WeatherApiService {
         @Query(QUERY_PARAM_DAILY, encoded = true) daily: String = NETWORK_QUERY,
         @Query(QUERY_PARAM_WINDSPEED_UNIT) windSpeed: String = "ms",
         @Query(QUERY_PARAM_TIMEZONE, encoded = true) timeZone: String,
-        @Query(QUERY_CURRENT_WEATHER) boolean: Boolean = true
+        @Query(QUERY_CURRENT_WEATHER) boolean: Boolean = true,
     ): JsonObject?
 }
 
@@ -23,7 +23,8 @@ private const val QUERY_CURRENT_WEATHER = "current_weather"
 private const val QUERY_PARAM_WINDSPEED_UNIT = "windspeed_unit"
 private const val QUERY_PARAM_TIMEZONE = "timezone"
 private const val QUERY_PARAM_DAILY = "daily"
-private const val NETWORK_QUERY =   "weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum,windspeed_10m_max,windgusts_10m_max"
+private const val NETWORK_QUERY =
+    "weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum,snowfall_sum,windspeed_10m_max,windgusts_10m_max"
 
 const val DAILY = "daily"
 const val CURRENT_WEATHER = "current_weather"
