@@ -20,26 +20,20 @@ fun typo() = MaterialTheme.typography
 @Composable
 fun color() = MaterialTheme.colorScheme
 
-fun Modifier.basicColumn(height: Dp) =
+fun Modifier.basicDimens(height: Dp = 80.dp) =
     run {
         this
             .fillMaxWidth()
-            .padding(start = 8.dp, end = 12.dp)
             .height(height)
+            .padding(start = 8.dp, end = 12.dp)
+
     }
 
-fun Modifier.basicRow() =
-    run {
-        this
-            .fillMaxWidth()
-            .padding(start = 8.dp, end = 12.dp)
-            .height(80.dp)
-    }
 
 fun Modifier.surfaceColor() = composed { this.background(color().surface) }
 fun Modifier.onSurfaceColor() = composed { this.background(color().onSurface) }
 fun Modifier.eightStartPadding() = run { this.padding(eightStartPadding) }
-fun Modifier.twelweEndPadding() = run { this.padding(endTwelwePadding) }
+fun Modifier.twelveEndPadding() = run { this.padding(endTwelvePadding) }
 
 val Al_CV = Alignment.CenterVertically
 val Ar_C = Arrangement.Center
@@ -61,5 +55,5 @@ fun String.Label(modifier: Modifier = Modifier) {
 }
 
 val eightStartPadding = 8.dp
-val endTwelwePadding = 12.dp
+val endTwelvePadding = 12.dp
 

@@ -80,6 +80,10 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
+    fun onClickWeather(weather: Weather){
+        _weather.value = weather
+    }
+
     fun onSearch(tag: String) {
         viewModelScope.launch {
             _isLoading.value = true
