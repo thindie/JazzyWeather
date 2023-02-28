@@ -18,13 +18,12 @@ sealed class Results<out T> {
 }
 
 fun <T, R> Results<T>.checkAndTransit(mapper: (T) -> R): Results<R> {
-    val t = this
-    when (t) {
+    return when (val t = this) {
         is Results.Success -> {
-            return Results.Success(mapper(t.data))
+            Results.Success(mapper(t.data))
         }
         is Results.Error -> {
-            return Results.Error(t.e)
+            Results.Error(t.e)
         }
     }
 }

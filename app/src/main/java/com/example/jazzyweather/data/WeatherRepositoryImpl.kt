@@ -6,11 +6,14 @@ import com.example.jazzyweather.data.remote.toDTO
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.*
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class WeatherRepositoryImpl @Inject constructor(
     private val favoriteWeatherDao: FavoriteWeatherDao,
     private val weatherApiService: WeatherApiService,
@@ -19,7 +22,9 @@ class WeatherRepositoryImpl @Inject constructor(
 ) : JazzyWeatherRepository {
     override fun searchAndSelectLocation(location: String): Flow<Results<List<Possibility>>> {
         return flow {
-            emit(placeDetector.produce(location))
+            val possibility = placeDetector.produce(location)
+            delay(1000)
+            emit(possibility)
         }
     }
 
