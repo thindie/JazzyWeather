@@ -18,16 +18,10 @@ class MainActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, true)
 
 
-        // vm.onRequest(Possibility("Калтнинитаыф", longitude = 21.5f, latitude = 54.75f))
-        vm.onSearch("москва")
 
 
         setContent {
             JazzyWeatherTheme {
-                val state = vm.viewState.collectAsStateWithLifecycle()
-                Log.d("SERVICE_TAG", "state collected ${state.value.favorites}")
-                Log.d("SERVICE_TAG", "state collected ${state.value.weather}")
-                Log.d("SERVICE_TAG", "state collected ${state.value.possibility}")
 
             }
         }

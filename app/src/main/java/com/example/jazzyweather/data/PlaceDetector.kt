@@ -15,18 +15,16 @@ import javax.inject.Inject
 
 private const val LOCATION_HOLDER = 1
 private const val BUFFER = 8192
-private const val READ_PROPERLY = 300L
+private const val READ_PROPERLY = 400L
 
 class PlaceDetector @Inject constructor(
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
     private val scope: CoroutineScope,
     private val application: Application,
 ) {
+     private val lock: Any = Any()
 
-    private val lock: Any = Any()
-
-
-    fun produce(toFind: String): Flow<Results<List<Possibility>>> {
+     fun produce(toFind: String): Flow<Results<List<Possibility>>> {
         return flow {
             val possibleLocationsList = synchronized(lock) {
                 mutableListOf<Possibility>()
@@ -77,7 +75,6 @@ class PlaceDetector @Inject constructor(
 
 }
 
-
 private fun String.getCoordinates(): Possibility? {
     var longitude: Float? = null
     var latitude: Float? = null
@@ -91,7 +88,7 @@ private fun String.getCoordinates(): Possibility? {
         }
 
     }
-    return if (latitude == null) {
+    return if (latitude == null || longitude == null) {
         return null
     } else {
         Possibility(

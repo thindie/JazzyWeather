@@ -1,6 +1,5 @@
 package com.example.jazzyweather
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jazzyweather.domain.Possibility
@@ -60,11 +59,11 @@ class WeatherViewModel @Inject constructor(
 
     fun onStart() {
         viewModelScope.launch {
+            _isLoading.value = true
             _favorites.value = favors().unpackResult() ?: emptyList<Weather>().apply {
                 _isSelectedPlace.value = false
-                Log.d("SERVICE_TAG", "onStart selected place is null")
             }
-
+            _isLoading.value = false
         }
     }
 
@@ -83,22 +82,24 @@ class WeatherViewModel @Inject constructor(
 
     fun onSearch(tag: String) {
         viewModelScope.launch {
+            _isLoading.value = true
             search(tag).collect {
+                _isLoading.value = false
                 _possibility.value = it.unpackResult() ?: emptyList()//TODO() stub
+
             }
         }
     }
 
     fun onRequest(possibility: Possibility) {
         viewModelScope.launch {
-
+            _isLoading.value = true
             request(possibility).unpackResult().apply {
                 if (this == null) offline().collect {
-                    it.unpackResult()
+                    it.unpackResult()//TODO
                     _weather.value = null
-                    Log.d("SERVICE_TAG", "onRequest weather = null")
                 }
-                else _weather.value = this
+                else _isLoading.value = false; _weather.value = this
 
             }
         }
