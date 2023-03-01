@@ -1,6 +1,7 @@
 package com.example.jazzyweather.data
 
 import android.app.Application
+import android.util.Log
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Results
@@ -15,7 +16,7 @@ import javax.inject.Inject
 
 private const val LOCATION_HOLDER = 1
 private const val BUFFER = 8192
-private const val READ_PROPERLY = 400L
+private const val READ_PROPERLY = 700L
 
 class PlaceDetector @Inject constructor(
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
@@ -68,6 +69,7 @@ class PlaceDetector @Inject constructor(
                 this.cancel()
             }
             delay(READ_PROPERLY)
+            Log.d("SERVICE_TAG", "$possibleLocationsList")
             emit(possibleLocationsList.encapsulateResult())
         }
 

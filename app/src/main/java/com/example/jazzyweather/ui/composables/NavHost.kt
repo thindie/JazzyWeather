@@ -1,5 +1,6 @@
 package com.example.jazzyweather.ui.composables
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -19,7 +20,7 @@ fun WeatherNavHost(
     viewModel: WeatherViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.viewState.collectAsStateWithLifecycle()
-
+    Log.d("SERVICE_TAG", "${uiState.value.possibility}")
     Scaffold(topBar = {
         SearchBar(onSearch = {
             viewModel.onSearch(it); navController.straightTo(
@@ -34,15 +35,23 @@ fun WeatherNavHost(
             modifier = Modifier.padding(it)
         ) {
             composable(route = Possibilities.route) {
-                PossibilitiesList({ viewModel.onRequest(it) }, uiState.value.possibility)
+                PossibilitiesList({ possib ->
+                    viewModel.onRequest(possib);
+                    navController.straightTo(Weathers.route)
+                }, uiState.value.possibility)
             }
             composable(route = Weathers.route) {
-                uiState.value.weather?.let { DetailScreen(it) }
+                uiState.value.weather?.let {
+                    DetailScreen(it, { weather -> viewModel.onFavoriteAdd(weather) }, { place ->
+                    viewModel.onFavoriteDelete( place )
+                })
+                }
             }
             composable(route = FavoriteWeathers.route) {
                 FavoriteWeathersList(
                     uiState.value.favorites,
-                    { viewModel.onClickWeather(it); navController.straightTo(Weathers.route) })
+                    onFavoriteDelete = {viewModel.onFavoriteDelete(it)}
+                ) { viewModel.onClickWeather(it); navController.straightTo(Weathers.route) }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.jazzyweather
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jazzyweather.domain.Possibility
@@ -7,6 +8,7 @@ import com.example.jazzyweather.domain.Weather
 import com.example.jazzyweather.domain.unpackResult
 import com.example.jazzyweather.domain.useCases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -80,33 +82,36 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun onClickWeather(weather: Weather){
+    fun onClickWeather(weather: Weather) {
         _weather.value = weather
     }
 
     fun onSearch(tag: String) {
-        viewModelScope.launch {
-            _isLoading.value = true
-            search(tag).collect {
-                _isLoading.value = false
-                _possibility.value = it.unpackResult() ?: emptyList()//TODO() stub
-
-            }
-        }
+         cleanState()
+        _isLoading.value = true
+        search(tag).onEach {
+            _isLoading.value = false
+            delay(700)
+            _possibility.value = it.unpackResult() ?: emptyList()
+        }.launchIn(viewModelScope)
     }
 
     fun onRequest(possibility: Possibility) {
+        cleanState()
+        _isLoading.value = true
         viewModelScope.launch {
-            _isLoading.value = true
-            request(possibility).unpackResult().apply {
-                if (this == null) offline().collect {
-                    it.unpackResult()//TODO
-                    _weather.value = null
-                }
-                else _isLoading.value = false; _weather.value = this
-
-            }
+            val weather =  request(possibility).unpackResult()
+            delay(50)
+            _isLoading.value = false
+            _weather.value = weather
+            Log.d("SERVICE_TAG", weather.toString())
         }
+    }
+    private fun cleanState(){
+        _weather.value = null
+        _favorites.value = emptyList()
+        _possibility.value = emptyList()
+        _isLoading.value = false
     }
 }
 
