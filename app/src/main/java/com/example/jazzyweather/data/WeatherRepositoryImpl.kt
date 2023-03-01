@@ -40,7 +40,7 @@ class WeatherRepositoryImpl @Inject constructor(
         val weather = weatherApiService.getWeather(
             latitude = possibility.latitude,
             longitude = possibility.longitude,
-            timeZone = possibility.timeZone
+            timeZone = possibility.timeZoneFake
         )
         return weather.toDTO().checkAndTransit {
             possibility.combineWith(it, possibility.place)

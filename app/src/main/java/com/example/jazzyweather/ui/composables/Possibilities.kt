@@ -28,8 +28,9 @@ fun PossibilitiesList(onClick: (Possibility) -> Unit, possibility: List<Possibil
                     it.place.Body()
                     it.latitude.toString().Label()
                     it.longitude.toString().Label()
+                    it.timeZone.toString().Label()
                 }
-                SpacerTwelveOr()
+                SpacerTwelve()
             }
         }
     }

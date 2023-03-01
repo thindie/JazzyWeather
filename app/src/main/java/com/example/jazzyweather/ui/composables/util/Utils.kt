@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -16,6 +17,7 @@ fun typo() = MaterialTheme.typography
 
 @Composable
 fun color() = MaterialTheme.colorScheme
+
 @Composable
 fun icons() = Icons.Default
 
@@ -46,22 +48,31 @@ val Ar_C = Arrangement.Center
 val Al_H = Alignment.CenterHorizontally
 
 @Composable
+fun String.Display(modifier: Modifier = Modifier, color: Color = color().onSurface) {
+    modifier.eightStartPadding()
+    Text(modifier = modifier, text = this, style = typo().headlineLarge, color = color)
+}
+
+@Composable
 fun String.Headline(modifier: Modifier = Modifier) {
+    modifier.eightStartPadding()
     Text(modifier = modifier, text = this, style = typo().headlineSmall)
 }
 
 @Composable
 fun String.Body(modifier: Modifier = Modifier) {
+    modifier.eightStartPadding()
     Text(modifier = modifier, text = this, style = typo().bodyLarge)
 }
 
 @Composable
 fun String.Label(modifier: Modifier = Modifier) {
+    modifier.eightStartPadding()
     Text(modifier = modifier, text = this, style = typo().labelMedium)
 }
 
 @Composable
-fun SpacerTwelveOr(modifier: Modifier = Modifier) {
+fun SpacerTwelve(modifier: Modifier = Modifier) {
     Spacer(modifier = modifier.height(endTwelvePadding))
 }
 

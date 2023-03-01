@@ -21,6 +21,10 @@ fun BottomBarElement(
     onClick: (String) -> Unit,
 ) {
     IconButton(onClick = { onClick(destinations.route) }, modifier.eightStartPadding()) {
-        Icon(imageVector = destinations.icon, contentDescription = destinations.route)
+        Icon(
+            imageVector = destinations.icon,
+            contentDescription = destinations.route,
+            tint = color().onSurface
+        )
     }
 }

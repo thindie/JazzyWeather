@@ -1,5 +1,6 @@
 package com.example.jazzyweather.ui.composables.util
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,6 +21,7 @@ fun SearchBar(onSearch: (String) -> Unit) {
         Modifier
             .fillMaxWidth()
             .height(containerBasicBar)
+
     ) {
         Row(
             Modifier

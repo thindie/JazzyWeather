@@ -13,7 +13,7 @@ fun Possibility.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather
         longitude = this.longitude,
         temperature = remoteSourceDto.temperature,
         time = remoteSourceDto.time,
-        weathercode = whatWeatherForHuman(remoteSourceDto.weathercode),
+        weathercode = remoteSourceDto.weathercode,
         winddirection = remoteSourceDto.winddirection,
         windspeed = remoteSourceDto.windspeed,
         apparent_temperature_max = remoteSourceDto.apparent_temperature_max,
@@ -53,7 +53,7 @@ fun WeatherDBModel.fromDBtoPossibility(): Possibility {
         place = this.place,
         latitude = this.latitude,
         longitude = this.longitude,
-
+        timeZone = ""
         )
 }
 
@@ -72,36 +72,36 @@ fun Weather.fromDomainToDB(): WeatherDBModel {
 
 
 val weatherMap = mapOf(
-    0 to "Clear sky",
-    1 to "Mainly clear",
-    2 to "partly cloudy",
-    3 to "overcast",
-    45 to "Fog",
-    48 to "depositing rime fog",
-    51 to "Drizzle: Light",
-    53 to "Drizzle: moderate",
-    55 to "Drizzle: dense intensity",
-    56 to "Freezing Drizzle: Light",
-    57 to "Freezing Drizzle: dense intensity",
-    61 to "Rain: Slight",
-    63 to "Rain: moderate",
-    65 to "Rain: heavy intensity",
-    66 to "Freezing Rain: Light",
-    67 to "Freezing Rain: heavy intensity",
-    71 to "Snow fall: Slight",
-    73 to "Snow fall: moderate",
-    75 to "Snow fall: heavy intensity",
-    77 to "Snow grains",
-    80 to "Rain showers: Slight",
-    81 to "Rain showers: moderate",
-    82 to "Rain showers: violent",
-    85 to "Snow showers slight",
-    86 to "Snow showers heavy",
-    95 to "Thunderstorm: Slight",
-    96 to "Thunderstorm: Slight",
-    99 to "Thunderstorm: Slight",
+    0 to "Ясно",
+    1 to "В основном Ясно",
+    2 to "Небольшая Облачность",
+    3 to "Пасмурно",
+    45 to "Туман",
+    48 to "Туман и изморозь",
+    51 to "Морось",
+    53 to "Противная Морось",
+    55 to "Противнейшая Морось",
+    56 to "Легкая Изморозь",
+    57 to "Интенсивная Изморозь",
+    61 to "Дождь: незначительно",
+    63 to "Дождь: средне",
+    65 to "Сильный Дождь",
+    66 to "Легкий Ледяной Дождь",
+    67 to "Сильный Ледяной Дождь",
+    71 to "Незначительный снег",
+    73 to "Снег",
+    75 to "Сильный Снег",
+    77 to "Град",
+    80 to "Небольшой Ливень",
+    81 to "Ливень",
+    82 to "Сильный Ливень",
+    85 to "Снегопад",
+    86 to "Сильный Снегопад",
+    95 to "Небольшая Гроза",
+    96 to "Гроза",
+    99 to "Грозище",
 )
 
-fun whatWeatherForHuman(int: Int): String {
-    return weatherMap[int] ?: "unstable weather type"
+fun Int.whatWeatherForHuman(): String {
+    return weatherMap[this] ?: "unstable weather type"
 }

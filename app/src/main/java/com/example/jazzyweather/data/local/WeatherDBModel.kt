@@ -11,7 +11,7 @@ data class WeatherDBModel(
     val longitude: Float,
     val temperature: Double,
     val time: String,
-    val weathercode: String,
+    val weathercode: Int,
     val winddirection: Double,
     val windspeed: Double,
 )

@@ -6,7 +6,7 @@ data class Weather(
     val longitude: Float,
     val temperature: Double,
     val time: String,
-    val weathercode: String,
+    val weathercode: Int,
     val winddirection: Double,
     val windspeed: Double,
     val apparent_temperature_max: List<Double>,
@@ -23,4 +23,5 @@ data class Weather(
     val weathercodes: List<Int>,
     val windgusts_10m_max: List<Double>,
     val windspeed_10m_max: List<Double>,
+    val isPlus: Boolean = temperature > 0.00
 )

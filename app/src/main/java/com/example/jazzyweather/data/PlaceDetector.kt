@@ -23,15 +23,15 @@ class PlaceDetector @Inject constructor(
     private val scope: CoroutineScope,
     private val application: Application,
 ) {
-     private val lock: Any = Any()
+    private val lock: Any = Any()
 
-     fun produce(toFind: String): Flow<Results<List<Possibility>>> {
+    fun produce(toFind: String): Flow<Results<List<Possibility>>> {
         return flow {
             val possibleLocationsList = synchronized(lock) {
                 mutableListOf<Possibility>()
             }
             scope.launch(IO) {
-                val tag = toFind.lowercase().trim()
+                val tag = toFind.legitTag()
 
 
                 val inputStream1 = application.resources.openRawResource(R.raw.coord1)
@@ -53,9 +53,9 @@ class PlaceDetector @Inject constructor(
                 streams.forEach { inputStream ->
                     scope.launch(IO) {
                         val reader = BufferedReader(InputStreamReader(inputStream), BUFFER)
-                        while (reader.ready() && possibleLocationsList.size < 10) {
+                        while (reader.ready() && possibleLocationsList.size < 15) {
                             val line = reader.readLine()
-                            if (line.lowercase().contains(tag)) {
+                            if (line.lowercase().subSequence(0,line.length.div(2)).contains(tag)) {
                                 line.getCoordinates()?.let { possibleLocationsList.add(it) }
                             }
                         }
@@ -94,11 +94,114 @@ private fun String.getCoordinates(): Possibility? {
         return null
     } else {
         Possibility(
-            place = splitted[LOCATION_HOLDER],
+            place = splitted[LOCATION_HOLDER].transmutate(),
             latitude = latitude!!,
-            longitude = longitude!!
+            longitude = longitude!!,
+            timeZone = splitted[splitted.size - 2].transmutate()
         )
     }
 }
 
+private val transMap = mapOf(
+    "a" to "а",
+    "b" to "б",
+    "v" to "в",
+    "g" to "г",
+    "d" to "д",
+    "e" to "е",
+    "z" to "з",
+    "i" to "и",
+    "j" to "й",
+    "k" to "к",
+    "l" to "л",
+    "m" to "м",
+    "n" to "н",
+    "o" to "о",
+    "p" to "п",
+    "r" to "р",
+    "s" to "с",
+    "t" to "т",
+    "u" to "у",
+    "f" to "ф",
+    "c" to "ц",
+    "y" to "й",
+    "’" to "ь",
+    "’’" to "ъ",
+
+)
+
+private val doublePhono = mapOf(
+    "/" to " ",
+    "Moscow" to "Москва",
+    "Europe" to "Европа",
+    "Asia" to "Азия",
+    "niye" to "ние",
+    " ts" to " Це",
+    "ishche" to "ище",
+    "nyy" to "ный",
+    "yany" to "яны",
+    "ntsyn" to "нцын",
+    "ayo" to "айо",
+    "nts" to "нц",
+    "yu" to "ю",
+    "ye" to "е",
+    "ya" to "я",
+    "atsk" to "атск",
+    "tsk" to "цк",
+    "ets" to "ец",
+    "iy" to "ий",
+    "ry" to "ры",
+    "vy" to "ы",
+    "zy" to "зы",
+    "ty" to "ты",
+    "khy" to "хи",
+    "hy" to "хы",
+    "ly" to "лы",
+    "gy" to "гы",
+    "dy" to "ды",
+    "fy" to "фы",
+    "my" to "мы",
+    "by" to "бы",
+    "cy" to "цы",
+    "kh" to "х",
+    "ch" to "ч", //
+    "sh" to "ш", //
+    "sh'" to "щ", //
+    "yo" to "ё",
+    "zh" to "ж",
+
+   //
+)
+private fun String.legitTag(): String{
+    var tag = try {
+        this.lowercase().trim()
+    }catch (e: Exception){ return "Bad Data"}
+    doublePhono.forEach {
+        tag = tag.replace(it.value, it.key, true)
+    }
+    transMap.forEach {
+        tag = tag.replace(it.value, it.key, ignoreCase = true)
+    }
+    tag = if(tag.length > 15) tag.subSequence(0,15).toString() else tag
+    return tag
+}
+
+private fun String.transmutate(): String{
+    var string = this.lowercase()
+    doublePhono.forEach {
+        string = string.replace(it.key, it.value, true)
+    }
+    transMap.forEach {
+        string = string.replace(it.key, it.value, true)
+    }
+    string = string.split(" ").map {
+        it.replaceFirstChar {
+            it.uppercase()
+        }
+    }.joinToString(separator = " ") {
+        it
+    }
+
+    return string
+}
 
