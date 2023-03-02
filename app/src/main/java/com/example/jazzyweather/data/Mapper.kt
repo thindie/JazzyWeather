@@ -1,6 +1,7 @@
 package com.example.jazzyweather.data
 
 import com.example.jazzyweather.data.local.WeatherDBModel
+import com.example.jazzyweather.data.local.possibilities.PossibilititesDbModel
 import com.example.jazzyweather.data.remote.WeatherDTO
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Weather
@@ -47,6 +48,27 @@ fun WeatherDBModel.fromDBtoOffline(): WeatherOffline {
     )
 }
 
+fun Possibility.toDBModel(): PossibilititesDbModel {
+
+    return PossibilititesDbModel(
+        this.place,
+        this.latitude,
+        this.longitude,
+        this.timeZone,
+        this.adaptedTimeZone
+    )
+}
+
+fun PossibilititesDbModel.toModel(): Possibility {
+
+    return Possibility(
+        this.place,
+        this.latitude,
+        this.longitude,
+        this.timeZone,
+        this.adaptedTimeZone
+    )
+}
 
 fun WeatherDBModel.fromDBtoPossibility(): Possibility {
     return Possibility(
@@ -55,7 +77,7 @@ fun WeatherDBModel.fromDBtoPossibility(): Possibility {
         longitude = this.longitude,
         timeZone = "",
         adaptedTimeZone = ""
-        )
+    )
 }
 
 fun Weather.fromDomainToDB(): WeatherDBModel {

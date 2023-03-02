@@ -23,6 +23,8 @@ class WeatherViewModel @Inject constructor(
     private val search: SearchLocationUseCase,
     private val request: RequestWeatherUseCase,
     private val favors: GetFavoriteLocationsUseCase,
+    private val save: SavePossibilitiesUseCase,
+    private val get: GetSavedPossibilitiesUseCase,
     private val offline: GetOfflineWeatherUseCase,
     @DispatchersModule.IODispatcher private val IO : CoroutineDispatcher
 ) : ViewModel() {

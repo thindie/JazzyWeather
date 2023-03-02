@@ -1,6 +1,7 @@
 package com.example.jazzyweather.data
 
 import com.example.jazzyweather.data.local.FavoriteWeatherDao
+import com.example.jazzyweather.data.local.possibilities.PossibilitiesDao
 import com.example.jazzyweather.data.remote.WeatherApiService
 import com.example.jazzyweather.data.remote.toDTO
 import com.example.jazzyweather.di.DispatchersModule
@@ -18,6 +19,7 @@ class WeatherRepositoryImpl @Inject constructor(
     private val favoriteWeatherDao: FavoriteWeatherDao,
     private val weatherApiService: WeatherApiService,
     private val placeDetector: PlaceDetector,
+    private val possibilitiesDao: PossibilitiesDao,
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
 ) : JazzyWeatherRepository {
     override fun searchAndSelectLocation(location: String): Flow<Results<List<Possibility>>> {
@@ -26,6 +28,14 @@ class WeatherRepositoryImpl @Inject constructor(
                 emit(it)
             }
         }
+    }
+
+    override suspend fun getSavedPossibilities(): Results<List<Possibility>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun savePossibilities(list: List<Possibility>) {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getFavoriteWeatherLocations(): Results<List<Weather>> = withContext(IO) {

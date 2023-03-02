@@ -5,6 +5,9 @@ import kotlinx.coroutines.flow.Flow
 interface JazzyWeatherRepository {
     fun searchAndSelectLocation(location: String): Flow<Results<List<Possibility>>>
 
+    suspend fun getSavedPossibilities():  Results<List<Possibility>>
+
+    suspend fun savePossibilities(list: List<Possibility>)
     suspend fun getFavoriteWeatherLocations(): Results<List<Weather>>
     suspend fun requestWeather(possibility: Possibility): Results<Weather>
     suspend fun addToFavorites(weather: Weather)
