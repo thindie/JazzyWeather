@@ -21,12 +21,12 @@ fun color() = MaterialTheme.colorScheme
 @Composable
 fun icons() = Icons.Default
 
-fun Modifier.basicDimensions(height: Dp = containerBasicBar) =
+fun Modifier.basicDimensions(height: Dp = eighty) =
     run {
         this
             .fillMaxWidth()
             .height(height)
-            .padding(start = eightStartPadding, end = endTwelvePadding)
+            .padding(start = eight, end = twelve)
 
     }
 
@@ -40,8 +40,8 @@ fun OnScreen(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
 
 fun Modifier.surfaceColor() = composed { this.background(color().surface) }
 fun Modifier.onSurfaceColor() = composed { this.background(color().onSurface) }
-fun Modifier.eightStartPadding() = run { this.padding(start = eightStartPadding) }
-fun Modifier.twelveEndPadding() = run { this.padding(end = endTwelvePadding) }
+fun Modifier.eightStartPadding() = run { this.padding(start = eight) }
+fun Modifier.twelveEndPadding() = run { this.padding(end = twelve) }
 
 val Al_CV = Alignment.CenterVertically
 val Ar_C = Arrangement.Center
@@ -54,26 +54,26 @@ fun String.Display(modifier: Modifier = Modifier, color: Color = color().onSurfa
 }
 
 @Composable
-fun String.Headline(modifier: Modifier = Modifier) {
+fun String.Headline(modifier: Modifier = Modifier, color: Color = color().onSurface) {
     modifier.eightStartPadding()
-    Text(modifier = modifier, text = this, style = typo().headlineSmall)
+    Text(modifier = modifier, text = this, style = typo().headlineSmall, color = color)
 }
 
 @Composable
-fun String.Body(modifier: Modifier = Modifier) {
+fun String.Body(modifier: Modifier = Modifier, color: Color = color().onSurface) {
     modifier.eightStartPadding()
-    Text(modifier = modifier, text = this, style = typo().bodyLarge)
+    Text(modifier = modifier, text = this, style = typo().bodyLarge, color = color)
 }
 
 @Composable
-fun String.Label(modifier: Modifier = Modifier) {
+fun String.Label(modifier: Modifier = Modifier, color: Color = color().onSurface) {
     modifier.eightStartPadding()
-    Text(modifier = modifier, text = this, style = typo().labelMedium)
+    Text(modifier = modifier, text = this, style = typo().labelMedium,color = color)
 }
 
 @Composable
 fun SpacerTwelve(modifier: Modifier = Modifier) {
-    Spacer(modifier = modifier.height(endTwelvePadding))
+    Spacer(modifier = modifier.height(twelve))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,9 +85,11 @@ fun textFieldColors() = TextFieldDefaults.outlinedTextFieldColors(
     unfocusedBorderColor = color().surface,
     focusedBorderColor = color().onSurface
 )
-
-
-val eightStartPadding = 8.dp
-val endTwelvePadding = 12.dp
-val basicWideBar = 60.dp
-val containerBasicBar = 80.dp
+val hair = Dp.Hairline
+val two = 2.dp
+val eight = 8.dp
+val twelve = 12.dp
+val thirty = 30.dp
+val sixty = 60.dp
+val eighty = 80.dp
+val hundred = 100.dp

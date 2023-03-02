@@ -5,5 +5,5 @@ data class Possibility(
     val latitude: Float,
     val longitude: Float,
     val timeZone: String,
-    val timeZoneFake: String = "Europe%2FMoscow",
+    val adaptedTimeZone: String,
 )

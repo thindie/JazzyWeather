@@ -2,7 +2,7 @@ package com.example.jazzyweather.ui.composables
 
 import android.util.Log
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ElevatedCard
@@ -25,10 +25,20 @@ fun PossibilitiesList(onClick: (Possibility) -> Unit, possibility: List<Possibil
                     Modifier
                         .basicDimensions()
                         .clickable { onClick(it) }) {
-                    it.place.Body()
-                    it.latitude.toString().Label()
-                    it.longitude.toString().Label()
-                    it.timeZone.toString().Label()
+                    Column(
+                        Modifier
+                            .basicDimensions(eighty)
+                            .eightStartPadding()) {
+                        it.place.Body()
+                        Row {
+                            it.latitude.toString().Label()
+                            Spacer(modifier = Modifier.padding(two).size(two))
+                            it.longitude.toString().Label()
+                        }
+
+                        it.adaptedTimeZone.toString().Label()
+                    }
+
                 }
                 SpacerTwelve()
             }

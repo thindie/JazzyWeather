@@ -3,14 +3,17 @@ package com.example.jazzyweather
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Weather
 import com.example.jazzyweather.domain.unpackResult
 import com.example.jazzyweather.domain.useCases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,6 +24,7 @@ class WeatherViewModel @Inject constructor(
     private val request: RequestWeatherUseCase,
     private val favors: GetFavoriteLocationsUseCase,
     private val offline: GetOfflineWeatherUseCase,
+    @DispatchersModule.IODispatcher private val IO : CoroutineDispatcher
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow<Boolean>(false)
@@ -91,21 +95,18 @@ class WeatherViewModel @Inject constructor(
         _isLoading.value = true
         search(tag).onEach {
             _isLoading.value = false
-            delay(700)
             _possibility.value = it.unpackResult() ?: emptyList()
         }.launchIn(viewModelScope)
     }
 
     fun onRequest(possibility: Possibility) {
-        cleanState()
-        _isLoading.value = true
-        viewModelScope.launch {
-            val weather =  request(possibility).unpackResult()
-            delay(50)
-            _isLoading.value = false
-            _weather.value = weather
-            Log.d("SERVICE_TAG", weather.toString())
-        }
+         viewModelScope.launch {
+       _weather.value =  withContext(IO){
+                 request(possibility).unpackResult()
+             }
+         }
+
+
     }
     private fun cleanState(){
         _weather.value = null

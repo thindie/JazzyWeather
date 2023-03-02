@@ -53,7 +53,8 @@ fun WeatherDBModel.fromDBtoPossibility(): Possibility {
         place = this.place,
         latitude = this.latitude,
         longitude = this.longitude,
-        timeZone = ""
+        timeZone = "",
+        adaptedTimeZone = ""
         )
 }
 

@@ -18,31 +18,33 @@ class WeatherRepositoryImpl @Inject constructor(
     private val favoriteWeatherDao: FavoriteWeatherDao,
     private val weatherApiService: WeatherApiService,
     private val placeDetector: PlaceDetector,
-    private val scope: CoroutineScope,
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
 ) : JazzyWeatherRepository {
     override fun searchAndSelectLocation(location: String): Flow<Results<List<Possibility>>> {
-        return placeDetector.produce(location)
+        return flow {
+            placeDetector.produce(location).collect {
+                emit(it)
+            }
+        }
     }
 
-    override suspend fun getFavoriteWeatherLocations(): Results<List<Weather>> =
-        withContext(IO) {
-            val list = mutableListOf<Weather>()
-            favoriteWeatherDao.getAllFavorites().map {
-                requestWeather(it.fromDBtoPossibility()).unpackResult()
-                    ?.let { weather -> list.add(weather) }
-            }
-            list.toList().encapsulateResult()
+    override suspend fun getFavoriteWeatherLocations(): Results<List<Weather>> = withContext(IO) {
+        val list = mutableListOf<Weather>()
+        favoriteWeatherDao.getAllFavorites().map {
+            requestWeather(it.fromDBtoPossibility()).unpackResult()
+                ?.let { weather -> list.add(weather) }
         }
+        list.toList().encapsulateResult()
+    }
 
 
-    override suspend fun requestWeather(possibility: Possibility): Results<Weather> {
+    override suspend fun requestWeather(possibility: Possibility) = withContext(IO) {
         val weather = weatherApiService.getWeather(
             latitude = possibility.latitude,
             longitude = possibility.longitude,
-            timeZone = possibility.timeZoneFake
+            timeZone = possibility.timeZone
         )
-        return weather.toDTO().checkAndTransit {
+        weather.toDTO().checkAndTransit {
             possibility.combineWith(it, possibility.place)
         }
     }

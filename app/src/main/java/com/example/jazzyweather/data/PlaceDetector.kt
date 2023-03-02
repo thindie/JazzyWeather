@@ -7,98 +7,105 @@ import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Results
 import com.example.jazzyweather.domain.encapsulateResult
 import com.example.thindie.wantmoex.R
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
+
+import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import javax.inject.Inject
 
 private const val LOCATION_HOLDER = 1
 private const val BUFFER = 8192
-private const val READ_PROPERLY = 700L
+
 
 class PlaceDetector @Inject constructor(
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
-    private val scope: CoroutineScope,
     private val application: Application,
 ) {
-    private val lock: Any = Any()
 
-    fun produce(toFind: String): Flow<Results<List<Possibility>>> {
-        return flow {
-            val possibleLocationsList = synchronized(lock) {
-                mutableListOf<Possibility>()
-            }
-            scope.launch(IO) {
-                val tag = toFind.legitTag()
+    suspend fun produce(toFind: String): Flow<Results<List<Possibility>>> {
+        val tag = toFind.legitTag()
+        if (tag == BAD_TAG || tag == EMPTY_TAG) return emptyFlow()
+        val inputStream1 = application.resources.openRawResource(R.raw.coord1)
+        val inputStream2 = application.resources.openRawResource(R.raw.coord2)
+        val inputStream3 = application.resources.openRawResource(R.raw.coord3)
+        val inputStream4 = application.resources.openRawResource(R.raw.coord1a)
+        val inputStream5 = application.resources.openRawResource(R.raw.coord2a)
+        val inputStream6 = application.resources.openRawResource(R.raw.coord3a)
+        val streams = listOf(
+            inputStream1,
+            inputStream2,
+            inputStream3,
+            inputStream4,
+            inputStream5,
+            inputStream6
+        )
+        val lock = Any()
+        val resultList = synchronized(lock) { mutableListOf<Possibility>() }
 
-
-                val inputStream1 = application.resources.openRawResource(R.raw.coord1)
-                val inputStream2 = application.resources.openRawResource(R.raw.coord2)
-                val inputStream3 = application.resources.openRawResource(R.raw.coord3)
-                val inputStream4 = application.resources.openRawResource(R.raw.coord1a)
-                val inputStream5 = application.resources.openRawResource(R.raw.coord2a)
-                val inputStream6 = application.resources.openRawResource(R.raw.coord3a)
-                val streams = listOf(
-                    inputStream1,
-                    inputStream2,
-                    inputStream3,
-                    inputStream4,
-                    inputStream5,
-                    inputStream6
-                )
-
-
-                streams.forEach { inputStream ->
-                    scope.launch(IO) {
-                        val reader = BufferedReader(InputStreamReader(inputStream), BUFFER)
-                        while (reader.ready() && possibleLocationsList.size < 15) {
-                            val line = reader.readLine()
-                            if (line.lowercase().subSequence(0,line.length.div(2)).contains(tag)) {
-                                line.getCoordinates()?.let { possibleLocationsList.add(it) }
-                            }
+        streams.forEach { inputStream ->
+            val list = withContext(IO) {
+                val bufferList = mutableListOf<Possibility>()
+                val reader = BufferedReader(InputStreamReader(inputStream), BUFFER)
+                while (withContext(IO) {
+                        reader.ready()
+                    }) {
+                    if (bufferList.size > 3) {
+                        withContext(Dispatchers.IO) {
+                            inputStream.close()
+                            reader.close()
                         }
-                        inputStream.close()
-                        reader.close()
-                        this.cancel()
+                        return@withContext bufferList
+                    }
+                    val line =
+                        withContext(IO) {
+                            reader.readLine()
+                        }
+                    if (line.lowercase().subSequence(0, line.length.div(2))
+                            .contains(tag)
+                    ) {
+                        line.getCoordinates()?.let { bufferList.add(it) }
                     }
 
                 }
-
-                this.cancel()
+                bufferList
             }
-            delay(READ_PROPERLY)
-            Log.d("SERVICE_TAG", "$possibleLocationsList")
-            emit(possibleLocationsList.encapsulateResult())
+            resultList.addAll(list)
         }
 
+        return flow{ emit (resultList.encapsulateResult())}
     }
 
-}
+    private fun String.getCoordinates(): Possibility? {
+        var longitude: Float? = null
+        var latitude: Float? = null
+        val splitted = this.split("\t")
 
-private fun String.getCoordinates(): Possibility? {
-    var longitude: Float? = null
-    var latitude: Float? = null
-    val splitted = this.split("\t")
+        splitted.forEach {
+            if (it.matches("\\d{2}[.]\\d*".toRegex())) {
+                if (latitude == null) {
+                    latitude = it.toFloat()
+                } else longitude = it.toFloat()
+            }
 
-    splitted.forEach {
-        if (it.matches("\\d{2}[.]\\d*".toRegex())) {
-            if (latitude == null) {
-                latitude = it.toFloat()
-            } else longitude = it.toFloat()
         }
-
-    }
-    return if (latitude == null || longitude == null) {
-        return null
-    } else {
-        Possibility(
-            place = splitted[LOCATION_HOLDER].transmutate(),
-            latitude = latitude!!,
-            longitude = longitude!!,
-            timeZone = splitted[splitted.size - 2].transmutate()
-        )
+        return if (latitude == null || longitude == null) {
+            return null
+        } else {
+            Possibility(
+                place = splitted[LOCATION_HOLDER].transmutate(),
+                latitude = latitude!!,
+                longitude = longitude!!,
+                timeZone = splitted[splitted.size - 2],
+                adaptedTimeZone = splitted[splitted.size - 2].transmutate(),
+            )
+        }
     }
 }
 
@@ -128,7 +135,7 @@ private val transMap = mapOf(
     "’" to "ь",
     "’’" to "ъ",
 
-)
+    )
 
 private val doublePhono = mapOf(
     "/" to " ",
@@ -170,23 +177,26 @@ private val doublePhono = mapOf(
     "yo" to "ё",
     "zh" to "ж",
 
-   //
+    //
 )
-private fun String.legitTag(): String{
+
+private fun String.legitTag(): String {
     var tag = try {
         this.lowercase().trim()
-    }catch (e: Exception){ return "Bad Data"}
+    } catch (e: Exception) {
+        return "Bad Data"
+    }
     doublePhono.forEach {
         tag = tag.replace(it.value, it.key, true)
     }
     transMap.forEach {
         tag = tag.replace(it.value, it.key, ignoreCase = true)
     }
-    tag = if(tag.length > 15) tag.subSequence(0,15).toString() else tag
+    tag = if (tag.length > 15) tag.subSequence(0, 15).toString() else tag
     return tag
 }
 
-private fun String.transmutate(): String{
+private fun String.transmutate(): String {
     var string = this.lowercase()
     doublePhono.forEach {
         string = string.replace(it.key, it.value, true)
@@ -205,3 +215,6 @@ private fun String.transmutate(): String{
     return string
 }
 
+
+private const val BAD_TAG = "Bad Data"
+private const val EMPTY_TAG = ""

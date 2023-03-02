@@ -29,12 +29,3 @@ private const val NETWORK_QUERY =
 const val DAILY = "daily"
 const val CURRENT_WEATHER = "current_weather"
 
-private const val COMMA = ","
-private fun queryBuilder(list: List<String>) = run {
-    var string = ""
-    list.forEach {
-        string += String.format(NETWORK_QUERY, it)
-    }
-    string
-}
-

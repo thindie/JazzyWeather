@@ -1,6 +1,5 @@
 package com.example.jazzyweather.ui.composables.util
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,12 +19,12 @@ fun SearchBar(onSearch: (String) -> Unit) {
     OnScreen(
         Modifier
             .fillMaxWidth()
-            .height(containerBasicBar)
+            .height(eighty)
 
     ) {
         Row(
             Modifier
-                .basicDimensions(containerBasicBar)
+                .basicDimensions(eighty)
                 .surfaceColor(),
             horizontalArrangement = Ar_C,
             verticalAlignment = Al_CV
@@ -36,12 +35,12 @@ fun SearchBar(onSearch: (String) -> Unit) {
                 shape = ShapeDefaults.ExtraLarge,
                 onValueChange = { textFieldValue = it },
                 modifier = Modifier
-                    .basicDimensions(basicWideBar)
+                    .basicDimensions(sixty)
                     .eightStartPadding()
                     .twelveEndPadding(),
                 leadingIcon = {
                     IconButton(
-                        onClick = { onSearch(textFieldValue); keyboardController!!.hide() },
+                        onClick = { onSearch(textFieldValue); keyboardController!!.hide(); textFieldValue = "" },
                         modifier = Modifier.eightStartPadding()
                     ) {
                         Icon(
@@ -51,6 +50,7 @@ fun SearchBar(onSearch: (String) -> Unit) {
                         )
                     }
                 },
+                singleLine = true,
                 colors = textFieldColors()
             )
 

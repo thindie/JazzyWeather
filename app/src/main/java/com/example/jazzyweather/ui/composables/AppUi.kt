@@ -14,7 +14,7 @@ fun WeatherAppUI() {
     val navController = rememberNavController()
     val currentBackStack = navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack.value?.destination
-    val currentScreen = weatherDestinations.find { it.route  == currentDestination?.route } ?: Weathers
+    val currentScreen = weatherDestinations.find { it.route  == currentDestination?.route } ?: FavoriteWeathers
 
     WeatherNavHost(
         navController = navController,

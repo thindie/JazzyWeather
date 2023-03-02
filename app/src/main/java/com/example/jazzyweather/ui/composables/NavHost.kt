@@ -1,7 +1,11 @@
 package com.example.jazzyweather.ui.composables
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -35,22 +39,55 @@ fun WeatherNavHost(
             modifier = Modifier.padding(it)
         ) {
             composable(route = Possibilities.route) {
-                PossibilitiesList({ possib ->
-                    viewModel.onRequest(possib);
-                    navController.straightTo(Weathers.route)
-                }, uiState.value.possibility)
-            }
-            composable(route = Weathers.route) {
-                uiState.value.weather?.let {
-                    DetailScreen(it, { weather -> viewModel.onFavoriteAdd(weather) }, { place ->
-                    viewModel.onFavoriteDelete( place )
-                })
+                if (uiState.value.possibility.isEmpty()) OnScreen {
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(two)
+                    ) {
+                        LinearProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(hair)
+                        )
+                    }
+
+                }
+                else {
+                    PossibilitiesList({ possib ->
+                        viewModel.onRequest(possib);
+                        navController.straightTo(Weathers.route)
+                    }, uiState.value.possibility)
                 }
             }
+            composable(route = Weathers.route) {
+                val weatherState = uiState.value.weather
+                if (weatherState == null) OnScreen {
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(two)
+                    ) {
+                        LinearProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(hair)
+                        )
+                    }
+
+                } else
+                    DetailScreen(
+                        weatherState,
+                        { weather -> viewModel.onFavoriteAdd(weather) },
+                        { place ->
+                            viewModel.onFavoriteDelete(place)
+                        })
+            }
+
             composable(route = FavoriteWeathers.route) {
                 FavoriteWeathersList(
                     uiState.value.favorites,
-                    onFavoriteDelete = {viewModel.onFavoriteDelete(it)}
+                    onFavoriteDelete = { viewModel.onFavoriteDelete(it) }
                 ) { viewModel.onClickWeather(it); navController.straightTo(Weathers.route) }
             }
         }
