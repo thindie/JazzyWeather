@@ -27,7 +27,6 @@ object NetworkModule {
         })
         .build()
 
-
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .client(okHttpClient)

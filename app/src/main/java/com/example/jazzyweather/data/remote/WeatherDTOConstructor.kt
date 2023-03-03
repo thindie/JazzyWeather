@@ -1,25 +1,32 @@
 package com.example.jazzyweather.data.remote
 
-import com.example.jazzyweather.domain.Results
 import com.example.jazzyweather.data.remote.utils.CurrentWeather
 import com.example.jazzyweather.data.remote.utils.Daily
+import com.example.jazzyweather.data.remote.utils.hourly.Hourly
+import com.example.jazzyweather.domain.Possibility
+import com.example.jazzyweather.domain.abstractions.Results
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-fun JsonObject?.toDTO(): Results<WeatherDTO> {
+suspend fun JsonObject?.toDTO(): Results<WeatherDTO> = withContext(Dispatchers.IO) {
     var daily: Daily? = null
     var current: CurrentWeather? = null
-    this?.entrySet()?.forEach {
+    this@toDTO?.entrySet()?.forEach {
         if (it.key == DAILY) {
-            daily = Gson().fromJson(it.value, Daily::class.java)
+            withContext(Dispatchers.IO) {
+                daily = Gson().fromJson(it.value, Daily::class.java)
+            }
         }
         if (it.key == CURRENT_WEATHER) {
-            current = Gson().fromJson(it.value, CurrentWeather::class.java)
+            withContext(Dispatchers.IO) {
+                current = Gson().fromJson(it.value, CurrentWeather::class.java)
+            }
         }
-    } ?: return Results.Error(Exception("no or bad remote data"))
-
+    } ?: Results.Error(Exception("no or bad remote data"))
     if (daily != null && current != null) {
-        return Results.Success(
+        Results.Success(
             WeatherDTO(
                 temperature = current!!.temperature,
                 time = current!!.time,
@@ -42,6 +49,33 @@ fun JsonObject?.toDTO(): Results<WeatherDTO> {
                 windspeed_10m_max = daily!!.windspeed_10m_max,
             )
         )
-    }
-    return Results.Error(Exception("no or bad remote data"))
+    } else Results.Error(Exception("no or bad remote data"))
 }
+
+suspend fun JsonObject?.toHourlyDTO(possibility: Possibility): Results<WeatherHourlyDTO> =
+    withContext(Dispatchers.IO) {
+        var hourly: Hourly? = null
+        this@toHourlyDTO?.entrySet()?.forEach {
+            if (it.key == HOURLY) {
+                withContext(Dispatchers.IO) {
+                    hourly = Gson().fromJson(it.value, Hourly::class.java)
+                }
+            }
+        } ?: Results.Error(Exception("no or bad remote data"))
+        if (hourly != null) {
+            Results.Success(
+                WeatherHourlyDTO(
+                    possibility.place,
+                    possibility.latitude,
+                    possibility.longitude,
+                    hourly!!.precipitation,
+                    hourly!!.temperature_2m,
+                    hourly!!.time,
+                    hourly!!.weathercode,
+                    hourly!!.windspeed_10m
+                )
+            )
+        } else Results.Error(Exception("no or bad remote data"))
+    }
+
+

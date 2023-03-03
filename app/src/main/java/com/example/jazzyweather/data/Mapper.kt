@@ -1,10 +1,15 @@
 package com.example.jazzyweather.data
 
 import com.example.jazzyweather.data.local.WeatherDBModel
+import com.example.jazzyweather.data.local.possibilities.PossibilititesDbModel
 import com.example.jazzyweather.data.remote.WeatherDTO
+import com.example.jazzyweather.data.remote.WeatherHourlyDTO
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Weather
+import com.example.jazzyweather.domain.WeatherHourly
+import com.example.jazzyweather.domain.WeatherOffline
 
+private const val FAKE_TIME_ZONE = "Europe/Moscow"
 fun Possibility.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather {
     return Weather(
         place = place,
@@ -12,7 +17,7 @@ fun Possibility.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather
         longitude = this.longitude,
         temperature = remoteSourceDto.temperature,
         time = remoteSourceDto.time,
-        weathercode = whatWeatherForHuman(remoteSourceDto.weathercode),
+        weathercode = remoteSourceDto.weathercode,
         winddirection = remoteSourceDto.winddirection,
         windspeed = remoteSourceDto.windspeed,
         apparent_temperature_max = remoteSourceDto.apparent_temperature_max,
@@ -32,9 +37,25 @@ fun Possibility.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather
 
         )
 }
+fun Weather.toPossibility():Possibility{
+    return Possibility(this.place, this.latitude, this.longitude, FAKE_TIME_ZONE, "")
+}
 
-fun WeatherDBModel.fromDBtoDomain(): Weather {
-    return Weather(
+fun WeatherHourlyDTO.fromDTOtoModel(): WeatherHourly {
+    return WeatherHourly(
+        this.place,
+        this.latitude,
+        this.longitude,
+        this.precipitation,
+        this.temperature_2m,
+        this.time,
+        this.weathercode,
+        this.windspeed_10m
+    )
+}
+
+fun WeatherDBModel.fromDBtoOffline(): WeatherOffline {
+    return WeatherOffline(
         place = this.place,
         latitude = this.latitude,
         longitude = this.longitude,
@@ -43,22 +64,39 @@ fun WeatherDBModel.fromDBtoDomain(): Weather {
         weathercode = this.weathercode,
         winddirection = this.winddirection,
         windspeed = this.windspeed,
-        apparent_temperature_max = this.apparent_temperature_max,
-        apparent_temperature_min = this.apparent_temperature_min,
-        precipitation_sum = this.precipitation_sum,
-        rain_sum = this.rain_sum,
-        showers_sum = this.showers_sum,
-        snowfall_sum = this.snowfall_sum,
-        sunrise = this.sunrise,
-        sunset = this.sunset,
-        temperature_2m_max = this.temperature_2m_max,
-        temperature_2m_min = this.temperature_2m_min,
-        times = this.times,
-        weathercodes = this.weathercodes,
-        windgusts_10m_max = this.windgusts_10m_max,
-        windspeed_10m_max = this.windspeed_10m_max,
+    )
+}
 
-        )
+fun Possibility.toDBModel(): PossibilititesDbModel {
+
+    return PossibilititesDbModel(
+        this.place,
+        this.latitude,
+        this.longitude,
+        this.timeZone,
+        this.adaptedTimeZone
+    )
+}
+
+fun PossibilititesDbModel.toModel(): Possibility {
+
+    return Possibility(
+        this.place,
+        this.latitude,
+        this.longitude,
+        this.timeZone,
+        this.adaptedTimeZone
+    )
+}
+
+fun WeatherDBModel.fromDBtoPossibility(): Possibility {
+    return Possibility(
+        place = this.place,
+        latitude = this.latitude,
+        longitude = this.longitude,
+        timeZone = FAKE_TIME_ZONE,
+        adaptedTimeZone = ""
+    )
 }
 
 fun Weather.fromDomainToDB(): WeatherDBModel {
@@ -71,56 +109,41 @@ fun Weather.fromDomainToDB(): WeatherDBModel {
         weathercode = this.weathercode,
         winddirection = this.winddirection,
         windspeed = this.windspeed,
-        apparent_temperature_max = this.apparent_temperature_max,
-        apparent_temperature_min = this.apparent_temperature_min,
-        precipitation_sum = this.precipitation_sum,
-        rain_sum = this.rain_sum,
-        showers_sum = this.showers_sum,
-        snowfall_sum = this.snowfall_sum,
-        sunrise = this.sunrise,
-        sunset = this.sunset,
-        temperature_2m_max = this.temperature_2m_max,
-        temperature_2m_min = this.temperature_2m_min,
-        times = this.times,
-        weathercodes = this.weathercodes,
-        windgusts_10m_max = this.windgusts_10m_max,
-        windspeed_10m_max = this.windspeed_10m_max,
-
-        )
+    )
 }
 
 
 val weatherMap = mapOf(
-    0 to "Clear sky",
-    1 to "Mainly clear",
-    2 to "partly cloudy",
-    3 to "overcast",
-    45 to "Fog",
-    48 to "depositing rime fog",
-    51 to "Drizzle: Light",
-    53 to "Drizzle: moderate",
-    55 to "Drizzle: dense intensity",
-    56 to "Freezing Drizzle: Light",
-    57 to "Freezing Drizzle: dense intensity",
-    61 to "Rain: Slight",
-    63 to "Rain: moderate",
-    65 to "Rain: heavy intensity",
-    66 to "Freezing Rain: Light",
-    67 to "Freezing Rain: heavy intensity",
-    71 to "Snow fall: Slight",
-    73 to "Snow fall: moderate",
-    75 to "Snow fall: heavy intensity",
-    77 to "Snow grains",
-    80 to "Rain showers: Slight",
-    81 to "Rain showers: moderate",
-    82 to "Rain showers: violent",
-    85 to "Snow showers slight",
-    86 to "Snow showers heavy",
-    95 to "Thunderstorm: Slight",
-    96 to "Thunderstorm: Slight",
-    99 to "Thunderstorm: Slight",
+    0 to "Ясно",
+    1 to "В основном Ясно",
+    2 to "Небольшая Облачность",
+    3 to "Пасмурно",
+    45 to "Туман",
+    48 to "Туман и изморозь",
+    51 to "Морось",
+    53 to "Противная Морось",
+    55 to "Противнейшая Морось",
+    56 to "Легкая Изморозь",
+    57 to "Изморозь!",
+    61 to "Дождик",
+    63 to "Дождь",
+    65 to "Сильный Дождь",
+    66 to "Ледяной Дождь",
+    67 to "*№*?! Ледяной Дождь!!",
+    71 to "Небольшой снег",
+    73 to "Снег",
+    75 to "Сильный Снег",
+    77 to "Град",
+    80 to "Небольшой Ливень",
+    81 to "Ливень",
+    82 to "Льет",
+    85 to "Снегопад",
+    86 to "Сильный Снегопад",
+    95 to "Небольшая Гроза",
+    96 to "Гроза",
+    99 to "Грозище",
 )
 
-fun whatWeatherForHuman(int: Int): String {
-    return weatherMap[int] ?: "unstable weather type"
+fun Int.whatWeatherForHuman(): String {
+    return weatherMap[this] ?: "unstable weather type"
 }
