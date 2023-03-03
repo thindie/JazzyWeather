@@ -7,5 +7,5 @@ import javax.inject.Singleton
 @Singleton
 @Database(entities = [PossibilititesDbModel::class], exportSchema = false, version = 1)
 abstract class PossibilitiesDataBase : RoomDatabase() {
-    abstract fun bindPossibilitiesDao () : PossibilitiesDao
+    abstract fun bindPossibilitiesDao(): PossibilitiesDao
 }

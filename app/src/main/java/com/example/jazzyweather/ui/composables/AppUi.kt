@@ -6,7 +6,6 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.jazzyweather.ui.composables.util.FavoriteWeathers
-import com.example.jazzyweather.ui.composables.util.Weathers
 import com.example.jazzyweather.ui.composables.util.weatherDestinations
 
 @Composable
@@ -14,7 +13,8 @@ fun WeatherAppUI() {
     val navController = rememberNavController()
     val currentBackStack = navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStack.value?.destination
-    val currentScreen = weatherDestinations.find { it.route  == currentDestination?.route } ?: FavoriteWeathers
+    val currentScreen =
+        weatherDestinations.find { it.route == currentDestination?.route } ?: FavoriteWeathers
 
     WeatherNavHost(
         navController = navController,
@@ -22,9 +22,9 @@ fun WeatherAppUI() {
     )
 }
 
-fun NavController.straightTo(route: String){
-    this.navigate(route){
-        popUpTo(this@straightTo.graph.findStartDestination().id){
+fun NavController.straightTo(route: String) {
+    this.navigate(route) {
+        popUpTo(this@straightTo.graph.findStartDestination().id) {
             saveState = true
         }
         restoreState = true

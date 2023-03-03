@@ -3,10 +3,13 @@ package com.example.jazzyweather.data
 import com.example.jazzyweather.data.local.WeatherDBModel
 import com.example.jazzyweather.data.local.possibilities.PossibilititesDbModel
 import com.example.jazzyweather.data.remote.WeatherDTO
+import com.example.jazzyweather.data.remote.WeatherHourlyDTO
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Weather
+import com.example.jazzyweather.domain.WeatherHourly
 import com.example.jazzyweather.domain.WeatherOffline
 
+private const val FAKE_TIME_ZONE = "Europe/Moscow"
 fun Possibility.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather {
     return Weather(
         place = place,
@@ -33,6 +36,22 @@ fun Possibility.combineWith(remoteSourceDto: WeatherDTO, place: String): Weather
         windspeed_10m_max = remoteSourceDto.windspeed_10m_max,
 
         )
+}
+fun Weather.toPossibility():Possibility{
+    return Possibility(this.place, this.latitude, this.longitude, FAKE_TIME_ZONE, "")
+}
+
+fun WeatherHourlyDTO.fromDTOtoModel(): WeatherHourly {
+    return WeatherHourly(
+        this.place,
+        this.latitude,
+        this.longitude,
+        this.precipitation,
+        this.temperature_2m,
+        this.time,
+        this.weathercode,
+        this.windspeed_10m
+    )
 }
 
 fun WeatherDBModel.fromDBtoOffline(): WeatherOffline {
@@ -75,7 +94,7 @@ fun WeatherDBModel.fromDBtoPossibility(): Possibility {
         place = this.place,
         latitude = this.latitude,
         longitude = this.longitude,
-        timeZone = "",
+        timeZone = FAKE_TIME_ZONE,
         adaptedTimeZone = ""
     )
 }
@@ -105,19 +124,19 @@ val weatherMap = mapOf(
     53 to "Противная Морось",
     55 to "Противнейшая Морось",
     56 to "Легкая Изморозь",
-    57 to "Интенсивная Изморозь",
-    61 to "Дождь: незначительно",
-    63 to "Дождь: средне",
+    57 to "Изморозь!",
+    61 to "Дождик",
+    63 to "Дождь",
     65 to "Сильный Дождь",
-    66 to "Легкий Ледяной Дождь",
-    67 to "Сильный Ледяной Дождь",
-    71 to "Незначительный снег",
+    66 to "Ледяной Дождь",
+    67 to "*№*?! Ледяной Дождь!!",
+    71 to "Небольшой снег",
     73 to "Снег",
     75 to "Сильный Снег",
     77 to "Град",
     80 to "Небольшой Ливень",
     81 to "Ливень",
-    82 to "Сильный Ливень",
+    82 to "Льет",
     85 to "Снегопад",
     86 to "Сильный Снегопад",
     95 to "Небольшая Гроза",

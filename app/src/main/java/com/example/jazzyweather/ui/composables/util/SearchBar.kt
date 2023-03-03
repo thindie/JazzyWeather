@@ -10,11 +10,12 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 
+private const val SEARCH = ""
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(onSearch: (String) -> Unit) {
-    var textFieldValue by remember { mutableStateOf("") }
+    var textFieldValue by remember { mutableStateOf(SEARCH) }
     val keyboardController = LocalSoftwareKeyboardController.current
     OnScreen(
         Modifier
@@ -33,6 +34,7 @@ fun SearchBar(onSearch: (String) -> Unit) {
             OutlinedTextField(
                 value = textFieldValue,
                 shape = ShapeDefaults.ExtraLarge,
+
                 onValueChange = { textFieldValue = it },
                 modifier = Modifier
                     .basicDimensions(sixty)
@@ -40,7 +42,10 @@ fun SearchBar(onSearch: (String) -> Unit) {
                     .twelveEndPadding(),
                 leadingIcon = {
                     IconButton(
-                        onClick = { onSearch(textFieldValue); keyboardController!!.hide(); textFieldValue = "" },
+                        onClick = {
+                            onSearch(textFieldValue); keyboardController!!.hide(); textFieldValue =
+                            SEARCH
+                        },
                         modifier = Modifier.eightStartPadding()
                     ) {
                         Icon(

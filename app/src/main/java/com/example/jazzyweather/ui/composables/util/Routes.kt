@@ -13,7 +13,7 @@ interface Destinations {
 
 }
 
-object Weathers: Destinations{
+object Weathers : Destinations {
     override val icon: ImageVector
         get() = Icons.Default.WbSunny
     override val route: String
@@ -22,7 +22,7 @@ object Weathers: Destinations{
 
 }
 
-object OfflineWeathers: Destinations{
+object OfflineWeathers : Destinations {
     override val icon: ImageVector
         get() = Icons.Default.Cloud
     override val route: String
@@ -30,7 +30,7 @@ object OfflineWeathers: Destinations{
 
 }
 
-object FavoriteWeathers: Destinations{
+object FavoriteWeathers : Destinations {
     override val icon: ImageVector
         get() = Icons.Default.Star
     override val route: String
@@ -38,7 +38,7 @@ object FavoriteWeathers: Destinations{
 
 }
 
-object Possibilities : Destinations{
+object Possibilities : Destinations {
     override val icon: ImageVector
         get() = Icons.Default.FilterList
     override val route: String

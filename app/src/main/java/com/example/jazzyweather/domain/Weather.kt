@@ -23,5 +23,5 @@ data class Weather(
     val weathercodes: List<Int>,
     val windgusts_10m_max: List<Double>,
     val windspeed_10m_max: List<Double>,
-    val isPlus: Boolean = temperature > 0.00
+    val isPlus: Boolean = temperature > 0.00,
 )

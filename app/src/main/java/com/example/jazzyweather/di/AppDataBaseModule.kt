@@ -6,7 +6,6 @@ import com.example.jazzyweather.data.local.FavoriteDataBase
 import com.example.jazzyweather.data.local.FavoriteWeatherDao
 import com.example.jazzyweather.data.local.possibilities.PossibilitiesDao
 import com.example.jazzyweather.data.local.possibilities.PossibilitiesDataBase
-import com.example.jazzyweather.data.local.possibilities.PossibilititesDbModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +22,7 @@ object AppDataBaseModule {
             context = application,
             klass = FavoriteDataBase::class.java,
             name = DB_NAME
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
 

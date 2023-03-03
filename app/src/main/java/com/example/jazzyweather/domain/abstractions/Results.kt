@@ -1,4 +1,4 @@
-package com.example.jazzyweather.domain
+package com.example.jazzyweather.domain.abstractions
 
 sealed class Results<out T> {
     data class Success<T>(val data: T) : Results<T>()

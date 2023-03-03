@@ -1,16 +1,14 @@
 package com.example.jazzyweather
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Weather
-import com.example.jazzyweather.domain.unpackResult
+import com.example.jazzyweather.domain.abstractions.unpackResult
 import com.example.jazzyweather.domain.useCases.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,14 +21,12 @@ class WeatherViewModel @Inject constructor(
     private val search: SearchLocationUseCase,
     private val request: RequestWeatherUseCase,
     private val favors: GetFavoriteLocationsUseCase,
-    private val save: SavePossibilitiesUseCase,
     private val get: GetSavedPossibilitiesUseCase,
     private val offline: GetOfflineWeatherUseCase,
-    @DispatchersModule.IODispatcher private val IO : CoroutineDispatcher
+    @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
 ) : ViewModel() {
 
-    private val _isLoading = MutableStateFlow<Boolean>(false)
-    private val _isSelectedPlace = MutableStateFlow<Boolean>(true)
+    private val _isLoading = MutableStateFlow(false)
     private val _favorites = MutableStateFlow<List<Weather>>(emptyList())
     private val _weather = MutableStateFlow<Weather?>(null)
     private val _possibility = MutableStateFlow<List<Possibility>>(emptyList())
@@ -38,21 +34,21 @@ class WeatherViewModel @Inject constructor(
 
     val viewState: StateFlow<ViewState> =
         combine(
-            _isSelectedPlace,
             _favorites,
             _isLoading,
             _weather,
             _possibility
-        ) { isSelectedPlace, favorites, isLoading, weather, possibility ->
-            if (!isSelectedPlace) {
-                ViewState(isSelectedPlace = false)
-            }
+        ) { favorites, isLoading, weather, possibility ->
             if (!isLoading) {
                 if (weather == null) {
                     if (favorites.isEmpty()) {
                         ViewState(isLoading = isLoading, possibility = possibility)
                     } else {
-                        ViewState(isLoading = isLoading, favorites = favorites)
+                        ViewState(
+                            isLoading = isLoading,
+                            favorites = favorites,
+                            possibility = possibility
+                        )
                     }
                 } else {
                     ViewState(isLoading = isLoading, weather = weather)
@@ -68,9 +64,7 @@ class WeatherViewModel @Inject constructor(
     fun onStart() {
         viewModelScope.launch {
             _isLoading.value = true
-            _favorites.value = favors().unpackResult() ?: emptyList<Weather>().apply {
-                _isSelectedPlace.value = false
-            }
+            _possibility.value = get().unpackResult() ?: emptyList<Possibility>()
             _isLoading.value = false
         }
     }
@@ -78,6 +72,20 @@ class WeatherViewModel @Inject constructor(
     fun onFavoriteAdd(weather: Weather) {
         viewModelScope.launch {
             add(weather)
+        }
+
+    }
+
+    fun onRequestFavorites() {
+        cleanState()
+        _isLoading.value = true
+        viewModelScope.launch {
+            _favorites.value = favors().unpackResult() ?: emptyList()
+
+        }
+        viewModelScope.launch {
+            _possibility.value = get().unpackResult() ?: emptyList()
+            _isLoading.value = false
         }
 
     }
@@ -93,7 +101,7 @@ class WeatherViewModel @Inject constructor(
     }
 
     fun onSearch(tag: String) {
-         cleanState()
+        cleanState()
         _isLoading.value = true
         search(tag).onEach {
             _isLoading.value = false
@@ -102,15 +110,17 @@ class WeatherViewModel @Inject constructor(
     }
 
     fun onRequest(possibility: Possibility) {
-         viewModelScope.launch {
-       _weather.value =  withContext(IO){
-                 request(possibility).unpackResult()
-             }
-         }
+        viewModelScope.launch {
+            cleanState()
+            _weather.value = withContext(IO) {
+                request(possibility).unpackResult()
+            }
+        }
 
 
     }
-    private fun cleanState(){
+
+    private fun cleanState() {
         _weather.value = null
         _favorites.value = emptyList()
         _possibility.value = emptyList()
@@ -119,7 +129,6 @@ class WeatherViewModel @Inject constructor(
 }
 
 data class ViewState(
-    val isSelectedPlace: Boolean = true,
     val isLoading: Boolean = false,
     val favorites: List<Weather> = emptyList(),
     val weather: Weather? = null,

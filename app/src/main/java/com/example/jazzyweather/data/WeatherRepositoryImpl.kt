@@ -6,9 +6,14 @@ import com.example.jazzyweather.data.remote.WeatherApiService
 import com.example.jazzyweather.data.remote.toDTO
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.*
+import com.example.jazzyweather.domain.abstractions.Results
+import com.example.jazzyweather.domain.abstractions.checkAndTransit
+import com.example.jazzyweather.domain.abstractions.encapsulateResult
+import com.example.jazzyweather.domain.abstractions.unpackResult
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -31,24 +36,39 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSavedPossibilities(): Results<List<Possibility>> {
+        val list = mutableListOf<Possibility>()
+        possibilitiesDao.getSavedPossibilities().asFlow().collect {
+            list.add(it.toModel())
+        }
+        if (list.isEmpty()) delay(20)
+        return list.encapsulateResult()
+    }
+
+    override suspend fun getHourlyWeather(possibility: Possibility): Results<WeatherHourly> {
         TODO("Not yet implemented")
     }
 
+
     override suspend fun savePossibilities(list: List<Possibility>) {
-        TODO("Not yet implemented")
+        withContext(IO) {
+            list.forEach {
+                possibilitiesDao.insertPossibility(it.toDBModel())
+            }
+        }
     }
 
     override suspend fun getFavoriteWeatherLocations(): Results<List<Weather>> = withContext(IO) {
         val list = mutableListOf<Weather>()
         favoriteWeatherDao.getAllFavorites().map {
             requestWeather(it.fromDBtoPossibility()).unpackResult()
-                ?.let { weather -> list.add(weather) }
+                ?.let { weather : Weather -> list.add(weather) }
         }
         list.toList().encapsulateResult()
     }
 
 
     override suspend fun requestWeather(possibility: Possibility) = withContext(IO) {
+        savePossibilities(listOf(possibility))
         val weather = weatherApiService.getWeather(
             latitude = possibility.latitude,
             longitude = possibility.longitude,

@@ -13,6 +13,15 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
+fun ountlinedCards() =
+    CardDefaults.outlinedCardColors(
+        contentColor = color().onSurface,
+        containerColor = color().surface,
+        disabledContainerColor = color().onSurface,
+        disabledContentColor = color().surface
+    )
+
+@Composable
 fun typo() = MaterialTheme.typography
 
 @Composable
@@ -68,7 +77,7 @@ fun String.Body(modifier: Modifier = Modifier, color: Color = color().onSurface)
 @Composable
 fun String.Label(modifier: Modifier = Modifier, color: Color = color().onSurface) {
     modifier.eightStartPadding()
-    Text(modifier = modifier, text = this, style = typo().labelMedium,color = color)
+    Text(modifier = modifier, text = this, style = typo().labelMedium, color = color)
 }
 
 @Composable
@@ -85,6 +94,8 @@ fun textFieldColors() = TextFieldDefaults.outlinedTextFieldColors(
     unfocusedBorderColor = color().surface,
     focusedBorderColor = color().onSurface
 )
+
+val no = 0.dp
 val hair = Dp.Hairline
 val two = 2.dp
 val eight = 8.dp
@@ -93,3 +104,4 @@ val thirty = 30.dp
 val sixty = 60.dp
 val eighty = 80.dp
 val hundred = 100.dp
+val extraWide = 280.dp

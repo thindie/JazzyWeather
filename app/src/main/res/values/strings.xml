@@ -1,15 +1,19 @@
 <resources>
     <string name="app_name">JazzyWeather</string>
-    <string name="temperature">T°C %s</string>
-    <string name="time">Время: s%</string>
-    <string name="weather_code">‣На улице: %s</string>
-    <string name="windSpeed">Ветер: %sм/с</string>
-    <string name="precipitation_sum">‣Всего Осадков, мм</string>
-    <string name="snowfall_sum">‣Снег, см</string>
-    <string name="rain_sum">‣Дождь, мм</string>
-    <string name="showers_sum">‣Ливни, мм</string>
-    <string name="sunrise">Восход</string>
-    <string name="sunset">Закат</string>
-    <string name="t_max">‣T°C Max:</string>
-    <string name="t_min">‣T°C Min:</string>
+    <string name="temperature">"T°C %s"</string>
+    <string name="time">"Время: s%"</string>
+    <string name="weather_code">"‣На улице: %s"</string>
+    <string name="windSpeed">"Ветер: %sм/с"</string>
+    <string name="precipitation_sum">"‣Всего Осадков, мм"</string>
+    <string name="snowfall_sum">"‣Снег, см"</string>
+    <string name="rain_sum">"‣Дождь, мм"</string>
+    <string name="showers_sum">"‣Ливни, мм"</string>
+    <string name="sunrise">"Восход "</string>
+    <string name="sunset">" Закат "</string>
+    <string name="t_max">"‣T°C Max:"</string>
+    <string name="t_min">"‣T°C Min:"</string>
+    <string name="falls">"Осадки: "</string>
+    <string name="expecting">"Ожидаются"</string>
+    <string name="unexpecting">"Не ожидаются"</string>
+
 </resources>

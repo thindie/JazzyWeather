@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "possibility")
-data class PossibilititesDbModel (
+data class PossibilititesDbModel(
     @PrimaryKey
     val place: String,
     val latitude: Float,

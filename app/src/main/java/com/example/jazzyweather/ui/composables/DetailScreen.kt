@@ -8,10 +8,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -30,7 +27,8 @@ fun DetailScreen(weather: Weather, onClickAdd: (Weather) -> Unit, onClickDelete:
                 .basicDimensions()
                 .eightStartPadding()
                 .twelveEndPadding()
-                .padding(bottom = twelve, top = eight)
+                .padding(bottom = twelve, top = eight),
+            shape = ShapeDefaults.ExtraLarge
         ) {
             IconButton(onClick = { onClickAdd(weather) }) {
                 Icon(imageVector = icons().Favorite, contentDescription = null)

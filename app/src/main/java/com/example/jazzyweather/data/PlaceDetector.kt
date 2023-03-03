@@ -1,20 +1,17 @@
 package com.example.jazzyweather.data
 
 import android.app.Application
-import android.util.Log
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.Possibility
-import com.example.jazzyweather.domain.Results
-import com.example.jazzyweather.domain.encapsulateResult
+import com.example.jazzyweather.domain.abstractions.Results
+import com.example.jazzyweather.domain.abstractions.encapsulateResult
+
 import com.example.thindie.wantmoex.R
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flow
-
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -79,7 +76,7 @@ class PlaceDetector @Inject constructor(
             resultList.addAll(list)
         }
 
-        return flow{ emit (resultList.encapsulateResult())}
+        return flow { emit(resultList.encapsulateResult()) }
     }
 
     private fun String.getCoordinates(): Possibility? {
