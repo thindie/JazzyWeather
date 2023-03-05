@@ -102,27 +102,27 @@ fun DetailScreen(weather: WeatherUIModel, onClickAdd: (WeatherUIModel) -> Unit) 
 
                     if (weather.precipitation_sum.isRequired()) {
                         stringResource(id = R.string.precipitation_sum).Body()
-                        WeatherSevenDays(list = weather.precipitation_sum) { Label(color = color().tertiary) }
+                        WeatherSevenDays(list = weather.precipitation_sum) { Body(color = color().tertiary) }
                     }
 
 
                     if (weather.rain_sum.isRequired()) {
                         stringResource(id = R.string.rain_sum).Body()
                         Log.d("SERVICE_TAG", "${weather.rain_sum.isRequired()}")
-                        WeatherSevenDays(list = weather.rain_sum) { Label(color = color().tertiary) }
+                        WeatherSevenDays(list = weather.rain_sum) { Body(color = color().tertiary) }
                     }
 
                     if (weather.snowfall_sum.isRequired()) {
                         stringResource(id = R.string.snowfall_sum).Body()
                         Log.d("SERVICE_TAG", "${weather.snowfall_sum.isRequired()}")
-                        WeatherSevenDays(list = weather.snowfall_sum) { Label(color = color().tertiary) }
+                        WeatherSevenDays(list = weather.snowfall_sum) { Body(color = color().tertiary) }
                     }
                     Log.d("SERVICE_TAG", "${weather.snowfall_sum.isRequired()}")
 
                     if (weather.showers_sum.isRequired()) {
                         stringResource(id = R.string.showers_sum).Body()
                         Log.d("SERVICE_TAG", "${weather.showers_sum.isRequired()}")
-                        WeatherSevenDays(list = weather.showers_sum) { Label() }
+                        WeatherSevenDays(list = weather.showers_sum) { Body() }
                     }
 
                 }

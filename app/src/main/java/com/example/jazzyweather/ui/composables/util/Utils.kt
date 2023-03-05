@@ -1,7 +1,9 @@
 package com.example.jazzyweather.ui.composables.util
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
@@ -11,8 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.jazzyweather.ui.theme.md_theme_dark_error
+import com.example.jazzyweather.ui.theme.md_theme_dark_primary
+import com.example.jazzyweather.ui.theme.md_theme_light_error
 
 @Composable
 fun ountlinedCards() =
@@ -65,6 +71,12 @@ fun String.Display(modifier: Modifier = Modifier, color: Color = color().onSurfa
 }
 
 @Composable
+fun String.Title(modifier: Modifier = Modifier, color: Color = color().onSurface) {
+    modifier.eightStartPadding()
+    Text(modifier = modifier, text = this, style = typo().headlineMedium, color = color)
+}
+
+@Composable
 fun String.Headline(modifier: Modifier = Modifier, color: Color = color().onSurface) {
     modifier.eightStartPadding()
     Text(modifier = modifier, text = this, style = typo().headlineSmall, color = color)
@@ -83,6 +95,13 @@ fun String.Label(modifier: Modifier = Modifier, color: Color = color().onSurface
 }
 
 @Composable
+fun String.LabelBold(modifier: Modifier = Modifier, color: Color = color().onSurface) {
+    modifier.eightStartPadding()
+    Text(modifier = modifier, text = this, style = typo().labelMedium, color = color)
+}
+
+
+@Composable
 fun SpacerTwelve(modifier: Modifier = Modifier) {
     Spacer(modifier = modifier.height(twelve))
 }
@@ -99,7 +118,7 @@ fun textFieldColors() = TextFieldDefaults.outlinedTextFieldColors(
 
 
 @Composable
-fun <T> HourlyCard(list: List<T>, label: String) {
+fun HourlyCard(list: List<Double>, @StringRes label: Int) {
 
     OutlinedCard(
         Modifier
@@ -115,7 +134,8 @@ fun <T> HourlyCard(list: List<T>, label: String) {
         border = BorderStroke(two, color = Color.Transparent)
     ) {
         Column(Modifier.padding(start = thirty, end = twelve)) {
-            label.Headline()
+            stringResource(id = label)
+                .Headline(color = color().onSurfaceVariant)
             LazyRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -123,14 +143,27 @@ fun <T> HourlyCard(list: List<T>, label: String) {
             ) {
 
 
-                items(DAY_IN_HOURS) {hour->
+                items(DAY_IN_HOURS) { hour ->
                     Column {
                         hour
                             .toString()
                             .plus(HOURS)
                             .plus("\n")
-                            .plus(list[hour].toString())
-                            .Body(modifier = Modifier.padding(end = eight))
+                            .plus(list[hour])
+                            .Body(
+                                modifier = Modifier.padding(end = eight),
+                                color =  when (list[hour]
+                                    ) {
+                                    in PLUS -> { if(isSystemInDarkTheme()) md_theme_dark_error
+                                    else md_theme_light_error.copy(0.7f) }
+                                    ZERO -> { color().onPrimaryContainer }
+                                    in MINUS -> {
+                                        if (isSystemInDarkTheme()) md_theme_dark_primary
+                                        else Color.Blue
+                                    }
+                                    else -> Color.Red
+                                }
+                            )
                     }
                 }
 
@@ -149,7 +182,14 @@ val eight = 8.dp
 val twelve = 12.dp
 val twenty = 20.dp
 val thirty = 30.dp
+val fourty = 40.dp
+val fifty = 50.dp
 val sixty = 60.dp
 val eighty = 80.dp
 val hundred = 100.dp
+val hundredTwenty = 120.dp
 val extraWide = 280.dp
+val toScreen = 350.dp
+private val PLUS = 0.1..17.0
+private val MINUS = -100.0..0.1
+private const val ZERO = 0.0

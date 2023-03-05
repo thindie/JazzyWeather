@@ -15,5 +15,8 @@
     <string name="falls">"Осадки: "</string>
     <string name="expecting">"Ожидаются"</string>
     <string name="unexpecting">"Не ожидаются"</string>
-
+    <string name="fallz">"Осадки, mm"</string>
+    <string name="tcz">"Температура, T°C"</string>
+    <string name="windy">"Будет сильный ветер!"</string>
+    <string name="windz">"Скорость Ветра, m/s"</string>
 </resources>
