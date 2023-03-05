@@ -68,14 +68,6 @@ class WeatherViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(3000)
         )
 
-    fun onStart() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            _possibility.value = get().unpackResult() ?: emptyList<Possibility>()
-            _isLoading.value = false
-        }
-    }
-
     fun onFavoriteAdd(weather: WeatherUIModel) {
         viewModelScope.launch {
             add(weather.map())
@@ -96,8 +88,6 @@ class WeatherViewModel @Inject constructor(
                     }
                 }.stateIn(viewModelScope).value
             }
-
-
         }
         viewModelScope.launch {
             _possibility.value = get().unpackResult() ?: emptyList()

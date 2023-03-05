@@ -38,22 +38,32 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override suspend fun getSavedPossibilities(): Results<List<Possibility>> {
         val list = mutableListOf<Possibility>()
-        possibilitiesDao.getSavedPossibilities().asFlow().collect {
-            list.add(it.toModel())
-        }
+        possibilitiesDao.getSavedPossibilities()
+            .asFlow()
+            .collect {
+                list.add(it.toModel())
+            }
         if (list.isEmpty()) delay(20)
         return list.encapsulateResult()
     }
 
     override suspend fun getHourlyWeather(possibility: Possibility): Results<WeatherHourly> {
-        val hourlyJsonObj = weatherApiService.getHourlyWeather(
-            latitude = possibility.latitude,
-            longitude = possibility.longitude,
-            timeZone = possibility.timeZone
-        )
-        return hourlyJsonObj.toHourlyDTO(possibility).checkAndTransit {
-            it.fromDTOtoModel()
+
+        val hourlyJsonObj = try {
+            weatherApiService
+                .getHourlyWeather(
+                    latitude = possibility.latitude,
+                    longitude = possibility.longitude,
+                    timeZone = possibility.timeZone
+                )
+        } catch (e: Exception) {
+            return Results.Error(e)
         }
+        return hourlyJsonObj
+            .toHourlyDTO(possibility)
+            .checkAndTransit {
+                it.fromDTOtoModel()
+            }
     }
 
 
@@ -76,12 +86,20 @@ class WeatherRepositoryImpl @Inject constructor(
 
 
     override suspend fun requestWeather(possibility: Possibility) = withContext(IO) {
+        val list = getSavedPossibilities().unpackResult()
+        if (list?.size!! > 6) {
+            possibilitiesDao.deletePossibility(list.first().place)
+        }
         savePossibilities(listOf(possibility))
-        val weather = weatherApiService.getWeather(
-            latitude = possibility.latitude,
-            longitude = possibility.longitude,
-            timeZone = possibility.timeZone
-        )
+        val weather = try {
+            weatherApiService.getWeather(
+                latitude = possibility.latitude,
+                longitude = possibility.longitude,
+                timeZone = possibility.timeZone
+            )
+        } catch (e: Exception) {
+            return@withContext Results.Error(e)
+        }
         weather.toDTO().checkAndTransit {
             possibility.combineWith(it, possibility.place)
         }
@@ -97,9 +115,11 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override fun getOfflineWeathers(): Flow<Results<List<WeatherOffline>>> {
         return flow {
-            emit(favoriteWeatherDao.getAllFavorites().map {
-                it.fromDBtoOffline()
-            }.encapsulateResult())
+            emit(favoriteWeatherDao.getAllFavorites()
+                .map {
+                    it.fromDBtoOffline()
+                }.encapsulateResult()
+            )
         }
     }
 

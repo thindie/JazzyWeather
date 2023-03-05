@@ -38,7 +38,6 @@ fun FavoriteWeathersList(
     onClickWeather: (WeatherHourlyUIModel) -> Unit,
     onClickPossibility: (Possibility) -> Unit,
 ) {
-
     OnScreen() {
         LazyColumn(
             modifier = Modifier

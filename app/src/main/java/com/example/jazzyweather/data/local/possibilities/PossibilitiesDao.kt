@@ -10,6 +10,9 @@ interface PossibilitiesDao {
     @Query("SELECT * FROM possibility ORDER by place DESC")
     suspend fun getSavedPossibilities(): List<PossibilititesDbModel>
 
+    @Query("DELETE FROM possibility WHERE place =:id")
+    suspend fun deletePossibility(id: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPossibility(possibilititesDbModel: PossibilititesDbModel)
 }
