@@ -70,10 +70,7 @@ fun WeatherNavHost(
                 } else
                     DetailScreen(
                         weatherState,
-                        { weather -> viewModel.onFavoriteAdd(weather) },
-                        { place ->
-                            viewModel.onFavoriteDelete(place)
-                        })
+                        ) { weather -> viewModel.onFavoriteAdd(weather) }
             }
 
             composable(route = FavoriteWeathers.route) {

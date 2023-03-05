@@ -14,12 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.jazzyweather.data.whatWeatherForHuman
 import com.example.jazzyweather.domain.Weather
+import com.example.jazzyweather.ui.WeatherUIModel
 import com.example.jazzyweather.ui.composables.util.*
 import com.example.thindie.wantmoex.R
 
 
 @Composable
-fun DetailScreen(weather: Weather, onClickAdd: (Weather) -> Unit, onClickDelete: (String) -> Unit) {
+fun DetailScreen(weather: WeatherUIModel, onClickAdd: (WeatherUIModel) -> Unit) {
     OnScreen {
 
         ElevatedCard(

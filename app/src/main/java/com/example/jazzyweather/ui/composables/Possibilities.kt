@@ -41,7 +41,7 @@ fun PossibilitiesList(onClick: (Possibility) -> Unit, possibility: List<Possibil
                         .basicDimensions()
                         .clickable { onClick(it) },
                     shape = ShapeDefaults.ExtraLarge,
-                    elevation = CardDefaults.cardElevation(defaultElevation = two),
+                    elevation = CardDefaults.cardElevation(defaultElevation = no),
                     border = BorderStroke(two, color = Color.Transparent)
                 ) {
                     Column(

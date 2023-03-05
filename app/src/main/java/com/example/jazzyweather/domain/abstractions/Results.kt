@@ -23,7 +23,9 @@ fun <T, R> Results<T>.checkAndTransit(mapper: (T) -> R): Results<R> {
             Results.Success(mapper(t.data))
         }
         is Results.Error -> {
-            Results.Error(t.e)
+            Results.Error(t.e).apply {
+              print(this.e.toString())
+            }
         }
     }
 }
@@ -38,7 +40,9 @@ fun <T : Any?> T.encapsulateResult(): Results<T> {
     if (t is Collection<*>) {
         if ((t as Collection<*>).isEmpty()) {
             return Results.Error(
-                NullPointerException("Bad Results - empty Iterable<{$t}> here. data lost / or not received")
+                NullPointerException("Bad Results - empty Iterable<{$t}> here. data lost / or not received").apply {
+                    print(this.toString())
+                }
             )
         }
     }

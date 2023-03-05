@@ -4,6 +4,7 @@ import com.example.jazzyweather.data.local.FavoriteWeatherDao
 import com.example.jazzyweather.data.local.possibilities.PossibilitiesDao
 import com.example.jazzyweather.data.remote.WeatherApiService
 import com.example.jazzyweather.data.remote.toDTO
+import com.example.jazzyweather.data.remote.toHourlyDTO
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.*
 import com.example.jazzyweather.domain.abstractions.Results
@@ -45,7 +46,14 @@ class WeatherRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getHourlyWeather(possibility: Possibility): Results<WeatherHourly> {
-        TODO("Not yet implemented")
+        val hourlyJsonObj = weatherApiService.getHourlyWeather(
+            latitude = possibility.latitude,
+            longitude = possibility.longitude,
+            timeZone = possibility.timeZone
+        )
+        return hourlyJsonObj.toHourlyDTO(possibility).checkAndTransit {
+            it.fromDTOtoModel()
+        }
     }
 
 
@@ -61,7 +69,7 @@ class WeatherRepositoryImpl @Inject constructor(
         val list = mutableListOf<Weather>()
         favoriteWeatherDao.getAllFavorites().map {
             requestWeather(it.fromDBtoPossibility()).unpackResult()
-                ?.let { weather : Weather -> list.add(weather) }
+                ?.let { weather: Weather -> list.add(weather) }
         }
         list.toList().encapsulateResult()
     }

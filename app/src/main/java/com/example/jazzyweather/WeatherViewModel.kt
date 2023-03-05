@@ -2,11 +2,16 @@ package com.example.jazzyweather
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.jazzyweather.data.toPossibility
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Weather
 import com.example.jazzyweather.domain.abstractions.unpackResult
 import com.example.jazzyweather.domain.useCases.*
+import com.example.jazzyweather.ui.WeatherHourlyUIModel
+import com.example.jazzyweather.ui.WeatherUIModel
+import com.example.jazzyweather.ui.map
+import com.example.jazzyweather.ui.mapHourly
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
@@ -22,13 +27,14 @@ class WeatherViewModel @Inject constructor(
     private val request: RequestWeatherUseCase,
     private val favors: GetFavoriteLocationsUseCase,
     private val get: GetSavedPossibilitiesUseCase,
+    private val hourly: GetHourlyWeatherUseCase,
     private val offline: GetOfflineWeatherUseCase,
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
 ) : ViewModel() {
 
     private val _isLoading = MutableStateFlow(false)
-    private val _favorites = MutableStateFlow<List<Weather>>(emptyList())
-    private val _weather = MutableStateFlow<Weather?>(null)
+    private val _favorites = MutableStateFlow<List<WeatherHourlyUIModel>>(emptyList())
+    private val _weather = MutableStateFlow<WeatherUIModel?>(null)
     private val _possibility = MutableStateFlow<List<Possibility>>(emptyList())
 
 
@@ -37,8 +43,9 @@ class WeatherViewModel @Inject constructor(
             _favorites,
             _isLoading,
             _weather,
-            _possibility
-        ) { favorites, isLoading, weather, possibility ->
+            _possibility,
+
+            ) { favorites, isLoading, weather, possibility ->
             if (!isLoading) {
                 if (weather == null) {
                     if (favorites.isEmpty()) {
@@ -69,9 +76,9 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun onFavoriteAdd(weather: Weather) {
+    fun onFavoriteAdd(weather: WeatherUIModel) {
         viewModelScope.launch {
-            add(weather)
+            add(weather.map())
         }
 
     }
@@ -80,7 +87,16 @@ class WeatherViewModel @Inject constructor(
         cleanState()
         _isLoading.value = true
         viewModelScope.launch {
-            _favorites.value = favors().unpackResult() ?: emptyList()
+            val favorite: List<Weather> = favors().unpackResult() ?: emptyList()
+            if (favorite.isNotEmpty()) {
+                _favorites.value = flowOf(favorite).map {
+                    it.map {
+                        hourly(it.toPossibility())
+                            .unpackResult()!!.let { it1 -> it.mapHourly(it1) }
+                    }
+                }.stateIn(viewModelScope).value
+            }
+
 
         }
         viewModelScope.launch {
@@ -96,27 +112,31 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun onClickWeather(weather: Weather) {
-        _weather.value = weather
+    fun onClickWeather(weather: WeatherHourlyUIModel) {
+        _weather.value = weather.map()
     }
 
     fun onSearch(tag: String) {
-        cleanState()
-        _isLoading.value = true
-        search(tag).onEach {
-            _isLoading.value = false
-            _possibility.value = it.unpackResult() ?: emptyList()
-        }.launchIn(viewModelScope)
+        viewModelScope.launch {
+            cleanState()
+            _isLoading.value = true
+            _possibility.value = search(tag).map {
+                it.unpackResult() ?: emptyList()
+            }.stateIn(viewModelScope).value.apply {
+                _isLoading.value = false
+            }
+        }
     }
 
     fun onRequest(possibility: Possibility) {
+        cleanState()
         viewModelScope.launch {
-            cleanState()
+            _isLoading.value = true
             _weather.value = withContext(IO) {
-                request(possibility).unpackResult()
+                request(possibility).unpackResult()?.map()
             }
+            _isLoading.value = false
         }
-
 
     }
 
@@ -130,7 +150,7 @@ class WeatherViewModel @Inject constructor(
 
 data class ViewState(
     val isLoading: Boolean = false,
-    val favorites: List<Weather> = emptyList(),
-    val weather: Weather? = null,
+    val favorites: List<WeatherHourlyUIModel> = emptyList(),
+    val weather: WeatherUIModel? = null,
     val possibility: List<Possibility> = emptyList(),
 )

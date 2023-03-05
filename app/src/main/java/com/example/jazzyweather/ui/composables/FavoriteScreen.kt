@@ -15,23 +15,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import com.example.jazzyweather.domain.Possibility
-import com.example.jazzyweather.domain.Weather
+import com.example.jazzyweather.ui.WeatherHourlyUIModel
 import com.example.jazzyweather.ui.composables.util.*
 import com.example.thindie.wantmoex.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoriteWeathersList(
-    favorites: List<Weather>,
+    favorites: List<WeatherHourlyUIModel>,
     possibilities: List<Possibility>,
     onFavoriteDelete: (String) -> Unit,
-    onClickWeather: (Weather) -> Unit,
+    onClickWeather: (WeatherHourlyUIModel) -> Unit,
     onClickPossibility: (Possibility) -> Unit,
 ) {
+
     OnScreen() {
         LazyColumn(
             modifier = Modifier
                 .basicDimensions()
+                .padding(top = twenty)
                 .fillMaxHeight()
         ) {
             items(favorites) {
@@ -43,12 +45,15 @@ fun FavoriteWeathersList(
                         .twelveEndPadding()
                         .padding(bottom = twelve),
                     shape = ShapeDefaults.ExtraLarge,
-
                     colors = ountlinedCards(),
-                    elevation = CardDefaults.cardElevation(defaultElevation = twelve),
+                    elevation = CardDefaults.cardElevation(defaultElevation = twenty),
                     border = BorderStroke(two, color = Color.Transparent)
                 ) {
-                    Row(modifier = Modifier.fillMaxSize()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(start = thirty)
+                    ) {
                         Column(
 
                         ) {
@@ -62,46 +67,64 @@ fun FavoriteWeathersList(
                         Column(
 
                         ) {
-                            it.place.Body()
+                            it.place.Headline()
                             stringResource(id = R.string.falls).plus(stringResource(id = it.precipitation_sum[0].expectingFalls()))
                                 .Body()
                         }
                     }
                 }
-            }
-        }
-        LazyRow(modifier = Modifier.basicDimensions()) {
-            items(possibilities) {
-                OutlinedCard(
-                    Modifier
-                        .height(eighty)
-                        .width(extraWide)
-                        .clickable { onClickPossibility(it) },
-                    shape = ShapeDefaults.ExtraLarge,
-                    elevation = CardDefaults.cardElevation(defaultElevation = two),
-                    border = BorderStroke(two, color = Color.Transparent)
-                ) {
-                    Column(
-                        Modifier
-                            .basicDimensions(eighty)
-                            .padding(start = thirty),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        it.place.Headline()
-                        Row(Modifier.padding(top = two)) {
-                            it.latitude.toString().Label()
-                            Spacer(
-                                modifier = Modifier
-                                    .padding(two)
-                                    .size(two)
-                            )
-                            it.longitude.toString().Label()
-                        }
+                LazyRow() {
+                    item {
+                        HourlyCard(list = it.precipitation, "Осадки, mm")
                     }
+                    item {
+                        HourlyCard(list = it.temperature_2m, "Температура, tc")
+                    }
+                    item {
+                        HourlyCard(list = it.windspeed_10m_hourly, "Скорость Ветра, m/s")
+                    }
+
                 }
             }
+            item {
+                LazyRow(
+                    modifier = Modifier.basicDimensions(),
+                    contentPadding = PaddingValues(start = two, end = two)
+                ) {
+                        items(possibilities) {
+                            OutlinedCard(
+                                Modifier
+                                    .height(eighty)
+                                    .width(extraWide)
+                                    .clickable { onClickPossibility(it) },
+                                shape = ShapeDefaults.ExtraLarge,
+                                elevation = CardDefaults.cardElevation(defaultElevation = two),
+                                border = BorderStroke(two, color = Color.Transparent)
+                            ) {
+                                Column(
+                                    Modifier
+                                        .basicDimensions(eighty)
+                                        .padding(start = thirty),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    it.place.Headline()
+                                    Row(Modifier.padding(top = two)) {
+                                        it.latitude.toString().Label()
+                                        Spacer(
+                                            modifier = Modifier
+                                                .padding(two)
+                                                .size(two)
+                                        )
+                                        it.longitude.toString().Label()
+                                    }
+                                }
+                            }
+                        }
+                    }
+            }
         }
+
     }
 }
 

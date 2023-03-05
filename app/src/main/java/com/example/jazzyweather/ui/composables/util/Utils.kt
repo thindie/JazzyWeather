@@ -1,7 +1,9 @@
 package com.example.jazzyweather.ui.composables.util
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -95,11 +97,57 @@ fun textFieldColors() = TextFieldDefaults.outlinedTextFieldColors(
     focusedBorderColor = color().onSurface
 )
 
+
+@Composable
+fun <T> HourlyCard(list: List<T>, label: String) {
+
+    OutlinedCard(
+        Modifier
+            .width(extraWide)
+            .height(hundred)
+            .eightStartPadding()
+            .twelveEndPadding()
+            .padding(bottom = twelve),
+        shape = ShapeDefaults.ExtraLarge,
+
+        colors = ountlinedCards(),
+        elevation = CardDefaults.cardElevation(defaultElevation = two),
+        border = BorderStroke(two, color = Color.Transparent)
+    ) {
+        Column(Modifier.padding(start = thirty, end = twelve)) {
+            label.Headline()
+            LazyRow(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.height(sixty)
+            ) {
+
+
+                items(DAY_IN_HOURS) {hour->
+                    Column {
+                        hour
+                            .toString()
+                            .plus(HOURS)
+                            .plus("\n")
+                            .plus(list[hour].toString())
+                            .Body(modifier = Modifier.padding(end = eight))
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+private const val HOURS = ":00"
+private const val DAY_IN_HOURS = 24
+
 val no = 0.dp
 val hair = Dp.Hairline
 val two = 2.dp
 val eight = 8.dp
 val twelve = 12.dp
+val twenty = 20.dp
 val thirty = 30.dp
 val sixty = 60.dp
 val eighty = 80.dp
