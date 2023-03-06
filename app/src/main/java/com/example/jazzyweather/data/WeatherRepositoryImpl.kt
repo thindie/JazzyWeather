@@ -4,6 +4,7 @@ import com.example.jazzyweather.data.local.FavoriteWeatherDao
 import com.example.jazzyweather.data.local.possibilities.PossibilitiesDao
 import com.example.jazzyweather.data.remote.WeatherApiService
 import com.example.jazzyweather.data.remote.toDTO
+import com.example.jazzyweather.data.remote.toHourlyDTO
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.*
 import com.example.jazzyweather.domain.abstractions.Results
@@ -37,15 +38,32 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override suspend fun getSavedPossibilities(): Results<List<Possibility>> {
         val list = mutableListOf<Possibility>()
-        possibilitiesDao.getSavedPossibilities().asFlow().collect {
-            list.add(it.toModel())
-        }
+        possibilitiesDao.getSavedPossibilities()
+            .asFlow()
+            .collect {
+                list.add(it.toModel())
+            }
         if (list.isEmpty()) delay(20)
         return list.encapsulateResult()
     }
 
     override suspend fun getHourlyWeather(possibility: Possibility): Results<WeatherHourly> {
-        TODO("Not yet implemented")
+
+        val hourlyJsonObj = try {
+            weatherApiService
+                .getHourlyWeather(
+                    latitude = possibility.latitude,
+                    longitude = possibility.longitude,
+                    timeZone = possibility.timeZone
+                )
+        } catch (e: Exception) {
+            return Results.Error(e)
+        }
+        return hourlyJsonObj
+            .toHourlyDTO(possibility)
+            .checkAndTransit {
+                it.fromDTOtoModel()
+            }
     }
 
 
@@ -61,19 +79,27 @@ class WeatherRepositoryImpl @Inject constructor(
         val list = mutableListOf<Weather>()
         favoriteWeatherDao.getAllFavorites().map {
             requestWeather(it.fromDBtoPossibility()).unpackResult()
-                ?.let { weather : Weather -> list.add(weather) }
+                ?.let { weather: Weather -> list.add(weather) }
         }
         list.toList().encapsulateResult()
     }
 
 
     override suspend fun requestWeather(possibility: Possibility) = withContext(IO) {
+        val list = getSavedPossibilities().unpackResult()
+        if (list?.size!! > 6) {
+            possibilitiesDao.deletePossibility(list.first().place)
+        }
         savePossibilities(listOf(possibility))
-        val weather = weatherApiService.getWeather(
-            latitude = possibility.latitude,
-            longitude = possibility.longitude,
-            timeZone = possibility.timeZone
-        )
+        val weather = try {
+            weatherApiService.getWeather(
+                latitude = possibility.latitude,
+                longitude = possibility.longitude,
+                timeZone = possibility.timeZone
+            )
+        } catch (e: Exception) {
+            return@withContext Results.Error(e)
+        }
         weather.toDTO().checkAndTransit {
             possibility.combineWith(it, possibility.place)
         }
@@ -89,9 +115,11 @@ class WeatherRepositoryImpl @Inject constructor(
 
     override fun getOfflineWeathers(): Flow<Results<List<WeatherOffline>>> {
         return flow {
-            emit(favoriteWeatherDao.getAllFavorites().map {
-                it.fromDBtoOffline()
-            }.encapsulateResult())
+            emit(favoriteWeatherDao.getAllFavorites()
+                .map {
+                    it.fromDBtoOffline()
+                }.encapsulateResult()
+            )
         }
     }
 

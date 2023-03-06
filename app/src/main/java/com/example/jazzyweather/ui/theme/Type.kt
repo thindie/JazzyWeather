@@ -79,7 +79,7 @@ val JazzyWeatherTypography = Typography(
     ),
     labelSmall = TextStyle(
         fontFamily = JazzyWeatherFonts,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.W600,
         fontSize = 12.sp
-    )
+    ),
 )
