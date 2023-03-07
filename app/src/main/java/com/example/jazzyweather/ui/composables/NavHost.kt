@@ -54,28 +54,17 @@ fun WeatherNavHost(
             }
             composable(route = Weathers.route) {
                 val weatherState = uiState.value.weather
-                if (weatherState == null) OnScreen {
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(two)
-                    ) {
-                        LinearProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(hair)
-                        )
-                    }
-
-                } else
+                if (weatherState == null) Loading()
+                else
                     DetailScreen(
                         weatherState,
-                        ) { weather -> viewModel.onFavoriteAdd(weather) }
+                    ) { weather -> viewModel.onFavoriteAdd(weather) }
             }
 
             composable(route = FavoriteWeathers.route) {
                 FavoriteWeathersList(
                     uiState.value.favorites,
+                    uiState.value.isLoading,
                     uiState.value.possibility,
                     onFavoriteDelete = { viewModel.onFavoriteDelete(it) },
                     onClickPossibility = {
@@ -89,10 +78,27 @@ fun WeatherNavHost(
                     )
                     }
                 )
+                { updateUi(it.destination.route!!) }
             }
         }
     }
 
 }
 
+@Composable
+fun Loading() {
+    OnScreen {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(two)
+        ) {
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(two)
+            )
+        }
+    }
+}
 
