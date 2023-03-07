@@ -2,7 +2,6 @@ package com.example.jazzyweather.data
 
 
 import android.app.Application
-import android.util.Log
 import com.example.jazzyweather.data.local.PossibilityFromJson
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.abstractions.Results
@@ -23,10 +22,14 @@ class PlaceDetector @Inject constructor(
 ) {
 
     fun produce(toFind: String): Flow<Results<Possibility>> {
-        if (toFind.matches("^\\d{2,3}.\\d{2,}\\s{1,}\\d{2,3}.\\d{2,}"
-                .toRegex())){ return flow { emit(toFind.parseAsCoordinates())} }
+        if (toFind.matches(
+                "^\\d{2,3}.\\d{2,}\\s{1,}\\d{2,3}.\\d{2,}"
+                    .toRegex()
+            )
+        ) {
+            return flow { emit(toFind.parseAsCoordinates()) }
+        }
         val tag = toFind.legitTag()
-        Log.d("SERVICE_TAG", tag)
         val stream = application.resources.openRawResource(R.raw.ru)
         val array = Gson()
             .fromJson(
@@ -37,7 +40,8 @@ class PlaceDetector @Inject constructor(
                 val city = it.asJsonObject.get("city").toString()
                 if (city.contains(tag, true)
                     || city == tag
-                    || tag.contains(city, true)) {
+                    || tag.contains(city, true)
+                ) {
                     val toEmit = Gson()
                         .fromJson(it, PossibilityFromJson::class.java)
                         .map()
@@ -51,7 +55,7 @@ class PlaceDetector @Inject constructor(
 private fun String.parseAsCoordinates(): Results<Possibility> {
     this.split("\\s+".toRegex()).apply {
         return Possibility(
-            place ="Мое место",
+            place = "Мое место",
             latitude = this[0].toFloat(),
             longitude = this[1].toFloat(),
             timeZone = FAKE_TIME_ZONE,
@@ -166,12 +170,26 @@ private val doublePhono = mapOf(
 private const val FAKE_TIME_ZONE = "Europe/Moscow"
 
 private fun String.legitTag(): String {
+
     var tag = try {
         this.lowercase().trim()
     } catch (e: Exception) {
         return "Bad Data"
     }
-    if(this == "") tag = "Moscow"
+    if (this == ""
+        || "Moskva".contains(this, true)
+        || "Москва".contains(this, true)
+    ) {
+        tag = "Moscow"; return tag
+    } else if (
+        "Peterburg".contains(this, true)
+        || "SanktPeterburg".contains(this, true)
+        || "Piter".contains(this, true)
+        || "Питер Петербург Санкт".contains(this, true)
+    ) {
+        tag = "Saint"; return tag
+    }
+
     doublePhono.forEach {
         tag = tag.replace(it.value, it.key, true)
     }
@@ -181,7 +199,7 @@ private fun String.legitTag(): String {
     return tag
 }
 
- fun String.transmutate(): String {
+fun String.transmutate(): String {
     var string = this.lowercase()
     doublePhono.forEach {
         string = string.replace(it.key, it.value, true)
