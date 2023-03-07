@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import javax.inject.Singleton
 
 @Singleton
-@Database(entities = [PossibilititesDbModel::class], exportSchema = false, version = 1)
+@Database(entities = [PossibilititesDbModel::class], exportSchema = false, version = 2)
 abstract class PossibilitiesDataBase : RoomDatabase() {
     abstract fun bindPossibilitiesDao(): PossibilitiesDao
 }

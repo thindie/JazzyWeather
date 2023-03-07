@@ -28,8 +28,9 @@ class WeatherRepositoryImpl @Inject constructor(
 ) : JazzyWeatherRepository {
     override fun searchAndSelectLocation(location: String): Flow<Results<List<Possibility>>> {
         return flow {
+            val locations = withContext(IO){ placeDetector.produce(location) }
             emit(
-            placeDetector.produce(location)
+                locations
                 .map { it.unpackResult() }
                 .toList()
                 .filterNotNull()
@@ -90,9 +91,12 @@ override suspend fun getFavoriteWeatherLocations(): Results<List<Weather>> = wit
 
 override suspend fun requestWeather(possibility: Possibility) = withContext(IO) {
     val list = getSavedPossibilities().unpackResult()
-    if (list?.size!! > MAX_SEARCH_HISTORY) {
-        possibilitiesDao.deletePossibility(list.first().place)
-    }
+    try {
+        if (list?.size!! > MAX_SEARCH_HISTORY) {
+            possibilitiesDao.deletePossibility(list.first().place)
+        }
+    }catch (_: NullPointerException){}
+
     savePossibilities(listOf(possibility))
     val weather = try {
         weatherApiService.getWeather(

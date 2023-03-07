@@ -33,7 +33,7 @@ object AppDataBaseModule {
             context = application,
             klass = PossibilitiesDataBase::class.java,
             name = DB_NAME_POSSIBILITY
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
 }

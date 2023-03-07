@@ -60,7 +60,7 @@ fun PossibilitiesList(onClick: (Possibility) -> Unit, possibility: List<Possibil
                             it.longitude.toString().Label()
                         }
 
-                        it.adaptedTimeZone.toString().Label()
+                       it.admin_name.toString().Label()
                     }
 
                 }
