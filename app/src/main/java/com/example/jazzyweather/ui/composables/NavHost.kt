@@ -1,9 +1,9 @@
 package com.example.jazzyweather.ui.composables
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Divider
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.jazzyweather.WeatherViewModel
+import com.example.jazzyweather.data.whatWeatherForHuman
 import com.example.jazzyweather.ui.composables.util.*
 
 @Composable
@@ -60,7 +61,6 @@ fun WeatherNavHost(
                         weatherState,
                     ) { weather -> viewModel.onFavoriteAdd(weather) }
             }
-
             composable(route = FavoriteWeathers.route) {
                 FavoriteWeathersList(
                     uiState.value.favorites,
@@ -80,6 +80,25 @@ fun WeatherNavHost(
                 )
                 { updateUi(it.destination.route!!) }
             }
+            composable(route = Offline.route){
+                OnScreen() {
+                    LazyColumn(
+                        Modifier
+                            .fillMaxSize()
+                            .eightStartPadding()
+                            .twelveEndPadding()){
+                        items(uiState.value.offLine){
+                            Column(Modifier.basicDimensions()) {
+                                it.place.Title()
+                                it.temperature.toString().Body()
+                                it.weathercode.whatWeatherForHuman().LabelBold()
+                                Divider()
+                            }
+
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -96,7 +115,9 @@ fun Loading() {
             LinearProgressIndicator(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(two)
+                    .height(hair),
+                color = color().onSurface,
+                backgroundColor = color().surface
             )
         }
     }

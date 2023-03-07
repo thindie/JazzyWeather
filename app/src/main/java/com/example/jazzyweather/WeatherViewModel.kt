@@ -16,6 +16,7 @@ import com.example.jazzyweather.ui.map
 import com.example.jazzyweather.ui.mapHourly
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -98,7 +99,7 @@ class WeatherViewModel @Inject constructor(
             _possibility.value = get().unpackResult() ?: emptyList()
             _isLoading.value = _possibility.value.isEmpty()
         }
-
+        TODO()
     }
 
     fun onFavoriteDelete(id: String) {
@@ -131,6 +132,7 @@ class WeatherViewModel @Inject constructor(
                 request(possibility).unpackResult()?.map()
             }
             _isLoading.value = (_weather.value == null)
+            TODO()
         }
 
     }
