@@ -94,8 +94,7 @@ fun WeatherNavHost(
                                 it.weathercode.whatWeatherForHuman().LabelBold()
                                 Divider()
                             }
-
-                        }
+                         }
                     }
                 }
             }

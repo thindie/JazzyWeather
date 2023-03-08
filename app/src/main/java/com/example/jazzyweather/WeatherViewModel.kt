@@ -99,7 +99,7 @@ class WeatherViewModel @Inject constructor(
             _possibility.value = get().unpackResult() ?: emptyList()
             _isLoading.value = _possibility.value.isEmpty()
         }
-        TODO()
+
     }
 
     fun onFavoriteDelete(id: String) {
@@ -132,7 +132,7 @@ class WeatherViewModel @Inject constructor(
                 request(possibility).unpackResult()?.map()
             }
             _isLoading.value = (_weather.value == null)
-            TODO()
+
         }
 
     }
