@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.example.jazzyweather.data
 
 
@@ -7,6 +9,7 @@ import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.abstractions.Results
 import com.example.jazzyweather.domain.abstractions.encapsulateResult
 import com.example.thindie.wantmoex.R
+
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import kotlinx.coroutines.flow.Flow
