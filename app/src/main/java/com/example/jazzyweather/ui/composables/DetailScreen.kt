@@ -85,7 +85,9 @@ fun DetailScreen(weather: WeatherUIModel, onClickAdd: (WeatherUIModel) -> Unit) 
             Spacer(modifier = Modifier.size(thirty))
             Divider()
             val weatherDays = weather.times.map {
-                it.replace("\\d{4}[-]".toRegex(), "").replace("-", ".")
+                it.replaceBeforeLast("-","" )
+                    .replaceFirstChar { "" }
+                    .trim()
             }
             WeatherSevenDays(list = weatherDays) { Body(color = color().surfaceTint) }
             Divider()

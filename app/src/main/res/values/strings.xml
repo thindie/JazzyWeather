@@ -19,4 +19,5 @@
     <string name="tcz">"Температура, T°C"</string>
     <string name="windy">"Будет сильный ветер!"</string>
     <string name="windz">"Скорость Ветра, m/s"</string>
+    <string name="search_label">"place or latitude and longitude"</string>
 </resources>

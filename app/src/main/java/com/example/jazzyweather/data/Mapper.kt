@@ -1,5 +1,6 @@
 package com.example.jazzyweather.data
 
+import com.example.jazzyweather.data.local.PossibilityFromJson
 import com.example.jazzyweather.data.local.WeatherDBModel
 import com.example.jazzyweather.data.local.possibilities.PossibilititesDbModel
 import com.example.jazzyweather.data.remote.WeatherDTO
@@ -74,7 +75,7 @@ fun Possibility.toDBModel(): PossibilititesDbModel {
         this.latitude,
         this.longitude,
         this.timeZone,
-        this.adaptedTimeZone
+        this.admin_name
     )
 }
 
@@ -85,7 +86,7 @@ fun PossibilititesDbModel.toModel(): Possibility {
         this.latitude,
         this.longitude,
         this.timeZone,
-        this.adaptedTimeZone
+        this.admin_name
     )
 }
 
@@ -95,7 +96,7 @@ fun WeatherDBModel.fromDBtoPossibility(): Possibility {
         latitude = this.latitude,
         longitude = this.longitude,
         timeZone = FAKE_TIME_ZONE,
-        adaptedTimeZone = ""
+         admin_name = ""
     )
 }
 
@@ -146,4 +147,14 @@ val weatherMap = mapOf(
 
 fun Int.whatWeatherForHuman(): String {
     return weatherMap[this] ?: "unstable weather type"
+}
+
+fun PossibilityFromJson.map(): Possibility {
+    return Possibility(
+        place = city.transmutate(),
+        latitude = lat.toFloat(),
+        longitude = lng.toFloat(),
+        timeZone = FAKE_TIME_ZONE,
+        admin_name = admin_name.transmutate()
+    )
 }

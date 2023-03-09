@@ -8,13 +8,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
+import com.example.thindie.wantmoex.R
 
 private const val SEARCH = ""
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(onSearch: (String) -> Unit) {
+
     var textFieldValue by remember { mutableStateOf(SEARCH) }
     val keyboardController = LocalSoftwareKeyboardController.current
     OnScreen(
@@ -34,7 +38,7 @@ fun SearchBar(onSearch: (String) -> Unit) {
             OutlinedTextField(
                 value = textFieldValue,
                 shape = ShapeDefaults.ExtraLarge,
-
+                label = { SearchBarLabel() },
                 onValueChange = { textFieldValue = it },
                 modifier = Modifier
                     .basicDimensions(sixty)
@@ -61,4 +65,9 @@ fun SearchBar(onSearch: (String) -> Unit) {
 
         }
     }
+}
+
+@Composable
+private fun SearchBarLabel() {
+    stringResource(id = R.string.search_label).Label(color = color().onSurface.copy(0.5f))
 }

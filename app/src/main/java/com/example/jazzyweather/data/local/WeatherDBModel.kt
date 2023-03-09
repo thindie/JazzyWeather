@@ -15,3 +15,4 @@ data class WeatherDBModel(
     val winddirection: Double,
     val windspeed: Double,
 )
+

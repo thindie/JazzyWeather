@@ -22,13 +22,6 @@ object Weathers : Destinations {
 
 }
 
-object OfflineWeathers : Destinations {
-    override val icon: ImageVector
-        get() = Icons.Default.Cloud
-    override val route: String
-        get() = "Offline"
-
-}
 
 object FavoriteWeathers : Destinations {
     override val icon: ImageVector
@@ -47,4 +40,13 @@ object Possibilities : Destinations {
 
 }
 
-val weatherDestinations = listOf(Weathers, OfflineWeathers, FavoriteWeathers, Possibilities)
+object Offline : Destinations {
+    override val icon: ImageVector
+        get() = Icons.Default.FilterList
+    override val route: String
+        get() = "Offline"
+
+
+}
+
+val weatherDestinations = listOf(Weathers, FavoriteWeathers, Possibilities, Offline)

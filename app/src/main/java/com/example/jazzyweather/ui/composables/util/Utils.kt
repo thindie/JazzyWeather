@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.example.jazzyweather.ui.theme.md_theme_dark_error
 import com.example.jazzyweather.ui.theme.md_theme_dark_primary
 import com.example.jazzyweather.ui.theme.md_theme_light_error
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun ountlinedCards() =
@@ -193,3 +195,23 @@ val toScreen = 350.dp
 private val PLUS = 0.1..17.0
 private val MINUS = -100.0..0.1
 private const val ZERO = 0.0
+
+@Composable
+fun LoadingContent(
+    isLoading: Boolean,
+    isEmpty: Boolean,
+    emptyContent: @Composable (modifier: Modifier) -> Unit,
+    onRefresh: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit,
+) {
+    if (isEmpty) {
+        emptyContent(modifier)
+    } else {
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isLoading),
+            onRefresh = onRefresh,
+            content = content,
+        )
+    }
+}

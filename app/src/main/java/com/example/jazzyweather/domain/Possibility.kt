@@ -5,5 +5,5 @@ data class Possibility(
     val latitude: Float,
     val longitude: Float,
     val timeZone: String,
-    val adaptedTimeZone: String,
+    val admin_name: String,
 )
