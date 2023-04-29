@@ -5,8 +5,8 @@ data class WeatherHourly(
     val latitude: Float,
     val longitude: Float,
     val precipitation: List<Double>,
-    val temperature_2m: List<Double>,
+    val temperature2m: List<Double>,
     val time: List<String>,
-    val weathercode: List<Int>,
-    val windspeed_10m: List<Double>,
+    val weatherCodes: List<Int>,
+    val windSpeed10m: List<Double>,
 )

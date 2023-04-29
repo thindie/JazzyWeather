@@ -1,7 +1,7 @@
 /*
 package com.example.jazzyweather.data
 
-import com.example.jazzyweather.data.local.FavoriteWeatherDao
+import com.example.thindie.database.room.WeatherRoomDao
 import com.example.jazzyweather.data.local.possibilities.PossibilitiesDao
 import com.example.thindie.core.network.dto.WeatherApiService
 import com.example.thindie.core.network.dto.toDTO
@@ -21,7 +21,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WeatherRepositoryImpl @Inject constructor(
-    private val favoriteWeatherDao: FavoriteWeatherDao,
+    private val favoriteWeatherDao: WeatherRoomDao,
     private val weatherApiService:  WeatherApiService,
     private val placeDetector: LocationProviderImpl,
     private val possibilitiesDao: PossibilitiesDao,

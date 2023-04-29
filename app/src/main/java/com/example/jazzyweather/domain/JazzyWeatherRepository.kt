@@ -1,3 +1,4 @@
+/*
 package com.example.jazzyweather.domain
 
 import com.example.jazzyweather.domain.abstractions.Results
@@ -15,4 +16,4 @@ interface JazzyWeatherRepository {
     suspend fun addToFavorites(weather: Weather)
     suspend fun deleteFromFavorites(id: String)
     fun getOfflineWeathers(): Flow<Results<List<WeatherOffline>>>
-}
+}*/

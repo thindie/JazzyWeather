@@ -32,6 +32,7 @@ val weatherMap = mapOf(
 )
 
 fun Int.whatWeatherForHuman(): String {
+    require(weatherMap.containsKey(this)) { " unexpected weather code in network::mapper::MapperUtil " }
     return checkNotNull(weatherMap[this])
-    { " unexpected weather code in network::mapper::MapperUtil " }
+
 }

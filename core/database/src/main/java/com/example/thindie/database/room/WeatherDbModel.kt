@@ -1,18 +1,18 @@
-package com.example.jazzyweather.data.local
+package com.example.thindie.database.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "favoriteWeather")
-data class WeatherDBModel(
+@Entity(tableName = "weather")
+data class WeatherDbModel(
     @PrimaryKey
     val place: String,
     val latitude: Float,
     val longitude: Float,
     val temperature: Double,
     val time: String,
-    val weathercode: Int,
-    val winddirection: Double,
-    val windspeed: Double,
+    val weatherCode: Int,
+    val windDirection: Double,
+    val windSpeed: Double,
 )
 
