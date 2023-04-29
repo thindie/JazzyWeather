@@ -17,10 +17,10 @@ fun WeatherAppUI() {
     val currentScreen =
         weatherDestinations.find { it.route == currentDestination?.route } ?: Offline
 
-    WeatherNavHost(
+    /*WeatherNavHost(
         navController = navController,
         startDestination = currentScreen,
-    )
+    )*/
 }
 
 fun NavController.straightTo(route: String) {

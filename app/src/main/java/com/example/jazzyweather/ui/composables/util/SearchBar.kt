@@ -1,3 +1,4 @@
+/*
 package com.example.jazzyweather.ui.composables.util
 
 import androidx.compose.foundation.layout.Row
@@ -70,4 +71,4 @@ fun SearchBar(onSearch: (String) -> Unit) {
 @Composable
 private fun SearchBarLabel() {
     stringResource(id = R.string.search_label).Label(color = color().onSurface.copy(0.5f))
-}
+}*/

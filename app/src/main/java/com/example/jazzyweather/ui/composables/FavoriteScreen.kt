@@ -1,3 +1,4 @@
+/*
 package com.example.jazzyweather.ui.composables
 
 import androidx.annotation.StringRes
@@ -201,4 +202,4 @@ private fun String.withPlus(boolean: Boolean): String {
 
 private fun List<Double>.isWindy(): Boolean {
     return this.any { it > 20.0 }
-}
+}*/

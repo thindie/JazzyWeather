@@ -1,10 +1,11 @@
+/*
 package com.example.jazzyweather.data
 
 import com.example.jazzyweather.data.local.FavoriteWeatherDao
 import com.example.jazzyweather.data.local.possibilities.PossibilitiesDao
-import com.example.jazzyweather.data.remote.WeatherApiService
-import com.example.jazzyweather.data.remote.toDTO
-import com.example.jazzyweather.data.remote.toHourlyDTO
+import com.example.thindie.core.network.dto.WeatherApiService
+import com.example.thindie.core.network.dto.toDTO
+import com.example.thindie.core.network.dto.toHourlyDTO
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.*
 import com.example.jazzyweather.domain.abstractions.Results
@@ -21,8 +22,8 @@ import javax.inject.Singleton
 @Singleton
 class WeatherRepositoryImpl @Inject constructor(
     private val favoriteWeatherDao: FavoriteWeatherDao,
-    private val weatherApiService: WeatherApiService,
-    private val placeDetector: PlaceDetector,
+    private val weatherApiService:  WeatherApiService,
+    private val placeDetector: LocationProviderImpl,
     private val possibilitiesDao: PossibilitiesDao,
     @DispatchersModule.IODispatcher private val IO: CoroutineDispatcher,
 ) : JazzyWeatherRepository {
@@ -31,7 +32,7 @@ class WeatherRepositoryImpl @Inject constructor(
             val locations = withContext(IO){ placeDetector.produce(location) }
             emit(
                 locations
-                .map { it.unpackResult() }
+
                 .toList()
                 .filterNotNull()
                 .encapsulateResult())
@@ -45,7 +46,7 @@ override suspend fun getSavedPossibilities(): Results<List<Possibility>> {
     possibilitiesDao.getSavedPossibilities()
         .asFlow()
         .collect {
-            list.add(it.toModel())
+
         }
     if (list.isEmpty()) delay(20)
     return list.encapsulateResult()
@@ -133,4 +134,4 @@ override fun getOfflineWeathers(): Flow<Results<List<WeatherOffline>>> {
 companion object{
     private const val MAX_SEARCH_HISTORY = 6
 }
-}
+}*/

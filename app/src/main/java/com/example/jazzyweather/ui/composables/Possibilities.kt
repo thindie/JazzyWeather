@@ -1,3 +1,4 @@
+/*
 package com.example.jazzyweather.ui.composables
 
 import android.util.Log
@@ -69,3 +70,4 @@ fun PossibilitiesList(onClick: (Possibility) -> Unit, possibility: List<Possibil
         }
     }
 }
+*/

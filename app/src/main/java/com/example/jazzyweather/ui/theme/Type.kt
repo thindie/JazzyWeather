@@ -1,3 +1,4 @@
+/*
 package com.example.jazzyweather.ui.theme
 
 import androidx.compose.material3.Typography
@@ -82,4 +83,4 @@ val JazzyWeatherTypography = Typography(
         fontWeight = FontWeight.W600,
         fontSize = 12.sp
     ),
-)
+)*/

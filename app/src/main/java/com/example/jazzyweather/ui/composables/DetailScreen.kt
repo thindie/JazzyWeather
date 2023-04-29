@@ -1,3 +1,4 @@
+/*
 package com.example.jazzyweather.ui.composables
 
 import android.util.Log
@@ -171,3 +172,4 @@ fun String.convertTime(): String {
 
     return this.replaceBefore("T", "").replaceFirstChar { " " }
 }
+*/

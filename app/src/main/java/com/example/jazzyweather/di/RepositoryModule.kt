@@ -1,3 +1,4 @@
+/*
 package com.example.jazzyweather.di
 
 import com.example.jazzyweather.data.WeatherRepositoryImpl
@@ -12,4 +13,4 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
     @Binds
     abstract fun bindJazzyWeatherRepo(impl: WeatherRepositoryImpl): JazzyWeatherRepository
-}
+}*/

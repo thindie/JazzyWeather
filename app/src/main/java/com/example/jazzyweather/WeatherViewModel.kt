@@ -1,9 +1,10 @@
+/*
 package com.example.jazzyweather
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jazzyweather.data.toPossibility
+
 import com.example.jazzyweather.di.DispatchersModule
 import com.example.jazzyweather.domain.Possibility
 import com.example.jazzyweather.domain.Weather
@@ -152,4 +153,4 @@ data class ViewState(
     val weather: WeatherUIModel? = null,
     val offLine: List<WeatherOffline> = emptyList(),
     val possibility: List<Possibility> = emptyList(),
-)
+)*/
