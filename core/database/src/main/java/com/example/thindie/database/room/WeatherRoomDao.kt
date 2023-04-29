@@ -5,7 +5,7 @@ import androidx.room.Query
 import androidx.room.Upsert
 
 @Dao
-interface WeatherRoomDao {
+internal interface WeatherRoomDao {
     @Query("SELECT * FROM favoriteWeather ORDER BY place DESC")
     suspend fun getAllWeathersSite(): List<WeatherDbModel>
 

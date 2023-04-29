@@ -1,6 +1,6 @@
-package com.example.thindie.core.network.mapper
+package com.example.thindie.database.mappers
 
-val weatherMap = mapOf(
+internal val weatherMap = mapOf(
     0 to "Ясно",
     1 to "В основном Ясно",
     2 to "Небольшая Облачность",
@@ -31,7 +31,7 @@ val weatherMap = mapOf(
     99 to "Грозище",
 )
 
-fun Int.whatWeatherForHuman(): String {
+internal fun Int.whatWeatherForHuman(): String {
     require(weatherMap.containsKey(this)) { " unexpected weather code in network::mapper::MapperUtil " }
     return checkNotNull(weatherMap[this])
 

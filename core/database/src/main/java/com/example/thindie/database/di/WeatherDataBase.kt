@@ -8,6 +8,6 @@ import javax.inject.Singleton
 
 @Singleton
 @Database(entities = [WeatherDbModel::class], version = 1, exportSchema = false)
-abstract class WeatherDataBase : RoomDatabase() {
+internal abstract class WeatherDataBase : RoomDatabase() {
     abstract fun bindWeatherRoomDao(): WeatherRoomDao
 }

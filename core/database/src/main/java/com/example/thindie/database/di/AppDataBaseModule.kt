@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppDataBaseModule {
+internal object AppDataBaseModule {
     @Provides
     @Singleton
     fun provideDataBase(application: Application): WeatherDataBase {
@@ -28,7 +28,7 @@ object AppDataBaseModule {
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DaoModule {
+internal object DaoModule {
     @Provides
     fun bindFavoriteWeatherDao(database: WeatherDataBase): WeatherRoomDao {
         return database.bindWeatherRoomDao()
