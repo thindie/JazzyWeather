@@ -1,4 +1,4 @@
-package com.example.jazzyweather.ui.theme
+package com.example.thindie.presentation.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
@@ -89,6 +89,7 @@ fun JazzyWeatherTheme(
     MaterialTheme(
         colorScheme = JazzyWeatherTheme(useDarkTheme),
         content = content,
+        shapes = Shapes,
         typography = JazzyWeatherTypography
     )
 }

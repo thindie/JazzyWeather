@@ -1,4 +1,4 @@
-package com.example.jazzyweather.ui.theme
+package com.example.thindie.presentation.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

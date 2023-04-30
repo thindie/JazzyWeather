@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
     }
 
     /*setContent {
-        com.example.jazzyweather.ui.theme.JazzyWeatherTheme {
+        com.example.thindie.presentation.designsystem.JazzyWeatherTheme {
             WeatherAppUI()
         }
     }*/

@@ -66,6 +66,7 @@ dependencies {
 
     implementation project(path: ':core:presentation')
     implementation project(path: ':core:presentation:location-choser')
+    implementation project(path: ':core:presentation:design-system')
 
 
 

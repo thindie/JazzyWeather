@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.jazzyweather.ui.theme.md_theme_dark_error
-import com.example.jazzyweather.ui.theme.md_theme_dark_primary
-import com.example.jazzyweather.ui.theme.md_theme_light_error
+import com.example.thindie.presentation.designsystem.theme.md_theme_dark_error
+import com.example.thindie.presentation.designsystem.theme.md_theme_dark_primary
+import com.example.thindie.presentation.designsystem.theme.md_theme_light_error
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
@@ -156,11 +156,11 @@ fun HourlyCard(list: List<Double>, @StringRes label: Int) {
                                 modifier = Modifier.padding(end = eight),
                                 color =  when (list[hour]
                                     ) {
-                                    in PLUS -> { if(isSystemInDarkTheme()) md_theme_dark_error
-                                    else md_theme_light_error.copy(0.7f) }
+                                    in PLUS -> { if(isSystemInDarkTheme()) com.example.thindie.presentation.designsystem.theme.md_theme_dark_error
+                                    else com.example.thindie.presentation.designsystem.theme.md_theme_light_error.copy(0.7f) }
                                     ZERO -> { color().onPrimaryContainer }
                                     in MINUS -> {
-                                        if (isSystemInDarkTheme()) md_theme_dark_primary
+                                        if (isSystemInDarkTheme()) com.example.thindie.presentation.designsystem.theme.md_theme_dark_primary
                                         else Color.Blue
                                     }
                                     else -> Color.Red
