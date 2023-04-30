@@ -31,7 +31,7 @@ fun WeatherNavHost(
     val updateUi: (String) -> Unit = { renew: String ->
         mapOf(
             FavoriteWeathers.route to { viewModel.onRequestFavorites() }
-        )[renew]?.invoke()
+        )[renew]?.build()
     }
 
 

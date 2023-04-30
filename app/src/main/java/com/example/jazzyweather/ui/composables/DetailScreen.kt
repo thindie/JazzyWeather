@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.jazzyweather.data.whatWeatherForHuman
-import com.example.jazzyweather.domain.Weather
+import com.example.thindie.domain.weatherprovider.entity.Weather
 import com.example.jazzyweather.ui.WeatherUIModel
 import com.example.jazzyweather.ui.composables.util.*
 import com.example.thindie.wantmoex.R
