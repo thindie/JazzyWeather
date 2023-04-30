@@ -1,4 +1,3 @@
-/*
 package com.example.jazzyweather.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -92,4 +91,4 @@ fun JazzyWeatherTheme(
         content = content,
         typography = JazzyWeatherTypography
     )
-}*/
+}

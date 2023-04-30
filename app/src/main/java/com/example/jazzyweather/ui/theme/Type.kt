@@ -1,4 +1,3 @@
-/*
 package com.example.jazzyweather.ui.theme
 
 import androidx.compose.material3.Typography
@@ -7,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.thindie.wantmoex.R
+import com.example.thindie.jazzyweather.R
 
 
 private val light = Font(R.font.sf_pro, FontWeight.W300)
@@ -83,4 +82,4 @@ val JazzyWeatherTypography = Typography(
         fontWeight = FontWeight.W600,
         fontSize = 12.sp
     ),
-)*/
+)
