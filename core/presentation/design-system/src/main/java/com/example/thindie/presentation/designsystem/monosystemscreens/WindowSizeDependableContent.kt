@@ -8,7 +8,7 @@ import com.example.thindie.presentation.designsystem.iconrail.IconRail
 
 @Suppress("LongParameterList")
 @Composable
-internal fun WindowSizeDependableContent(
+fun WindowSizeDependableContent(
     modifier: Modifier = Modifier,
     navigationRailPoints: List<BarFiller>,
     isLandscape: Boolean,

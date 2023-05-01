@@ -33,7 +33,7 @@ fun NavBottomBar(
     onSelectedDestination: (String) -> Unit,
     onOperateCurrentContent: () -> Unit,
     actionsBarStart: List<BarFiller>,
-    actionBarEnd: BarFiller, // todo can it be interchangeable and migrationable?
+    actionBarEnd: BarFiller? = null, // todo can it be interchangeable and migrationable?
     modifier: Modifier = Modifier,
 ) {
     BottomAppBar(
@@ -48,7 +48,10 @@ fun NavBottomBar(
         Spacer(
             modifier = modifier.weight(1f)
         )
-        MoveTo(screens = actionBarEnd) { onOperateCurrentContent() }
+        if (actionBarEnd != null) {
+            MoveTo(screens = actionBarEnd) { onOperateCurrentContent() }
+        }
+
     }
 }
 

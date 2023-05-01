@@ -1,4 +1,4 @@
-/*
+package com.example.jazzyweather/*
 package com.example.jazzyweather.ui.composables
 
 import androidx.compose.foundation.layout.*
@@ -36,7 +36,7 @@ fun WeatherNavHost(
 
 
     Scaffold(topBar = {
-        SearchBar(onSearch = {
+        com.example.thindie.presentation.designsystem.searchbar.SearchBar(onSearch = {
             viewModel.onSearch(it); navController.straightTo(
             Possibilities.route
         )

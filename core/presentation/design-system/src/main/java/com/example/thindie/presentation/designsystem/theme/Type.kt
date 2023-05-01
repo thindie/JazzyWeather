@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.example.thindie.jazzyweather.R
+import com.example.thindie.presentation.designsystem.R
 
 
 private val light = Font(R.font.sf_pro, FontWeight.W300)
