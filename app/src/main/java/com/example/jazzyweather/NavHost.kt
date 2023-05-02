@@ -36,8 +36,8 @@ fun WeatherNavHost(
 
 
     Scaffold(topBar = {
-        com.example.thindie.presentation.designsystem.searchbar.SearchBar(onSearch = {
-            viewModel.onSearch(it); navController.straightTo(
+        com.example.thindie.presentation.designsystem.searchbar.SearchBar(onReactiveSearch = {
+            viewModel.onReactiveSearch(it); navController.straightTo(
             Possibilities.route
         )
         })

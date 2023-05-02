@@ -4,5 +4,5 @@ import com.example.thindie.domain.localresourceobserver.entity.PossiblyWeatherLo
 import kotlinx.coroutines.flow.Flow
 
 interface WeatherPlaceObserver {
-    fun observePlaces(placeName: String): Flow<PossiblyWeatherLocation>
+    fun observePlaces(placeName: String): Flow<List<PossiblyWeatherLocation>>
 }

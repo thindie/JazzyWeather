@@ -14,24 +14,26 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.TextFieldDefaults.textFieldColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableStateFlow
 
 private const val SEARCH = ""
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
-
-    var textFieldValue by remember { mutableStateOf(SEARCH) }
-    val keyboardController = LocalSoftwareKeyboardController.current
+fun SearchBar(
+    modifier: Modifier = Modifier,
+    isLandScape: Boolean,
+    searchBarState: SearchBarState = rememberSearchBarState(isLandScape),
+    onSearch: (String) -> Unit
+) {
 
     Row(
         modifier
@@ -43,11 +45,13 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
         OutlinedTextField(
             modifier = modifier,
             shape = ShapeDefaults.ExtraLarge,
-            value = textFieldValue, onValueChange = { textFieldValue = it },
+            value = searchBarState.textFieldState.value,
+            onValueChange = { searchBarState.textField.value = it },
             leadingIcon = {
-                IconButton(
+                /*IconButton(
                     onClick = {
-                        onSearch(textFieldValue); keyboardController!!.hide(); textFieldValue =
+                        //onSearch(searchBarState.textField.value);
+                        keyboardController!!.hide(); searchBarState.textField.value =
                         SEARCH
                     },
                     modifier = modifier.padding(start = 8.dp)
@@ -57,11 +61,30 @@ fun SearchBar(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurface
                     )
-                }
+                }*/
             },
             singleLine = true,
             colors = textFieldColors()
 
         )
     }
+}
+
+@Composable
+fun rememberSearchBarState(isLandScape: Boolean): SearchBarState {
+    return remember(isLandScape) {
+        SearchBarState()
+    }
+}
+
+
+@Stable
+class SearchBarState {
+    @OptIn(ExperimentalComposeUiApi::class)
+    val keyboardController
+    @Composable get() = LocalSoftwareKeyboardController.current
+
+    internal val textField: MutableStateFlow<String> = MutableStateFlow("")
+    val textFieldState
+        @Composable get() = textField.collectAsState()
 }

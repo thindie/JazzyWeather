@@ -19,36 +19,34 @@ import com.google.gson.JsonObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
 
-@Singleton
+
 internal class WeatherStoredLocationObserverImpl @Inject constructor(
     private val application: Application,
     private val locationNameParser: LocationNameParser
 ) : WeatherStoredLocationObserver {
 
-    override fun getLocationByCoordinates(coordinates: Coordinates): Flow<LocationPropertiesLdo> {
+    override fun getLocationByCoordinates(coordinates: Coordinates): Flow<List<LocationPropertiesLdo>> {
         return filterByConditionsAndParseJsonObjectsAsFlow {
             asJsonObject.checkCoordinateConditions(coordinates)
         }
     }
 
-    override fun getLocationByStringTag(locationTag: String): Flow<LocationPropertiesLdo> {
+    override fun getLocationByStringTag(locationTag: String): Flow<List<LocationPropertiesLdo>> {
         return if (locationTag.matches(
                 COORDINATES_PATTERN_WITH_POINT.toRegex()
             )
         ) {
             getLocationByCoordinates(locationTag.parseAsCoordinates())
         } else {
-           val preparedTagToSearch = locationNameParser.transcryptParseLocationName(locationTag)
+            val preparedTagToSearch = locationNameParser.transcryptParseLocationName(locationTag)
             getLocationBySearchCity(preparedTagToSearch)
         }
     }
 
-    private fun getLocationBySearchCity(locationTag: String): Flow<LocationPropertiesLdo> {
+    private fun getLocationBySearchCity(locationTag: String): Flow<List<LocationPropertiesLdo>> {
         return filterByConditionsAndParseJsonObjectsAsFlow {
             asJsonObject.get(CITY).asString.meetConditions(locationTag)
         }
@@ -67,7 +65,7 @@ internal class WeatherStoredLocationObserverImpl @Inject constructor(
         }
     }
 
-    private fun resourcesJsonArray(): JsonArray {
+    private fun readResourcesJsonArray(): JsonArray {
         val stream = application.resources.openRawResource(R.raw.ru)
         val array = Gson().fromJson(
             BufferedReader(InputStreamReader(stream)), JsonArray::class.java
@@ -90,14 +88,27 @@ internal class WeatherStoredLocationObserverImpl @Inject constructor(
         ) || this == locationTag || locationTag.contains(this, true))
     }
 
-    private fun filterByConditionsAndParseJsonObjectsAsFlow(foo: JsonElement.() -> Boolean)
-            : Flow<LocationPropertiesLdo> {
-        return resourcesJsonArray().asSequence().filter { element ->
-            element.foo()
-        }.asFlow().map { filteredElement ->
-            val preParsedElement =
-                Gson().fromJson(filteredElement, LocationPropertiesLdo::class.java)
-            preParsedElement.copy(city = locationNameParser.outcomingTranscryptParseLocationName(preParsedElement.city))
+    private fun filterByConditionsAndParseJsonObjectsAsFlow(filterThem: JsonElement.() -> Boolean)
+            : Flow<List<LocationPropertiesLdo>> {
+        return flow {
+            readResourcesJsonArray()
+                .asSequence()
+                .filter { element ->
+                    element.filterThem()
+                }
+                .map { filteredElement ->
+                    val parsedAndAlmostReady =
+                        Gson().fromJson(filteredElement, LocationPropertiesLdo::class.java)
+                    parsedAndAlmostReady.copy(
+                        city = locationNameParser.outcomingTranscryptParseLocationName(
+                            parsedAndAlmostReady.city
+                        )
+                    )
+                }
+                .toList()
+                .apply {
+                    emit(this@apply)
+                }
         }
     }
 

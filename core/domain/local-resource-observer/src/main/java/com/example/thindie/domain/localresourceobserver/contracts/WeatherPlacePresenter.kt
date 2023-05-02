@@ -1,6 +1,8 @@
 package com.example.thindie.domain.localresourceobserver.contracts
 
-import com.example.thindie.domain.localresourceobserver.repository.WeatherPlaceObserver
+import com.example.thindie.domain.localresourceobserver.entity.PossiblyWeatherLocation
+import kotlinx.coroutines.flow.Flow
 
-interface WeatherPlacePresenter: WeatherPlaceObserver {
+interface WeatherPlacePresenter {
+    fun presentPlaces(possiblyLocationName: String): Flow<List<PossiblyWeatherLocation>>
 }

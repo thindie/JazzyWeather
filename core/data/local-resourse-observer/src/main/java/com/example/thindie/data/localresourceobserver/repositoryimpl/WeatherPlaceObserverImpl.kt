@@ -1,6 +1,7 @@
 package com.example.thindie.data.localresourceobserver.repositoryimpl
 
 
+import android.util.Log
 import com.example.thindie.core.localrawresources.WeatherStoredLocationObserver
 import com.example.thindie.data.localresourceobserver.mappers.toPossiblyWeatherLocation
 import com.example.thindie.domain.localresourceobserver.entity.PossiblyWeatherLocation
@@ -13,9 +14,14 @@ import kotlinx.coroutines.flow.map
 internal class WeatherPlaceObserverImpl @Inject constructor(
     private val provider: WeatherStoredLocationObserver
 ) : WeatherPlaceObserver {
-    override fun observePlaces(placeName: String): Flow<PossiblyWeatherLocation> {
-        return provider.getLocationByStringTag(placeName).map { locationPropertiesLdo ->
-            locationPropertiesLdo.toPossiblyWeatherLocation()
+    override fun observePlaces(placeName: String): Flow<List<PossiblyWeatherLocation>> {
+        return provider.getLocationByStringTag(placeName)
+            .map { locationPropertiesLdoList ->
+                locationPropertiesLdoList.map {locationPropertiesLdo->
+                    locationPropertiesLdo.toPossiblyWeatherLocation()
+                }
+           /* Log.d("SERVICE_TAG", "$locationPropertiesLdo")
+            Log.d("SERVICE_TAG", placeName)*/
         }
     }
 }

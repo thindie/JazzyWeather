@@ -1,50 +1,72 @@
 package com.example.jazzyweather
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
 import com.example.jazzyweather.navigation.weatherDestinations
 import com.example.thindie.presentation.designsystem.asBarFiller
 import com.example.thindie.presentation.designsystem.bottomnavbar.NavBottomBar
 import com.example.thindie.presentation.designsystem.monosystemscreens.WindowSizeDependableContent
-import com.example.thindie.presentation.designsystem.searchbar.SearchBar
-import com.example.thindie.presentation.locationchoser.routing.locationChoseScreen
+import com.example.thindie.presentation.designsystem.theme.Shapes
+import com.example.thindie.presentation.locationchoser.routing.possiblyLocationChoseScreen
 import com.example.thindie.presentation.routes.WeatherRoutes
 import com.example.thindie.presentation.weatherpresenter.routing.onConcreteLocation
 import com.example.thindie.presentation.weatherpresenter.routing.selectedLocationsScreen
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherApp(
     isSystemDarkThemed: Boolean,
     isLandScapeOrientation: Boolean,
-    navHostController: NavHostController = rememberNavController(),
+    locationsListState: LazyListState = rememberLazyListState(),
     appState: WeatherAppState = rememberWeatherAppState(
         isWideScreen = isLandScapeOrientation,
         isDarkTheme = isSystemDarkThemed,
-        navHostController = navHostController
     )
 ) {
     Scaffold(
         bottomBar = {
-            NavBottomBar(
-                onSelectedDestination = appState::navigate,
-                onOperateCurrentContent = {},
-                actionsBarStart = weatherDestinations.map { destination ->
-                    asBarFiller(destination.icon, destination.route)
-                },
-                actionBarEnd = null
-            )
+            if (appState.isShowBottomBar)
+                NavBottomBar(
+                    onSelectedDestination = appState::navigate,
+                    onOperateCurrentContent = {},
+                    actionsBarStart = weatherDestinations.map { destination ->
+                        asBarFiller(destination.icon, destination.route)
+                    },
+                    actionBarEnd = null
+                )
         },
-        topBar = {
-            if (appState.currentScreen.route == WeatherRoutes.possiblyLocation) SearchBar(
-                onSearch = { appState.setLocationAndNavigate(it) })
-        }
+        floatingActionButton = {
+            if (locationsListState.canScrollBackward) {
+                FloatingActionButton(
+                    onClick = {
+                        appState.weatherScope.launch {
+                            locationsListState.animateScrollToItem(
+                                0
+                            )
+                        }
+                    },
+                    shape = Shapes.small
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowUp,
+                        contentDescription = ""
+                    ) //todo(
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { values ->
         WindowSizeDependableContent(
             modifier = Modifier.padding(values),
@@ -56,7 +78,7 @@ fun WeatherApp(
             }
         ) {
             NavHost(
-                navController = navHostController,
+                navController = appState.weatherNavHostController,
                 startDestination = appState.currentScreen.route
             ) {
                 onConcreteLocation(
@@ -68,20 +90,19 @@ fun WeatherApp(
                     isWideScreen = appState.isLandScape,
                     onSelectedDestination = appState::navigate
                 )
-                locationChoseScreen(
+                possiblyLocationChoseScreen(
                     isWideScreen = appState.isLandScape,
                     onSelectedLocation = {
-                            appState.setLocationAndNavigate(it)
-                    }
+                        appState.setLocationAndNavigate(it)
+                    },
+                    locationListState = locationsListState
                 )
             }
-
         }
-
     }
 }
 
-private fun WeatherAppState.setLocationAndNavigate(location: String){
+private fun WeatherAppState.setLocationAndNavigate(location: String) {
     this.locatedDestination.value = location
     this.navigate(WeatherRoutes.weatherConcreteLocation)
 }

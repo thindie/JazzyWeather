@@ -45,7 +45,9 @@ android {
 }
 
 dependencies {
-     implementation project(path: ':core:presentation')
+    implementation project(path: ':core:presentation')
+    implementation project(path: ':core:domain:local-resource-observer')
+    implementation project(path: ':core:presentation:design-system')
     def composeBom = platform('androidx.compose:compose-bom:2022.12.00')
     implementation composeBom
     androidTestImplementation composeBom
