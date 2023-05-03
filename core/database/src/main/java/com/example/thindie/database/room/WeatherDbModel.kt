@@ -14,5 +14,6 @@ data class WeatherDbModel(
     val weatherCode: Int,
     val windDirection: Double,
     val windSpeed: Double,
+    val isPinned: Boolean = false
 )
 

@@ -13,6 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+
 @Singleton
 internal class WeatherFetcherRepositoryImpl @Inject constructor(
     private val service: WeatherProvider,
@@ -21,23 +22,74 @@ internal class WeatherFetcherRepositoryImpl @Inject constructor(
 ) : WeatherFetcherRepository {
     override suspend fun fetchWeather(city: String): Weather {
 
-        val weatherLandedProvider: WeatherLandedProvider = withContext(dispatcherIO) {
-            dao.getWeatherSite(city)
-        }.build()
+        val dbModel = withContext(dispatcherIO) {
+            requireNotNull(dao.getWeatherSite(city))
+        }
+        val weatherLandedProvider: WeatherLandedProvider = dbModel.build()
+        return city
+            .prepareWeatherForecast(weatherLandedProvider)
+            .alsoUpsertDao(dbModel.isPinned)
+    }
 
+    override suspend fun fetchPinnedWeatherLocations(): List<Weather> {
+        return dao.getAllWeathersSite()
+            .filter { weatherDbModel -> weatherDbModel.isPinned }
+            .map { weatherDbModel ->
+                val landedProvider = weatherDbModel.build()
+                val weather = weatherDbModel.place.prepareWeatherForecast(landedProvider)
+                weather.alsoUpsertDao(weatherDbModel.isPinned)
+            }
+    }
+
+    override suspend fun pinWeather(city: String) {
+        val dbModelToUpsert = dao.getWeatherSite(city)
+
+        dao.upsertWeatherSite(dbModelToUpsert.copy(isPinned = !dbModelToUpsert.isPinned))
+    }
+
+    private suspend fun String.prepareWeatherForecast(weatherLandedProvider: WeatherLandedProvider): Weather {
         return withContext(dispatcherIO) {
             WeatherBuilder.build(
-                place = city,
-                weatherDtoFetcher = { service.provideDailyWeather(weatherLandedProvider) },
-                hourlyWeatherFetcher = { service.provideHourlyWeather(weatherLandedProvider) },
+                place = this@prepareWeatherForecast,
+                weatherDtoFetcher = {
+                    requireNotNull(
+                        service.provideDailyWeather(
+                            weatherLandedProvider
+                        )
+                    )
+                },
+                hourlyWeatherFetcher = {
+                    requireNotNull(
+                        service.provideHourlyWeather(
+                            weatherLandedProvider
+                        )
+                    )
+                },
             )
         }
     }
+
 
     private fun WeatherDbModel.build(): WeatherLandedProvider {
         return WeatherLandedProvider(
             latitude = this.latitude, longitude = this.longitude, timeZone = FAKE_TIME_ZONE
         )
+    }
+
+    private suspend fun Weather.alsoUpsertDao(isPinned: Boolean): Weather {
+        val weatherDbModel = WeatherDbModel(
+            place = place,
+            latitude = latitude,
+            longitude = longitude,
+            temperature = temperature,
+            time = time,
+            weatherCode = weathercode,
+            windDirection = winddirection,
+            windSpeed = windspeed,
+            isPinned = isPinned
+        )
+        dao.upsertWeatherSite(weatherDbModel)
+        return this@alsoUpsertDao
     }
 
     data class WeatherLandedProvider(

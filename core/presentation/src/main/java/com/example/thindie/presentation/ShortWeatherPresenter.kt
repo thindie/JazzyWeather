@@ -8,5 +8,3 @@ interface ShortWeatherPresenter {
     val weatherCode: Int
     val nameType: String
 }
-
-class ShortWeatherP
