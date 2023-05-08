@@ -4,27 +4,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.example.thindie.presentation.designsystem.theme.JazzyWeatherTheme
 
 @Composable
-fun String.HeadLineText(modifier: Modifier = Modifier) =
+fun String.HeadLineText(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
+) =
     JazzyWeatherTheme() {
         Text(
             this,
-            style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface,
+            style = MaterialTheme.typography.headlineMedium,
+            color = color,
             modifier = modifier
         )
     }
 
 @Composable
-fun String.HeadLineTextNews(modifier: Modifier = Modifier) =
+fun String.DisplayText(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
+) =
     JazzyWeatherTheme() {
         Text(
             this,
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.surfaceTint.copy(0.5f),
+            style = MaterialTheme.typography.displaySmall,
+            color = color,
             softWrap = true,
             textAlign = TextAlign.Justify,
             modifier = modifier
@@ -32,12 +40,15 @@ fun String.HeadLineTextNews(modifier: Modifier = Modifier) =
     }
 
 @Composable
-fun String.NewsText(modifier: Modifier = Modifier) =
+fun String.VariationBodyText(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
+) =
     JazzyWeatherTheme() {
         Text(
             this,
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurface.copy(0.8f),
+            color = color.copy(0.8f),
             softWrap = true,
             textAlign = TextAlign.Justify,
             modifier = modifier
@@ -46,34 +57,72 @@ fun String.NewsText(modifier: Modifier = Modifier) =
     }
 
 @Composable
-fun String.BodyText(modifier: Modifier = Modifier) =
+fun String.BodyLargeBoldText(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
+) =
+    JazzyWeatherTheme() {
+        Text(
+            this,
+            style = MaterialTheme.typography.headlineSmall,
+            fontWeight = FontWeight.Bold,
+            color = color,
+            modifier = modifier
+        )
+    }
+
+@Composable
+fun String.BodyLargeText(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
+) =
+    JazzyWeatherTheme() {
+        Text(
+            this,
+            style = MaterialTheme.typography.bodyLarge,
+            color = color,
+            modifier = modifier
+        )
+    }
+
+@Composable
+fun String.BodyText(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
+) =
     JazzyWeatherTheme() {
         Text(
             this,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = color,
             modifier = modifier
         )
     }
 
 @Composable
-fun String.MiniText(modifier: Modifier = Modifier) =
+fun String.MiniText(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
+) =
     JazzyWeatherTheme() {
         Text(
             this,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = color,
             modifier = modifier
         )
     }
 
 @Composable
-fun String.MediumText(modifier: Modifier = Modifier) =
+fun String.LabelMediumText(
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.onSurface
+) =
     JazzyWeatherTheme() {
         Text(
             this,
             style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = color,
             modifier = modifier
         )
     }

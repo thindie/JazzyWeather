@@ -13,7 +13,7 @@ fun WindowSizeDependableContent(
     navigationRailPoints: List<BarFiller>,
     isLandscape: Boolean,
     onClick: (String) -> Unit,
-    onClickExpand: () -> Unit = {},
+    onClickSomeOperation: () -> Unit = {},
     navHost: @Composable () -> Unit,
 ) {
     Row(modifier = modifier) {

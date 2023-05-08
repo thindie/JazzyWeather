@@ -1,5 +1,6 @@
 package com.example.thindie.presentation.locationchoser.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,15 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Divider
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,11 +24,9 @@ import com.example.thindie.presentation.designsystem.searchbar.SearchBarState
 import com.example.thindie.presentation.designsystem.searchbar.rememberSearchBarState
 import com.example.thindie.presentation.designsystem.textutil.BodyText
 import com.example.thindie.presentation.designsystem.textutil.HeadLineText
-import com.example.thindie.presentation.designsystem.textutil.MediumText
+import com.example.thindie.presentation.designsystem.textutil.LabelMediumText
 import com.example.thindie.presentation.designsystem.theme.Shapes
 import com.example.thindie.presentation.locationchoser.viewmodel.LocationChooserViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -44,7 +37,7 @@ fun LocationChooserScreen(
     searchBarState: SearchBarState = rememberSearchBarState(isWideScreen),
     searchBarTextAsState: State<String> = searchBarState.textFieldState,
     locationListState: LazyListState,
-    onSelectedLocation: (String) -> Unit,
+    onSelectedLocation: (String, Float, Float) -> Unit,
     viewModel: LocationChooserViewModel = hiltViewModel()
 ) {
     viewModel.onReactiveSearch(searchBarTextAsState)
@@ -66,7 +59,15 @@ fun LocationChooserScreen(
         }
         items(listOfPossibleLocations) { location ->
             if (location != null) {
-                LocationCard(location = location, modifier = locationCardModifier.fillMaxWidth(1f))
+                LocationCard(
+                    location = location, modifier = locationCardModifier.fillMaxWidth(1f)
+                ) { selectedLocation, latitude, longitude ->
+                    onSelectedLocation(
+                        selectedLocation,
+                        latitude,
+                        longitude
+                    )
+                }
             }
             Divider()
 
@@ -81,9 +82,16 @@ fun LocationChooserScreen(
 @Composable
 internal fun LocationCard(
     modifier: Modifier = Modifier,
-    location: LocationChooserViewModel.Location
+    location: LocationChooserViewModel.Location,
+    onSelectedLocation: (String, Float, Float) -> Unit
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier.clickable {
+        onSelectedLocation(
+            location.city,
+            location.latitude.toFloatOrNull() ?: 0f,
+            location.longitude.toFloatOrNull() ?: 0f  //todo(
+        )
+    }) {
         LocationCardStart(modifier.fillMaxWidth(0.3f), location.city, location.population)
         LocationCardBody(modifier.fillMaxWidth(0.3f), location.latitude, location.longitude)
         LocationCardEnd(modifier.fillMaxWidth(0.3f), location.adminName)
@@ -109,6 +117,6 @@ internal fun LocationCardBody(modifier: Modifier, latitude: String, longitude: S
 internal fun LocationCardStart(modifier: Modifier, city: String, population: String) {
     Column(modifier) {
         city.HeadLineText()
-        population.MediumText()
+        population.LabelMediumText()
     }
 }

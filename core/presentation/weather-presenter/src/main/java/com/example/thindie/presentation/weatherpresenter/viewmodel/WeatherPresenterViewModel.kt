@@ -2,8 +2,10 @@ package com.example.thindie.presentation.weatherpresenter.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thindie.domain.weatherprovider.contract.WeatherFetchRequirements
 import com.example.thindie.domain.weatherprovider.contract.WeatherOperator
 import com.example.thindie.domain.weatherprovider.entity.Weather
+import com.example.thindie.presentation.weatherpresenter.routing.ConcreteScreenFetchContract
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +17,8 @@ internal class WeatherPresenterViewModel @Inject constructor(private val fetcher
     ViewModel() {
 
     private val weatherPresenterUiState: MutableStateFlow<WeatherPresenterUIState> =
-        MutableStateFlow(WeatherPresenterUIState.ErrorWeather(NoSuchElementException())
+        MutableStateFlow(
+            WeatherPresenterUIState.ErrorWeather(NoSuchElementException())
         )
 
     val weatherPresenterUIStateFlow = weatherPresenterUiState.asStateFlow()
@@ -26,12 +29,12 @@ internal class WeatherPresenterViewModel @Inject constructor(private val fetcher
         }
     }
 
-    fun onShowLocationWeather(locationName: String) {
+    fun onShowLocationWeather(fetchContract: ConcreteScreenFetchContract) {
         viewModelScope.launch {
             val state = try {
                 WeatherPresenterUIState
-                    .SuccessWeatherPlace(fetcher.fetchWeather(locationName))
-            } catch (e: IllegalStateException) {
+                    .SuccessWeatherPlace(fetcher.fetchWeather(fetchContract.map()))
+            } catch (e: IllegalArgumentException) {
                 WeatherPresenterUIState
                     .ErrorWeather(e)
             }
@@ -56,6 +59,17 @@ internal class WeatherPresenterViewModel @Inject constructor(private val fetcher
         data class SuccessWeatherPlace(val place: Weather) : WeatherPresenterUIState()
         data class SuccessWeatherPinnedPlaces(val places: List<Weather>) :
             WeatherPresenterUIState()
+
         data class ErrorWeather(val e: Exception) : WeatherPresenterUIState()
     }
+}
+
+private fun ConcreteScreenFetchContract.map() = object : WeatherFetchRequirements {
+    override val location: String
+        get() = this@map.location
+    override val latitude: Float
+        get() = this@map.latitude
+    override val longitude: Float
+        get() = this@map.longitude
+
 }

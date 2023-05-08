@@ -1,5 +1,6 @@
 package com.example.thindie.core.network.weatherproviderimpl
 
+import android.util.Log
 import com.example.thindie.core.network.WeatherApiService
 import com.example.thindie.core.network.WeatherProvider
 import com.example.thindie.core.network.WeatherProviderContract
@@ -14,17 +15,18 @@ internal class WeatherProviderImpl @Inject constructor(private val service: Weat
     WeatherProvider {
     @kotlin.jvm.Throws(IllegalStateException::class)
     override suspend fun provideDailyWeather(contract: WeatherProviderContract): WeatherDto {
-        val weather =
-            WeatherDtoBuilder {
+        return WeatherDtoBuilder {
                 serviceResponseThrowOrResult {
                     service.getWeatherJson(
                         latitude = contract.latitude,
                         longitude = contract.longitude,
                         timeZone = contract.timeZone
-                    )
+                    ).also {
+                        Log.d("SERVICE_TAG", it.body().toString())
+                    }
                 }
             }
-        return checkNotNull(weather)
+
     }
 
     @kotlin.jvm.Throws(IllegalStateException::class)

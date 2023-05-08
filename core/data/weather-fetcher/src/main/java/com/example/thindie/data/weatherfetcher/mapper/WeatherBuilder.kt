@@ -27,13 +27,13 @@ internal class WeatherBuilder private constructor(
         snowfallSum = weatherDto.snowfallSum,
         sunrise = weatherDto.sunrise,
         sunset = weatherDto.sunset,
-        temperatureMax = weatherHourlyDto.temperatureTwoMeters,
-        temperatureMin = weatherHourlyDto.temperatureTwoMeters,
-        times = weatherHourlyDto.time,
-        weatherCodes = weatherHourlyDto.weatherCode,
-        windgusts10mMax = weatherHourlyDto.windspeedTenMeters,
-        windspeed10mMax = weatherHourlyDto.windspeedTenMeters,
-    )
+        temperatureMaxHourly = weatherHourlyDto.temperatureTwoMeters,
+        temperatureMinHourly = weatherHourlyDto.temperatureTwoMeters,
+        timesHourly = weatherHourlyDto.time,
+        weatherCodesHourly = weatherHourlyDto.weatherCode,
+        windgusts10mMaxHourly = weatherHourlyDto.windspeedTenMeters,
+        windspeed10mMaxHourly = weatherHourlyDto.windspeedTenMeters,
+    ) //todo(
     companion object{
         suspend fun build(
             place: String,

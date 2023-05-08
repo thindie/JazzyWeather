@@ -3,6 +3,7 @@
 package com.example.thindie.core.network
 
 import com.example.thindie.core.network.util.ENDPOINT
+import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -16,7 +17,7 @@ internal interface WeatherApiService {
         @Query(QUERY_PARAM_WINDSPEED_UNIT) windSpeed: String = "ms",
         @Query(QUERY_PARAM_TIMEZONE, encoded = true) timeZone: String,
         @Query(QUERY_CURRENT_WEATHER) boolean: Boolean = true,
-    ): Response<String>
+    ): Response<JsonObject>
 
     @GET(ENDPOINT)
     suspend fun getHourlyWeatherJson(
@@ -26,7 +27,7 @@ internal interface WeatherApiService {
         @Query(QUERY_PARAM_WINDSPEED_UNIT) windSpeed: String = "ms",
         @Query(QUERY_PARAM_TIMEZONE, encoded = true) timeZone: String,
         @Query(QUERY_CURRENT_WEATHER) boolean: Boolean = true,
-    ): Response<String>
+    ): Response<JsonObject>
 
 
 }

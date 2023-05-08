@@ -1,6 +1,6 @@
 package com.example.thindie.core.network.generated
-@Suppress("ConstructorParameterNaming")
-internal data class DailyUnits(
+
+data class DailyUnits(
     val apparent_temperature_max: String,
     val apparent_temperature_min: String,
     val precipitation_sum: String,
@@ -14,5 +14,5 @@ internal data class DailyUnits(
     val time: String,
     val weathercode: String,
     val windgusts_10m_max: String,
-    val windspeed_10m_max: String,
+    val windspeed_10m_max: String
 )

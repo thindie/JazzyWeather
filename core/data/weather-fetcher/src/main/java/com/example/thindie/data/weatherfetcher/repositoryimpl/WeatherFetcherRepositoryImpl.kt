@@ -7,6 +7,7 @@ import com.example.thindie.core.network.util.FAKE_TIME_ZONE
 import com.example.thindie.data.weatherfetcher.mapper.WeatherBuilder
 import com.example.thindie.database.room.WeatherDbModel
 import com.example.thindie.database.room.WeatherRoomDao
+import com.example.thindie.domain.weatherprovider.contract.WeatherFetchRequirements
 import com.example.thindie.domain.weatherprovider.entity.Weather
 import com.example.thindie.domain.weatherprovider.repository.WeatherFetcherRepository
 import javax.inject.Inject
@@ -20,15 +21,22 @@ internal class WeatherFetcherRepositoryImpl @Inject constructor(
     private val dao: WeatherRoomDao,
     @DispatchersIOModule.IODispatcher private val dispatcherIO: CoroutineDispatcher
 ) : WeatherFetcherRepository {
-    override suspend fun fetchWeather(city: String): Weather {
+    override suspend fun fetchWeather(requirements: WeatherFetchRequirements): Weather {
+        return try {
+            val dbModel = withContext(dispatcherIO) {
+                requireNotNull(dao.getWeatherSite(requirements.location))
+            }
+            val weatherLandedProvider: WeatherLandedProvider = dbModel.build()
+            requirements.location
+                .prepareWeatherForecast(weatherLandedProvider)
+                .alsoUpsertDao(dbModel.isPinned)
 
-        val dbModel = withContext(dispatcherIO) {
-            requireNotNull(dao.getWeatherSite(city))
+        } catch (e: IllegalArgumentException) {
+            val weatherLandedProvider: WeatherLandedProvider = requirements.build()
+            requirements.location
+                .prepareWeatherForecast(weatherLandedProvider)
+                .alsoUpsertDao(false)
         }
-        val weatherLandedProvider: WeatherLandedProvider = dbModel.build()
-        return city
-            .prepareWeatherForecast(weatherLandedProvider)
-            .alsoUpsertDao(dbModel.isPinned)
     }
 
     override suspend fun fetchPinnedWeatherLocations(): List<Weather> {
@@ -71,6 +79,12 @@ internal class WeatherFetcherRepositoryImpl @Inject constructor(
 
 
     private fun WeatherDbModel.build(): WeatherLandedProvider {
+        return WeatherLandedProvider(
+            latitude = this.latitude, longitude = this.longitude, timeZone = FAKE_TIME_ZONE
+        )
+    }
+
+    private fun WeatherFetchRequirements.build(): WeatherLandedProvider {
         return WeatherLandedProvider(
             latitude = this.latitude, longitude = this.longitude, timeZone = FAKE_TIME_ZONE
         )

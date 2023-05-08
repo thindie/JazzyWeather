@@ -1,8 +1,9 @@
 package com.example.thindie.core.network.dto
 
+import android.util.Log
 import com.example.thindie.core.network.generated.CurrentWeather
 import com.example.thindie.core.network.generated.Daily
-import com.example.thindie.core.network.generated.WeatherRawDto
+import com.example.thindie.core.network.generated.WeatherJsonDto
 import com.example.thindie.core.network.util.parseJsonTo
 
 internal class WeatherDtoBuilder private constructor(
@@ -38,7 +39,7 @@ internal class WeatherDtoBuilder private constructor(
     companion object {
         suspend operator fun invoke(getRawJson: suspend () -> String) = try {
             val weatherRaw = getRawJson()
-                .parseJsonTo<WeatherRawDto>()
+                .parseJsonTo<WeatherJsonDto>()
             WeatherDtoBuilder(
                 weatherRaw.current_weather,
                 weatherRaw.daily,
@@ -46,8 +47,8 @@ internal class WeatherDtoBuilder private constructor(
                 weatherRaw.longitude
             ).dto()
         } catch (e: IllegalStateException) {
-            e.message
-            null
+            Log.d("SERVICE_TAG_temperature", e.message.toString())
+             throw e
         }
     }
 }

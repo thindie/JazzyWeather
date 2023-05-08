@@ -1,8 +1,8 @@
 package com.example.jazzyweather
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
@@ -39,11 +39,10 @@ class WeatherAppState(
     private val navHostController: NavHostController,
     private val scope: CoroutineScope
 ) {
+
     val weatherScope
         get() =
             scope
-
-    var locatedDestination = mutableStateOf("")
 
     val weatherNavHostController
         @Composable get() = navHostController
@@ -73,15 +72,16 @@ class WeatherAppState(
     fun navigate(route: String) {
         navHostController.straightTo(route)
     }
-
-    private fun NavController.straightTo(route: String) {
-        this.navigate(route) {
-            popUpTo(this@straightTo.graph.findStartDestination().id) {
-                saveState = true
-            }
-            restoreState = true
-            launchSingleTop = true
-        }
-    }
-
 }
+
+private fun NavController.straightTo(route: String) {
+    this.navigate(route) {
+        popUpTo(this@straightTo.graph.findStartDestination().id) {
+            saveState = true
+        }
+        restoreState = true
+        launchSingleTop = true
+    }
+}
+
+

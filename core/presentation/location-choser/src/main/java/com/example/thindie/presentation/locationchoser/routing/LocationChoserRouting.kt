@@ -10,7 +10,7 @@ import com.example.thindie.presentation.routes.WeatherRoutes
 fun NavGraphBuilder.possiblyLocationChoseScreen(
     locationListState: LazyListState,
     isWideScreen: Boolean,
-    onSelectedLocation: (String) -> Unit
+    onSelectedLocation: (String, Float, Float) -> Unit
 ) {
     composable(
         route = WeatherRoutes.possiblyLocation

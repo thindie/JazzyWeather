@@ -12,6 +12,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import com.example.jazzyweather.navigation.weatherDestinations
 import com.example.thindie.presentation.designsystem.asBarFiller
@@ -27,6 +29,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherApp(
+    mainViewModel: MainViewModel = viewModel(),
     isSystemDarkThemed: Boolean,
     isLandScapeOrientation: Boolean,
     locationsListState: LazyListState = rememberLazyListState(),
@@ -35,6 +38,10 @@ fun WeatherApp(
         isDarkTheme = isSystemDarkThemed,
     )
 ) {
+    val concreteLocationState =
+        mainViewModel
+            .concreteScreenLocationProperties
+            .collectAsStateWithLifecycle()
     Scaffold(
         bottomBar = {
             if (appState.isShowBottomBar)
@@ -82,7 +89,7 @@ fun WeatherApp(
                 startDestination = appState.currentScreen.route
             ) {
                 onConcreteLocation(
-                    location = appState.locatedDestination.value,
+                    fetchContract = concreteLocationState.value,
                     isWideScreen = appState.isLandScape,
                     onClickBack = appState::navigate
                 )
@@ -92,8 +99,13 @@ fun WeatherApp(
                 )
                 possiblyLocationChoseScreen(
                     isWideScreen = appState.isLandScape,
-                    onSelectedLocation = {
-                        appState.setLocationAndNavigate(it)
+                    onSelectedLocation = { location, latitude, longitude ->
+                        mainViewModel.updateConcreteLocationProperties(
+                            location,
+                            latitude,
+                            longitude
+                        )
+                        appState.navigate(WeatherRoutes.weatherConcreteLocation)
                     },
                     locationListState = locationsListState
                 )
@@ -102,7 +114,3 @@ fun WeatherApp(
     }
 }
 
-private fun WeatherAppState.setLocationAndNavigate(location: String) {
-    this.locatedDestination.value = location
-    this.navigate(WeatherRoutes.weatherConcreteLocation)
-}
