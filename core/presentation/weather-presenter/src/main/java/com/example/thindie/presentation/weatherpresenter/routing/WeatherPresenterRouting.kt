@@ -11,12 +11,15 @@ fun NavGraphBuilder.selectedLocationsScreen(
     composable(
         route = WeatherRoutes.weather
     ) {
-
+        SelectedLocationsScreenState(
+            isWideScreen = isWideScreen,
+            onSelectedDestination = onSelectedDestination
+        )
     }
 }
 
 fun NavGraphBuilder.onConcreteLocation(
-    fetchContract: ConcreteScreenFetchContract,
+    fetchContract: () -> ConcreteScreenFetchContract,
     isWideScreen: Boolean,
     onClickBack: (String) -> Unit,
 ) {
@@ -24,7 +27,7 @@ fun NavGraphBuilder.onConcreteLocation(
         route = WeatherRoutes.weatherConcreteLocation
     ) {
         ConcreteLocationScreenState(
-            fetchContract = fetchContract,
+            fetchContract = fetchContract.invoke(),
             isWideScreen = isWideScreen,
             onClickBack = onClickBack
         )

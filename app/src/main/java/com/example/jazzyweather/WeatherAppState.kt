@@ -1,6 +1,5 @@
 package com.example.jazzyweather
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -12,6 +11,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.jazzyweather.navigation.Possibilities
 import com.example.jazzyweather.navigation.weatherDestinations
+import com.example.thindie.presentation.routes.WeatherRoutes
 import kotlinx.coroutines.CoroutineScope
 
 @Composable
@@ -24,7 +24,6 @@ fun rememberWeatherAppState(
     return remember(isWideScreen, isDarkTheme, navHostController, scope) {
         WeatherAppState(
             isWideScreen = isWideScreen,
-            isDarkTheme = isDarkTheme,
             navHostController = navHostController,
             scope = scope
         )
@@ -35,7 +34,6 @@ fun rememberWeatherAppState(
 @Stable
 class WeatherAppState(
     private val isWideScreen: Boolean,
-    private val isDarkTheme: Boolean,
     private val navHostController: NavHostController,
     private val scope: CoroutineScope
 ) {
@@ -56,18 +54,9 @@ class WeatherAppState(
     val isShowBottomBar
         get() = !isWideScreen
 
-    val isDarkThemed
-        @Composable get() = isDarkTheme
 
-    private val navEntry
-        @Composable get() = navHostController.currentBackStackEntryAsState()
-
-    private val currentDestination
-        @Composable get() = navEntry.value?.destination
-    internal val currentScreen
-        @Composable get() =
-            weatherDestinations.find { it.route == currentDestination?.route } ?: Possibilities
-
+    internal val startScreen
+        @Composable get() = WeatherRoutes.possiblyLocation
 
     fun navigate(route: String) {
         navHostController.straightTo(route)
@@ -79,7 +68,7 @@ private fun NavController.straightTo(route: String) {
         popUpTo(this@straightTo.graph.findStartDestination().id) {
             saveState = true
         }
-        restoreState = true
+       restoreState = true
         launchSingleTop = true
     }
 }

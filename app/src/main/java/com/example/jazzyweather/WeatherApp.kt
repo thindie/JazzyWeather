@@ -86,10 +86,10 @@ fun WeatherApp(
         ) {
             NavHost(
                 navController = appState.weatherNavHostController,
-                startDestination = appState.currentScreen.route
+                startDestination = appState.startScreen
             ) {
                 onConcreteLocation(
-                    fetchContract = concreteLocationState.value,
+                    fetchContract = { concreteLocationState.value },
                     isWideScreen = appState.isLandScape,
                     onClickBack = appState::navigate
                 )
