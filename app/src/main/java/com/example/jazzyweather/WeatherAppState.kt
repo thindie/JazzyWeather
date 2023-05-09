@@ -7,10 +7,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.jazzyweather.navigation.Possibilities
-import com.example.jazzyweather.navigation.weatherDestinations
 import com.example.thindie.presentation.routes.WeatherRoutes
 import kotlinx.coroutines.CoroutineScope
 
@@ -54,7 +51,6 @@ class WeatherAppState(
     val isShowBottomBar
         get() = !isWideScreen
 
-
     internal val startScreen
         @Composable get() = WeatherRoutes.possiblyLocation
 
@@ -68,7 +64,7 @@ private fun NavController.straightTo(route: String) {
         popUpTo(this@straightTo.graph.findStartDestination().id) {
             saveState = true
         }
-       restoreState = true
+        restoreState = true
         launchSingleTop = true
     }
 }

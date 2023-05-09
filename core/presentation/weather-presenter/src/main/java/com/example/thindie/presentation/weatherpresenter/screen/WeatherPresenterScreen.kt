@@ -300,7 +300,7 @@ fun WeatherPresenterWideScreen(
 
 
 @Composable
-private fun WeatherSymbol(modifier: Modifier = Modifier, @DrawableRes weatherRes: Int) {
+fun WeatherSymbol(modifier: Modifier = Modifier, @DrawableRes weatherRes: Int) {
     Surface(
         modifier = modifier
             .clip(CircleShape)
