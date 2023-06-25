@@ -43,7 +43,7 @@ import com.example.thindie.presentation.designsystem.textutil.BodyLargeText
 import com.example.thindie.presentation.designsystem.textutil.BodyText
 import com.example.thindie.presentation.designsystem.textutil.HeadLineText
 import com.example.thindie.presentation.designsystem.textutil.MiniText
-import com.example.thindie.presentation.drawablemap.present
+import com.example.thindie.presentation.drawablemap.toWeatherPresenter
 import com.example.thindie.presentation.util.TimeParser
 import com.example.thindie.presentation.weatherpresenter.weathergraphapi.BuildColumnGraph
 import com.example.thindie.presentation.weatherpresenter.weathergraphapi.precipitation
@@ -183,7 +183,7 @@ fun WeatherPrimarySection(
     }
 
     TemperatureSection(
-        weatherPresenter = weatherCode.present(),
+        weatherPresenter = weatherCode.toWeatherPresenter(),
         place = place,
         temperature = temperature,
         plus = plus
@@ -437,7 +437,7 @@ fun previewTemperatureSection() {
             place = "place",
             temperature = -5.00,
             plus = false,
-            weatherPresenter = 0.present()
+            weatherPresenter = 0.toWeatherPresenter()
         )
     }
 }

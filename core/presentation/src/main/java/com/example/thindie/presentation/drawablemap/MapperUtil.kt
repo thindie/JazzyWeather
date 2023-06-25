@@ -65,7 +65,7 @@ internal val weatherDrawableMap = mapOf(
     99 to R.drawable.flash_alert_outline,
 )
 
-  fun Int.present(): ShortWeatherPresenter {
+  fun Int.toWeatherPresenter(): ShortWeatherPresenter {
     val weatherCode = this
 
     return object : ShortWeatherPresenter {

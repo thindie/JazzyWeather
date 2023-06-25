@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="place">"локация: %s"</string>
+    <string name="place_short">" %s,"</string>
     <string name="latitude">"ш: %s"</string>
     <string name="longitude">"д: %s"</string>
     <string name="precipitation">"всего осадков: %s"</string>
@@ -8,6 +9,9 @@
     <string name="daily">"%s, посуточно"</string>
     <string name="hourly">"%s, почасовой"</string>
     <string name="temperature_2m">"t•C꞉ %s"</string>
+    <string name="temperature_short">" %sc "</string>
+    <string name="precipit_short">"осадки: %s, "</string>
+    <string name="wind_short">" ветер max: %sm/s, "</string>
     <string name="time_on">"aктуальность: "</string>
     <string name="windSpeed_10m">"cкорость ветра, 10м: %s"</string>
     <string name="wind_speed">"cкорость ветра: %s м/с"</string>
@@ -17,6 +21,7 @@
     <string name="rain_sum">"дождь: %s"</string>
     <string name="showers_sum">"ливень: %s"</string>
     <string name="snowfall_sum">"снегопад: %s"</string>
-    <string name="sunrise">"восход: %s"</string>
-    <string name="sunset">"закат: %s"</string>
+    <string name="sunrise">" восход: %s,"</string>
+    <string name="sunset">" закат: %s,"</string>
+    <string name="place_wide_screen_info">"%s, температура: %s, осадки: %s, ветер max: %s"</string>
 </resources>
