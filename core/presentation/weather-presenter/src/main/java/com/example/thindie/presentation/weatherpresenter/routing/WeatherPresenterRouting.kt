@@ -6,7 +6,7 @@ import com.example.thindie.presentation.routes.WeatherRoutes
 
 fun NavGraphBuilder.selectedLocationsScreen(
     isWideScreen: Boolean,
-    onSelectedDestination: (String) -> Unit
+    onSelectedDestination: (String, Float, Float) -> Unit
 ) {
     composable(
         route = WeatherRoutes.weather

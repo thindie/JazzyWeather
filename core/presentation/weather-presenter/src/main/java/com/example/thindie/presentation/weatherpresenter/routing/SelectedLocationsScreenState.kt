@@ -11,7 +11,7 @@ import com.example.thindie.presentation.weatherpresenter.viewmodel.WeatherPinned
 internal fun SelectedLocationsScreenState(
     viewModel: WeatherPinnedPlacesViewModel = hiltViewModel(),
     isWideScreen: Boolean,
-    onSelectedDestination: (String) -> Unit,
+    onSelectedDestination: (String, Float, Float) -> Unit,
 ) {
     viewModel.onShowPinnedWeathers()
     val screenState = viewModel
@@ -22,7 +22,7 @@ internal fun SelectedLocationsScreenState(
             SelectedWeatherLocationsScreen(
                 isWideScreen = isWideScreen,
                 onSelectedDestination = onSelectedDestination,
-                onChangePinnedStatus = onSelectedDestination,
+                onChangePinnedStatus = viewModel::onSwitchPinWeather,
                 weatherList =
                 (screenState.value as WeatherPinnedPlacesViewModel
                 .WeatherPresenterUIState.SuccessWeatherPinnedPlaces).places

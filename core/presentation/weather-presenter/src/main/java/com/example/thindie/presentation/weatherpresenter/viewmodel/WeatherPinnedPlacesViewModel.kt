@@ -38,8 +38,7 @@ internal class WeatherPinnedPlacesViewModel @Inject constructor(private val fetc
         viewModelScope.launch {
             fetcher.fetchPinnedWeatherLocations()
                 .onSuccess {
-                    WeatherPresenterViewModel
-                        .WeatherPresenterUIState
+                    weatherPresenterUiState.value = WeatherPresenterUIState
                         .SuccessWeatherPinnedPlaces(it)
                 }
                 .onFailure {

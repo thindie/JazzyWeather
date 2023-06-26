@@ -1,12 +1,12 @@
 package com.example.thindie.presentation.weatherpresenter.screen.selectedweathers.widescreen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -32,11 +32,13 @@ fun WeatherInformationSection(
     sunrise: List<String>,
     sunset: List<String>,
     place: String,
+    latitude: Float,
+    longitude: Float,
     plus: Boolean,
     modifier: Modifier = Modifier,
     precipitation: List<Double>,
     wind: List<Double>,
-    onSelectedDestination: (String) -> Unit,
+    onSelectedDestination: (String, Float, Float) -> Unit,
     onChangePinnedStatus: (String) -> Unit,
 
     ) {
@@ -49,7 +51,10 @@ fun WeatherInformationSection(
                     start = 25.dp, end = 22.dp, top = 4.dp, bottom = 4.dp
                 )
         ) {
-            stringResource(id = R.string.place_short, place).HeadLineText()
+            stringResource(id = R.string.place_short, place).HeadLineText(modifier =
+            Modifier.clickable {
+                onSelectedDestination(place, latitude, longitude)
+            })
             stringResource(id = R.string.temperature_short, temperature.toString())
                 .HeadLineText(
                     color = if (plus) Color.Red else Color.Blue
@@ -63,9 +68,6 @@ fun WeatherInformationSection(
             TimeParser(sunset.first()).time.BodyLargeText()
             IconButton(onClick = { onChangePinnedStatus(place) }) {
                 Icon(imageVector = Icons.Default.Favorite, contentDescription = "")
-            }
-            IconButton(onClick = { onSelectedDestination(place) }) {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "")
             }
         }
     }

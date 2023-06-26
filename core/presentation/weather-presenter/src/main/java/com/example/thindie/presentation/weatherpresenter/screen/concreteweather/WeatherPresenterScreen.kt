@@ -1,6 +1,5 @@
 package com.example.thindie.presentation.weatherpresenter.screen.concreteweather
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import com.example.thindie.domain.weatherprovider.entity.Weather
 import com.example.thindie.presentation.weatherpresenter.screen.concreteweather.portraitScreen.WeatherPresenterPortraitScreen
@@ -15,6 +14,4 @@ fun WeatherPresenterScreen(isWideScreen: Boolean, weather: Weather, onClick: (St
     else WeatherPresenterPortraitScreen(weather = weather) { pinStatus ->
         onClick(pinStatus)
     }
-
-    Log.d("SERVICE_TAG_WID", isWideScreen.toString())
 }

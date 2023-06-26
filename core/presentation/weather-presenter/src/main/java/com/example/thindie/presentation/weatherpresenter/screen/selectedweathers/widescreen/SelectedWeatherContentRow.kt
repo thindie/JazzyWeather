@@ -46,7 +46,9 @@ fun WeatherContentRow(
             items(indicesList) { atIndex ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = modifier.padding(all = 2.dp)
+                    modifier = modifier
+                        .padding(all = 2.dp)
+                        .padding(start = 10.dp, end = 10.dp)
                 ) {
                     TimeParser(timesHourly[atIndex]).time.BodyText()
                     WeatherSymbol(

@@ -36,7 +36,7 @@ fun WeatherApp(
     appState: WeatherAppState = rememberWeatherAppState(
         isWideScreen = isLandScapeOrientation,
         isDarkTheme = isSystemDarkThemed,
-    )
+    ),
 ) {
     val concreteLocationState =
         mainViewModel
@@ -95,7 +95,14 @@ fun WeatherApp(
                 )
                 selectedLocationsScreen(
                     isWideScreen = appState.isLandScape,
-                    onSelectedDestination = appState::navigate
+                    onSelectedDestination = { location, latitude, longitude ->
+                        mainViewModel.updateConcreteLocationProperties(
+                            location,
+                            latitude,
+                            longitude
+                        )
+                        appState.navigate(WeatherRoutes.weatherConcreteLocation)
+                    }
                 )
                 possiblyLocationChoseScreen(
                     isWideScreen = appState.isLandScape,
