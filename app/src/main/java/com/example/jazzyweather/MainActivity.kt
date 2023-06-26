@@ -38,9 +38,8 @@ class MainActivity : ComponentActivity() {
     internal fun checkWindowSizeIsExpanded(): Boolean {
         val windowSize = calculateWindowSizeClass(activity = this)
         return when (windowSize.widthSizeClass) {
-            WindowWidthSizeClass.Expanded -> {
-                true
-            }
+            WindowWidthSizeClass.Expanded -> true
+            WindowWidthSizeClass.Medium -> true
             else -> false
         }
     }

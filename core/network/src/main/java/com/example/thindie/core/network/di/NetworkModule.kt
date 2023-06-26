@@ -22,7 +22,7 @@ object NetworkModule {
         .newBuilder()
         .addInterceptor { chain: Interceptor.Chain ->
             val request = chain.request()
-            Log.d("SERVICE_TAG_INTERCEPTOR","Outgoing request to ${request.url()}")
+            /*Log.d("SERVICE_TAG_INTERCEPTOR","Outgoing request to ${request.url()}")*/
             chain.proceed(request)
         }
         .build()

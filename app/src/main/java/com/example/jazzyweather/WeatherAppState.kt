@@ -1,5 +1,6 @@
 package com.example.jazzyweather
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -18,6 +19,7 @@ fun rememberWeatherAppState(
     navHostController: NavHostController = rememberNavController(),
     scope: CoroutineScope = rememberCoroutineScope(),
 ): WeatherAppState {
+    Log.d ("SERVICE_TAG_remember", isWideScreen.toString())
     return remember(isWideScreen, isDarkTheme, navHostController, scope) {
         WeatherAppState(
             isWideScreen = isWideScreen,

@@ -1,5 +1,6 @@
 package com.example.thindie.presentation.weatherpresenter.screen.concreteweather.weathercomposablesections
 
+import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,7 +32,7 @@ fun WeatherSlaveSection(
     windgusts10mMax: List<Double>,
     times: List<String>,
 ) {
-
+    Log.d("SERVICE_TAG_WIDE", "WIDE")
     CoordinatesSection(longitude = longitude, latitude = latitude)
     times.BuildDaysLine()
     LazyColumn() {
