@@ -32,7 +32,7 @@ fun WeatherSlaveSection(
     windgusts10mMax: List<Double>,
     times: List<String>,
 ) {
-    Log.d("SERVICE_TAG_WIDE", "WIDE")
+
     CoordinatesSection(longitude = longitude, latitude = latitude)
     times.BuildDaysLine()
     LazyColumn() {

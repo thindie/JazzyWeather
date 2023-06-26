@@ -28,7 +28,7 @@ fun AdditionalCurrentWeatherPlaceInfo(
     sunrise: String,
     windDirection: Double,
     windSpeed: Double,
-    time: String
+    time: String,
 ) {
     val values = PaddingValues(all = 5.dp)
     Card(
@@ -50,25 +50,30 @@ fun AdditionalCurrentWeatherPlaceInfo(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                stringResource(
-                    id = R.string.sunrise, ""
-                ).BodyLargeText()
-                TimeParser(sunrise).time.BodyLargeBoldText()
-                stringResource(
-                    id = R.string.sunset, ""
-                ).BodyLargeText()
-                TimeParser(sunset).time.BodyLargeBoldText()
+                    stringResource(
+                        id = R.string.sunrise, ""
+                    ).BodyLargeText()
+                    TimeParser(sunrise).time.BodyLargeBoldText()
+
+
+                    stringResource(
+                        id = R.string.sunset, ""
+                    ).BodyLargeText()
+                    TimeParser(sunset).time.BodyLargeBoldText()
             }
             Column(modifier = modifier.padding(all = 10.dp)) {
-                stringResource(
-                    id = R.string.wind_speed,
-                    windSpeed.toString()
-                ).BodyLargeBoldText()
-                stringResource(
-                    id = R.string.time_on
-                )
-                    .BodyLargeText()
-                TimeParser(time).time.BodyLargeText()
+                    stringResource(
+                        id = R.string.wind_speed,
+                        windSpeed.toString()
+                    ).BodyLargeBoldText()
+                Row {
+                    stringResource(
+                        id = R.string.time_on
+                    )
+                        .BodyLargeText()
+                    TimeParser(time).time.BodyLargeText()
+                }
+
             }
 
         }

@@ -21,7 +21,7 @@
     <string name="rain_sum">"дождь: %s"</string>
     <string name="showers_sum">"ливень: %s"</string>
     <string name="snowfall_sum">"снегопад: %s"</string>
-    <string name="sunrise">"   восход: %s,   "</string>
-    <string name="sunset">"   закат: %s,   "</string>
+    <string name="sunrise">"восход: %s, "</string>
+    <string name="sunset">"закат: %s, "</string>
     <string name="place_wide_screen_info">"%s,    температура: %s,    осадки: %s,    ветер max: %s   "</string>
 </resources>

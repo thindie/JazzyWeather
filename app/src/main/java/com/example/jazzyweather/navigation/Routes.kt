@@ -2,6 +2,7 @@ package com.example.jazzyweather.navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.thindie.presentation.routes.WeatherRoutes
@@ -24,7 +25,7 @@ object Weathers : Destinations {
 
 object Possibilities : Destinations {
     override val icon: ImageVector
-        get() = Icons.Default.FilterList
+        get() = Icons.Default.Search
     override val route: String
         get() = WeatherRoutes.possiblyLocation
 
