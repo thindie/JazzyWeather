@@ -26,6 +26,7 @@ import com.example.thindie.presentation.designsystem.textutil.BodyText
 import com.example.thindie.presentation.designsystem.textutil.HeadLineText
 import com.example.thindie.presentation.designsystem.textutil.LabelMediumText
 import com.example.thindie.presentation.designsystem.theme.Shapes
+import com.example.thindie.presentation.locationchoser.screen.cardunit.LocationCard
 import com.example.thindie.presentation.locationchoser.viewmodel.LocationChooserViewModel
 
 
@@ -70,7 +71,6 @@ fun LocationChooserScreen(
                 }
             }
             Divider()
-
         }
     }
     if (locationListState.canScrollForward) {
@@ -79,44 +79,6 @@ fun LocationChooserScreen(
 
 }
 
-@Composable
-internal fun LocationCard(
-    modifier: Modifier = Modifier,
-    location: LocationChooserViewModel.Location,
-    onSelectedLocation: (String, Float, Float) -> Unit
-) {
-    Row(modifier = modifier.clickable {
-        onSelectedLocation(
-            location.city,
-            location.latitude.toFloatOrNull() ?: 0f,
-            location.longitude.toFloatOrNull() ?: 0f  //todo(
-        )
-    }) {
-        LocationCardStart(modifier.fillMaxWidth(0.3f), location.city, location.population)
-        LocationCardBody(modifier.fillMaxWidth(0.3f), location.latitude, location.longitude)
-        LocationCardEnd(modifier.fillMaxWidth(0.3f), location.adminName)
-    }
-}
 
-@Composable
-internal fun LocationCardEnd(modifier: Modifier, adminName: String) {
-    Column(modifier) {
-        adminName.HeadLineText()
-    }
-}
 
-@Composable
-internal fun LocationCardBody(modifier: Modifier, latitude: String, longitude: String) {
-    Column(modifier) {
-        latitude.BodyText()
-        longitude.BodyText()
-    }
-}
 
-@Composable
-internal fun LocationCardStart(modifier: Modifier, city: String, population: String) {
-    Column(modifier) {
-        city.HeadLineText()
-        population.LabelMediumText()
-    }
-}

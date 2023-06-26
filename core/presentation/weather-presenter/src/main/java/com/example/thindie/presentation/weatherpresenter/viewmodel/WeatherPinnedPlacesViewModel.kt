@@ -36,14 +36,17 @@ internal class WeatherPinnedPlacesViewModel @Inject constructor(private val fetc
 
     fun onShowPinnedWeathers() {
         viewModelScope.launch {
-            val state = try {
-                WeatherPresenterUIState
-                    .SuccessWeatherPinnedPlaces(fetcher.fetchPinnedWeatherLocations())
-            } catch (e: IllegalStateException) {
-                WeatherPresenterUIState
-                    .ErrorWeather(e)
-            }
-            weatherPresenterUiState.value = state
+            fetcher.fetchPinnedWeatherLocations()
+                .onSuccess {
+                    WeatherPresenterViewModel
+                        .WeatherPresenterUIState
+                        .SuccessWeatherPinnedPlaces(it)
+                }
+                .onFailure {
+                    weatherPresenterUiState.value = WeatherPresenterUIState.ErrorWeather(it)
+                }
+
+
         }
     }
 
@@ -51,7 +54,7 @@ internal class WeatherPinnedPlacesViewModel @Inject constructor(private val fetc
         data class SuccessWeatherPinnedPlaces(val places: List<Weather>) :
             WeatherPresenterUIState()
 
-        data class ErrorWeather(val e: Exception) : WeatherPresenterUIState()
+        data class ErrorWeather(val e: Throwable) : WeatherPresenterUIState()
     }
 }
 

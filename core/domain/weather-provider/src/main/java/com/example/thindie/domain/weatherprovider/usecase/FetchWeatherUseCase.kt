@@ -8,11 +8,11 @@ import javax.inject.Inject
 
 internal class FetchWeatherUseCase @Inject constructor(private val repository: WeatherFetcherRepository) :
     WeatherOperator {
-    override suspend fun fetchWeather(requirements: WeatherFetchRequirements): Weather {
+    override suspend fun fetchWeather(requirements: WeatherFetchRequirements): Result<Weather> {
         return repository.fetchWeather(requirements)
     }
 
-    override suspend fun fetchPinnedWeatherLocations(): List<Weather> {
+    override suspend fun fetchPinnedWeatherLocations(): Result<List<Weather>> {
         return repository.fetchPinnedWeatherLocations()
     }
 

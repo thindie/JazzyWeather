@@ -1,18 +1,17 @@
 package com.example.thindie.presentation.weatherpresenter.routing
 
-import SelectedWeatherLocationsScreen
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-
+import com.example.thindie.presentation.weatherpresenter.screen.selectedweathers.SelectedWeatherLocationsScreen
 import com.example.thindie.presentation.weatherpresenter.viewmodel.WeatherPinnedPlacesViewModel
 
 @Composable
 internal fun SelectedLocationsScreenState(
     viewModel: WeatherPinnedPlacesViewModel = hiltViewModel(),
     isWideScreen: Boolean,
-    onSelectedDestination: (String) -> Unit
+    onSelectedDestination: (String) -> Unit,
 ) {
     viewModel.onShowPinnedWeathers()
     val screenState = viewModel

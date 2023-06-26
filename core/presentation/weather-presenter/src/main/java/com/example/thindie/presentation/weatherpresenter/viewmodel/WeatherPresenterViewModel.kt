@@ -31,27 +31,28 @@ internal class WeatherPresenterViewModel @Inject constructor(private val fetcher
 
     fun onShowLocationWeather(fetchContract: ConcreteScreenFetchContract) {
         viewModelScope.launch {
-            val state = try {
-                WeatherPresenterUIState
-                    .SuccessWeatherPlace(fetcher.fetchWeather(fetchContract.map()))
-            } catch (e: IllegalArgumentException) {
-                WeatherPresenterUIState
-                    .ErrorWeather(e)
-            }
-            weatherPresenterUiState.value = state
+            fetcher.fetchWeather(fetchContract.map())
+                .onFailure {
+                    weatherPresenterUiState.value = WeatherPresenterUIState.ErrorWeather(it)
+                }
+                .onSuccess {
+                    weatherPresenterUiState.value = WeatherPresenterUIState.SuccessWeatherPlace(it)
+                }
         }
     }
 
     fun onShowPinnedWeathers() {
         viewModelScope.launch {
-            val state = try {
-                WeatherPresenterUIState
-                    .SuccessWeatherPinnedPlaces(fetcher.fetchPinnedWeatherLocations())
-            } catch (e: IllegalStateException) {
-                WeatherPresenterUIState
-                    .ErrorWeather(e)
-            }
-            weatherPresenterUiState.value = state
+
+            fetcher.fetchPinnedWeatherLocations()
+                .onSuccess {
+                    weatherPresenterUiState.value = WeatherPresenterUIState
+                        .SuccessWeatherPinnedPlaces(it)
+                }
+                .onFailure {
+                    weatherPresenterUiState.value = WeatherPresenterUIState
+                        .ErrorWeather(it)
+                }
         }
     }
 
@@ -60,7 +61,7 @@ internal class WeatherPresenterViewModel @Inject constructor(private val fetcher
         data class SuccessWeatherPinnedPlaces(val places: List<Weather>) :
             WeatherPresenterUIState()
 
-        data class ErrorWeather(val e: Exception) : WeatherPresenterUIState()
+        data class ErrorWeather(val e: Throwable) : WeatherPresenterUIState()
     }
 }
 

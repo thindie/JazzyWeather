@@ -19,10 +19,10 @@ import kotlinx.coroutines.withContext
 internal class WeatherFetcherRepositoryImpl @Inject constructor(
     private val service: WeatherProvider,
     private val dao: WeatherRoomDao,
-    @DispatchersIOModule.IODispatcher private val dispatcherIO: CoroutineDispatcher
+    @DispatchersIOModule.IODispatcher private val dispatcherIO: CoroutineDispatcher,
 ) : WeatherFetcherRepository {
-    override suspend fun fetchWeather(requirements: WeatherFetchRequirements): Weather {
-        return try {
+    override suspend fun fetchWeather(requirements: WeatherFetchRequirements): Result<Weather> {
+        return runCatching {
             val dbModel = withContext(dispatcherIO) {
                 requireNotNull(dao.getWeatherSite(requirements.location))
             }
@@ -31,7 +31,7 @@ internal class WeatherFetcherRepositoryImpl @Inject constructor(
                 .prepareWeatherForecast(weatherLandedProvider)
                 .alsoUpsertDao(dbModel.isPinned)
 
-        } catch (e: IllegalArgumentException) {
+        }.onFailure {
             val weatherLandedProvider: WeatherLandedProvider = requirements.build()
             requirements.location
                 .prepareWeatherForecast(weatherLandedProvider)
@@ -39,14 +39,16 @@ internal class WeatherFetcherRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchPinnedWeatherLocations(): List<Weather> {
-        return dao.getAllWeathersSite()
-            .filter { weatherDbModel -> weatherDbModel.isPinned }
-            .map { weatherDbModel ->
-                val landedProvider = weatherDbModel.build()
-                val weather = weatherDbModel.place.prepareWeatherForecast(landedProvider)
-                weather.alsoUpsertDao(weatherDbModel.isPinned)
-            }
+    override suspend fun fetchPinnedWeatherLocations(): Result<List<Weather>> {
+        return kotlin.runCatching {
+            dao.getAllWeathersSite()
+                .filter { weatherDbModel -> weatherDbModel.isPinned }
+                .map { weatherDbModel ->
+                    val landedProvider = weatherDbModel.build()
+                    val weather = weatherDbModel.place.prepareWeatherForecast(landedProvider)
+                    weather.alsoUpsertDao(weatherDbModel.isPinned)
+                }
+        }
     }
 
     override suspend fun pinWeather(city: String) {
@@ -107,7 +109,7 @@ internal class WeatherFetcherRepositoryImpl @Inject constructor(
     }
 
     data class WeatherLandedProvider(
-        override val latitude: Float, override val longitude: Float, override val timeZone: String
+        override val latitude: Float, override val longitude: Float, override val timeZone: String,
     ) : WeatherProviderContract
 
 }
