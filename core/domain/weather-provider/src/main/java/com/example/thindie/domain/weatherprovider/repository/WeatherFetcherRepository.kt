@@ -8,8 +8,6 @@ interface WeatherFetcherRepository {
     suspend fun fetchWeather(requirements: WeatherFetchRequirements): Result<Weather>
     fun fetchPinnedWeatherLocations(): Flow<Result<List<Weather>>>
     suspend fun pinWeather(requirements: WeatherFetchRequirements)
-
     suspend fun updateSavedWeatherPlaces()
-
     suspend fun deleteWeather(place: String)
 }

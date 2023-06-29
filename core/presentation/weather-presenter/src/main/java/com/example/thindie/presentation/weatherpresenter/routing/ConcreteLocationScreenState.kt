@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thindie.presentation.weatherpresenter.screen.concreteweather.WeatherPresenterScreen
+import com.example.thindie.presentation.weatherpresenter.screen.servicescreens.ErrorScreen
+import com.example.thindie.presentation.weatherpresenter.screen.servicescreens.LoadingScreen
 import com.example.thindie.presentation.weatherpresenter.viewmodel.WeatherPresenterViewModel
 
 @Composable
@@ -13,7 +15,9 @@ internal fun ConcreteLocationScreenState(
     onClickBack: (String) -> Unit,
     fetchContract: ConcreteScreenFetchContract,
 ) {
-    val viewState = viewModel.weatherPresenterUIStateFlow.collectAsStateWithLifecycle()
+    val viewState = viewModel
+        .weatherPresenterUIStateFlow
+        .collectAsStateWithLifecycle()
     viewModel.onShowLocationWeather(fetchContract)
     when (viewState.value) {
         is WeatherPresenterViewModel
@@ -25,8 +29,12 @@ internal fun ConcreteLocationScreenState(
             isWideScreen = isWideScreen,
             onClick = viewModel::onPinWeather
         )
-        is WeatherPresenterViewModel.WeatherPresenterUIState.ErrorWeather -> {}
-        else -> {}
+        is WeatherPresenterViewModel.WeatherPresenterUIState.ErrorWeather -> {
+            ErrorScreen()
+        }
+        is WeatherPresenterViewModel.WeatherPresenterUIState.Loading -> {
+            LoadingScreen()
+        }
     }
 
 }

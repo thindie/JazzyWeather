@@ -28,6 +28,12 @@ internal class WeatherPinnedPlacesViewModel @Inject constructor(private val fetc
             WeatherPresenterUIState.ErrorWeather(NoSuchElementException())
         )
 
+    @Inject
+    fun updatePinnedWeather() {
+        viewModelScope.launch {
+            fetcher.updateSavedWeatherPlaces()
+        }
+    }
 
     fun onDeletePinnedWeather(locationName: String) {
         viewModelScope.launch {
@@ -58,6 +64,8 @@ internal class WeatherPinnedPlacesViewModel @Inject constructor(private val fetc
     sealed class WeatherPresenterUIState {
         data class SuccessWeatherPinnedPlaces(val places: List<Weather>) :
             WeatherPresenterUIState()
+
+
 
         data class ErrorWeather(val e: Throwable) : WeatherPresenterUIState()
     }

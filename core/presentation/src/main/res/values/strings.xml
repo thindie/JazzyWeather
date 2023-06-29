@@ -24,4 +24,8 @@
     <string name="sunrise">"восход: %s, "</string>
     <string name="sunset">"закат: %s, "</string>
     <string name="place_wide_screen_info">"%s,    температура: %s,    осадки: %s,    ветер max: %s   "</string>
+    <string name="location_card_label_population">население: %s</string>
+    <string name="location_card_label_forecast_location">населенный пункт: %s</string>
+    <string name="message_error_screen">looks like connection lost</string>
+    <string name="message_location_choser_screen">Пока нечего посмотреть</string>
 </resources>

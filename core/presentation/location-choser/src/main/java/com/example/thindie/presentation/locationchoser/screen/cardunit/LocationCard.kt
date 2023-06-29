@@ -14,7 +14,9 @@ internal fun LocationCard(
     location: LocationChooserViewModel.Location,
     onSelectedLocation: (String, Float, Float) -> Unit
 ) {
-    Row(modifier = modifier.clickable {
+    Row(modifier = modifier
+        .fillMaxWidth()
+        .clickable {
         onSelectedLocation(
             location.city,
             location.latitude.toFloatOrNull() ?: 0f,
