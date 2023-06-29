@@ -8,6 +8,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -27,9 +29,9 @@ internal class WeatherPinnedPlacesViewModel @Inject constructor(private val fetc
         )
 
 
-    fun onSwitchPinWeather(locationName: String) {
+    fun onDeletePinnedWeather(locationName: String) {
         viewModelScope.launch {
-            fetcher.pinWeather(locationName)
+            fetcher.deleteWeather(locationName)
         }
     }
 
@@ -37,15 +39,19 @@ internal class WeatherPinnedPlacesViewModel @Inject constructor(private val fetc
     fun onShowPinnedWeathers() {
         viewModelScope.launch {
             fetcher.fetchPinnedWeatherLocations()
-                .onSuccess {
-                    weatherPresenterUiState.value = WeatherPresenterUIState
-                        .SuccessWeatherPinnedPlaces(it)
-                }
-                .onFailure {
-                    weatherPresenterUiState.value = WeatherPresenterUIState.ErrorWeather(it)
-                }
+                .onEach { result ->
+                    with(result) {
+                        onSuccess {
+                            weatherPresenterUiState.value = WeatherPresenterUIState
+                                .SuccessWeatherPinnedPlaces(it)
+                        }
+                        onFailure {
+                            weatherPresenterUiState.value = WeatherPresenterUIState.ErrorWeather(it)
+                        }
+                    }
 
-
+                }
+                .launchIn(this)
         }
     }
 

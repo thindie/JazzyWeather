@@ -11,7 +11,7 @@ import com.example.thindie.presentation.weatherpresenter.screen.concreteweather.
 fun WeatherPresenterPortraitScreen(
     modifier: Modifier = Modifier,
     weather: Weather,
-    onClick: (String) -> Unit,
+    onClick: (String, Float, Float) -> Unit,
 ) {
     Column(modifier) {
         WeatherPrimarySection(
@@ -26,8 +26,8 @@ fun WeatherPresenterPortraitScreen(
             time = weather.time,
             longitude = weather.longitude,
             latitude = weather.latitude,
-        ) { pinStatus ->
-            onClick(pinStatus)
+        ) { pinStatus, latitude, longitude ->
+            onClick(pinStatus, latitude, longitude)
         }
         WeatherSlaveSection(
             modifier = modifier,

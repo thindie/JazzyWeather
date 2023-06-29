@@ -15,7 +15,7 @@ import com.example.thindie.presentation.weatherpresenter.screen.selectedweathers
 fun SelectedWeatherPortraitScreen(
     weatherList: List<Weather>,
     onSelectedDestination: (String, Float, Float) -> Unit,
-    onChangePinnedStatus: (String) -> Unit,
+    onChangePinnedStatus: (String, Float, Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn() {
@@ -36,8 +36,8 @@ fun SelectedWeatherPortraitScreen(
                             precipitation = weatherPlace.precipitationSum,
                             wind = weatherPlace.windgusts10mMaxHourly,
                             onSelectedDestination = onSelectedDestination,
-                        ) { place ->
-                            onChangePinnedStatus(place)
+                        ) { place, latitude, longitude ->
+                            onChangePinnedStatus(place, latitude, longitude)
                         }
                     }
                 }

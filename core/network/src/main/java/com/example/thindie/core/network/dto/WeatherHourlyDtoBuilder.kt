@@ -2,6 +2,8 @@ package com.example.thindie.core.network.dto
 
 import com.example.thindie.core.network.generated.hourly.WeatherHourlyRawDto
 import com.example.thindie.core.network.util.parseJsonTo
+import com.google.gson.JsonObject
+import retrofit2.Response
 
 @Suppress("LongParameterList")
 internal class WeatherHourlyDtoBuilder private constructor(
@@ -24,21 +26,21 @@ internal class WeatherHourlyDtoBuilder private constructor(
     )
 
     companion object {
-        suspend operator fun invoke(getRawJson: suspend () -> String) = try {
-            val weatherRaw = getRawJson()
-                .parseJsonTo<WeatherHourlyRawDto>()
-            WeatherHourlyDtoBuilder(
-                latitude = weatherRaw.latitude,
-                longitude = weatherRaw.longitude,
-                precipitation = weatherRaw.hourly.precipitation,
-                temperatureTwoMeters = weatherRaw.hourly.temperature_2m,
-                time = weatherRaw.hourly.time,
-                weatherCode = weatherRaw.hourly.weathercode,
-                windspeedTenMeters = weatherRaw.hourly.windspeed_10m,
-            ).hourlyDto()
-        } catch (e: IllegalStateException) {
-            e.message
-            null
+        suspend operator fun invoke(getRawJson: suspend () -> Response<JsonObject>): Result<WeatherHourlyDto> {
+            return kotlin.runCatching {
+                val weatherRaw = getRawJson().body().toString()
+                val weatherHourlyDto = weatherRaw.parseJsonTo<WeatherHourlyRawDto>()
+                WeatherHourlyDtoBuilder(
+                    latitude = weatherHourlyDto.latitude,
+                    longitude = weatherHourlyDto.longitude,
+                    precipitation = weatherHourlyDto.hourly.precipitation,
+                    temperatureTwoMeters = weatherHourlyDto.hourly.temperature_2m,
+                    time = weatherHourlyDto.hourly.time,
+                    weatherCode = weatherHourlyDto.hourly.weathercode,
+                    windspeedTenMeters = weatherHourlyDto.hourly.windspeed_10m,
+                ).hourlyDto()
+            }
+
         }
     }
 }

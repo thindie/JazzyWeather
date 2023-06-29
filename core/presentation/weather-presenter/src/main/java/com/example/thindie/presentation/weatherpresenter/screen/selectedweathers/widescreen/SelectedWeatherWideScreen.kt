@@ -16,7 +16,7 @@ import com.example.thindie.domain.weatherprovider.entity.Weather
 fun LocationsWideScreen(
     weatherList: List<Weather>,
     onSelectedDestination: (String, Float, Float) -> Unit,
-    onChangePinnedStatus: (String) -> Unit,
+    onChangePinnedStatus: (String, Float, Float) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -42,8 +42,8 @@ fun LocationsWideScreen(
                                 precipitation = weatherPlace.precipitationSum,
                                 wind = weatherPlace.windgusts10mMaxHourly,
                                 onSelectedDestination = onSelectedDestination,
-                            ) { place ->
-                                onChangePinnedStatus(place)
+                            ) { place, latitude, longitude ->
+                                onChangePinnedStatus(place, latitude, longitude)
                             }
                         }
                     }

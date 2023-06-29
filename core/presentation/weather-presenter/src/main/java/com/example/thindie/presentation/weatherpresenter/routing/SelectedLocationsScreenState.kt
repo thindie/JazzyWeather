@@ -22,7 +22,7 @@ internal fun SelectedLocationsScreenState(
             SelectedWeatherLocationsScreen(
                 isWideScreen = isWideScreen,
                 onSelectedDestination = onSelectedDestination,
-                onChangePinnedStatus = viewModel::onSwitchPinWeather,
+                onChangePinnedStatus = { location, _, _ -> viewModel.onDeletePinnedWeather(location) },
                 weatherList =
                 (screenState.value as WeatherPinnedPlacesViewModel
                 .WeatherPresenterUIState.SuccessWeatherPinnedPlaces).places

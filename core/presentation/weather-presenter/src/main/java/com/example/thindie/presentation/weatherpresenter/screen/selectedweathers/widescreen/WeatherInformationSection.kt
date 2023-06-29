@@ -39,7 +39,7 @@ fun WeatherInformationSection(
     precipitation: List<Double>,
     wind: List<Double>,
     onSelectedDestination: (String, Float, Float) -> Unit,
-    onChangePinnedStatus: (String) -> Unit,
+    onChangePinnedStatus: (String, Float, Float) -> Unit,
 
     ) {
     Card(modifier.fillMaxWidth(), shape = ShapeDefaults.ExtraLarge) {
@@ -66,7 +66,7 @@ fun WeatherInformationSection(
             TimeParser(sunrise.first()).time.BodyLargeText()
             stringResource(id = R.string.sunset).BodyLargeText()
             TimeParser(sunset.first()).time.BodyLargeText()
-            IconButton(onClick = { onChangePinnedStatus(place) }) {
+            IconButton(onClick = { onChangePinnedStatus(place, latitude, longitude) }) {
                 Icon(imageVector = Icons.Default.Favorite, contentDescription = "")
             }
         }

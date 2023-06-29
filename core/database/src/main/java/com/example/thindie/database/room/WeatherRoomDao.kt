@@ -10,7 +10,7 @@ interface WeatherRoomDao {
     suspend fun getAllWeathersSite(): List<WeatherDbModel>
 
     @Query("SELECT * FROM weather WHERE place == :city LIMIT 1")
-    suspend fun getWeatherSite(city: String): WeatherDbModel
+    suspend fun getWeatherSite(city: String): WeatherDbModel?
 
     @Upsert
     suspend fun upsertWeatherSite(weatherDbModel: WeatherDbModel)

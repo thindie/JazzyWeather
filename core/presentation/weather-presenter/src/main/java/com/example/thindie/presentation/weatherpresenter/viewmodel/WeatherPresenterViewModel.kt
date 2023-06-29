@@ -23,9 +23,18 @@ internal class WeatherPresenterViewModel @Inject constructor(private val fetcher
 
     val weatherPresenterUIStateFlow = weatherPresenterUiState.asStateFlow()
 
-    fun onSwitchPinWeather(locationName: String) {
+    fun onPinWeather(locationName: String, latitude: Float, longitude: Float) {
         viewModelScope.launch {
-            fetcher.pinWeather(locationName)
+            val contract = object : ConcreteScreenFetchContract {
+                override val location: String
+                    get() = locationName
+                override val latitude: Float
+                    get() = latitude
+                override val longitude: Float
+                    get() = longitude
+
+            }
+            fetcher.pinWeather(contract.map())
         }
     }
 
@@ -41,31 +50,14 @@ internal class WeatherPresenterViewModel @Inject constructor(private val fetcher
         }
     }
 
-    fun onShowPinnedWeathers() {
-        viewModelScope.launch {
-
-            fetcher.fetchPinnedWeatherLocations()
-                .onSuccess {
-                    weatherPresenterUiState.value = WeatherPresenterUIState
-                        .SuccessWeatherPinnedPlaces(it)
-                }
-                .onFailure {
-                    weatherPresenterUiState.value = WeatherPresenterUIState
-                        .ErrorWeather(it)
-                }
-        }
-    }
 
     sealed class WeatherPresenterUIState {
         data class SuccessWeatherPlace(val place: Weather) : WeatherPresenterUIState()
-        data class SuccessWeatherPinnedPlaces(val places: List<Weather>) :
-            WeatherPresenterUIState()
-
         data class ErrorWeather(val e: Throwable) : WeatherPresenterUIState()
     }
 }
 
-private fun ConcreteScreenFetchContract.map() = object : WeatherFetchRequirements {
+ fun ConcreteScreenFetchContract.map() = object : WeatherFetchRequirements {
     override val location: String
         get() = this@map.location
     override val latitude: Float

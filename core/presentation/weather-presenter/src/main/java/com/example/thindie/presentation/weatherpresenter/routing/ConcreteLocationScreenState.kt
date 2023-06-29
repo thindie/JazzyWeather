@@ -23,7 +23,7 @@ internal fun ConcreteLocationScreenState(
             weather = (viewState.value as WeatherPresenterViewModel
             .WeatherPresenterUIState.SuccessWeatherPlace).place,
             isWideScreen = isWideScreen,
-            onClick = viewModel::onSwitchPinWeather
+            onClick = viewModel::onPinWeather
         )
         is WeatherPresenterViewModel.WeatherPresenterUIState.ErrorWeather -> {}
         else -> {}

@@ -15,7 +15,7 @@ import com.example.thindie.presentation.weatherpresenter.screen.concreteweather.
 fun WeatherPresenterWideScreen(
     modifier: Modifier = Modifier,
     weather: Weather,
-    onClick: (String) -> Unit,
+    onClick: (String, Float, Float) -> Unit,
 ) {
     Row(modifier.wrapContentHeight()) {
         Column(Modifier.fillMaxWidth(0.5f)) {
@@ -31,8 +31,8 @@ fun WeatherPresenterWideScreen(
                 time = weather.time,
                 longitude = weather.longitude,
                 latitude = weather.latitude,
-            ) { pinStatus ->
-                onClick(pinStatus)
+            ) { pinStatus, latitude, longitude ->
+                onClick(pinStatus, latitude, longitude)
             }
         }
         Column(Modifier.fillMaxWidth()) {

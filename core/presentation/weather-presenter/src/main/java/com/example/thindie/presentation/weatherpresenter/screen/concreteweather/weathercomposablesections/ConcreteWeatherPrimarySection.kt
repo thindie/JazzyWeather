@@ -25,10 +25,10 @@ fun WeatherPrimarySection(
     time: String,
     latitude: Float,
     longitude: Float,
-    onClick: (String) -> Unit,
+    onClick: (String, Float, Float) -> Unit,
 ) {
     IconButton(
-        onClick = { onClick(place) }, modifier = Modifier
+        onClick = { onClick(place, latitude, longitude) }, modifier = Modifier
             .size(54.dp)
             .padding(start = 8.dp, end = 12.dp, top = 5.dp, bottom = 2.dp)
     ) {

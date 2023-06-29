@@ -11,7 +11,7 @@ fun SelectedWeatherLocationsScreen(
     isWideScreen: Boolean,
     onSelectedDestination: (String, Float, Float) -> Unit,
     weatherList: List<Weather>,
-    onChangePinnedStatus: (String) -> Unit,
+    onChangePinnedStatus: (String, Float, Float) -> Unit,
 ) {
     if (isWideScreen) LocationsWideScreen(
         weatherList, onSelectedDestination, onChangePinnedStatus
