@@ -43,6 +43,7 @@ internal class WeatherPinnedPlacesViewModel @Inject constructor(private val fetc
 
 
     fun onShowPinnedWeathers() {
+        updatePinnedWeather()
         viewModelScope.launch {
             fetcher.fetchPinnedWeatherLocations()
                 .onEach { result ->
