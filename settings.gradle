@@ -15,3 +15,5 @@ dependencyResolutionManagement {
 rootProject.name = "JazzyWeather"
 include ':app'
 include ':core:network'
+include ':core:local-raw-resources'
+include ':core:design-system'
