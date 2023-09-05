@@ -9,7 +9,6 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.core.view.WindowCompat
-import com.example.thindie.presentation.designsystem.theme.JazzyWeatherTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,12 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val isWindowSizeExpanded = checkWindowSizeIsExpanded()
             val isSystemDarkThemed = isSystemInDarkTheme()
-            JazzyWeatherTheme {
-                WeatherApp(
-                    isSystemDarkThemed = isSystemDarkThemed,
-                    isLandScapeOrientation = isWindowSizeExpanded
-                )
-            }
+
         }
     }
 

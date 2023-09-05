@@ -50,24 +50,6 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':core:network')
-    implementation project(path: ':core:local-raw-resources')
-    implementation project(path: ':core:common')
-    implementation project(path: ':core:database')
-
-    implementation project(path: ':core:data:local-resourse-observer')
-    implementation project(path: ':core:data:weather-fetcher')
-    implementation project(path: ':core:data')
-
-
-    implementation project(path: ':core:domain')
-    implementation project(path: ':core:domain:weather-provider')
-    implementation project(path: ':core:domain:local-resource-observer')
-
-    implementation project(path: ':core:presentation')
-    implementation project(path: ':core:presentation:location-choser')
-    implementation project(path: ':core:presentation:weather-presenter')
-    implementation project(path: ':core:presentation:design-system')
 
 
     implementation("com.google.dagger:hilt-android:2.45")

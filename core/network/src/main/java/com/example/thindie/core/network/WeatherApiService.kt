@@ -2,13 +2,16 @@
 
 package com.example.thindie.core.network
 
-import com.example.thindie.core.network.util.ENDPOINT
 import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+internal const val ENDPOINT = "/v1/forecast"
+
 internal interface WeatherApiService {
+
+
     @GET(ENDPOINT)
     suspend fun getWeatherJson(
         @Query(QUERY_PARAM_LATITUDE) latitude: Float,

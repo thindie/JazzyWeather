@@ -1,8 +1,6 @@
 package com.example.thindie.core.network.di
 
-import android.util.Log
 import com.example.thindie.core.network.WeatherApiService
-import com.example.thindie.core.network.util.BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,13 +14,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    private const val BASE_URL = "https://api.open-meteo.com"
 
     @Provides
     internal fun provideOkHttpClient() = OkHttpClient()
         .newBuilder()
         .addInterceptor { chain: Interceptor.Chain ->
             val request = chain.request()
-            /*Log.d("SERVICE_TAG_INTERCEPTOR","Outgoing request to ${request.url()}")*/
             chain.proceed(request)
         }
         .build()
@@ -35,7 +33,7 @@ object NetworkModule {
         .build()
 
     @Provides
-   internal fun provideApiService(retrofit: Retrofit): WeatherApiService {
+    internal fun provideApiService(retrofit: Retrofit): WeatherApiService {
         return retrofit.create(WeatherApiService::class.java)
     }
 }
