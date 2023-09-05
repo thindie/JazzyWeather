@@ -3,7 +3,7 @@ package com.example.thindie.core.localrawresources.locationprovider
 
 import android.app.Application
 import com.example.thindie.core.local_raw_resources.R
-import com.example.thindie.core.localrawresources.Coordinates
+import com.example.thindie.core.localrawresources.LocateAble
 import com.example.thindie.core.localrawresources.LocationNameParser
 import com.example.thindie.core.localrawresources.WeatherStoredLocationObserver
 import com.example.thindie.core.localrawresources.ldo.LocationPropertiesLdo
@@ -28,9 +28,9 @@ internal class WeatherStoredLocationObserverImpl @Inject constructor(
     private val locationNameParser: LocationNameParser
 ) : WeatherStoredLocationObserver {
 
-    override fun getLocationByCoordinates(coordinates: Coordinates): Flow<List<LocationPropertiesLdo>> {
+    override fun getLocationByCoordinates(locateAble: LocateAble): Flow<List<LocationPropertiesLdo>> {
         return filterByConditionsAndParseJsonObjectsAsFlow {
-            asJsonObject.checkCoordinateConditions(coordinates)
+            asJsonObject.checkCoordinateConditions(locateAble)
         }
     }
 
@@ -54,10 +54,10 @@ internal class WeatherStoredLocationObserverImpl @Inject constructor(
 
 
     @kotlin.jvm.Throws(IllegalArgumentException::class, NumberFormatException::class)
-    private fun String.parseAsCoordinates(): Coordinates {
+    private fun String.parseAsCoordinates(): LocateAble {
         val tagToParse = this
         tagToParse.split(SPLIT_BY_WHITESPACE)
-        return object : Coordinates {
+        return object : LocateAble {
             override val latitude: Float
                 get() = requireNotNull(tagToParse[0].toString()).toFloat()
             override val longitude: Float
@@ -74,10 +74,10 @@ internal class WeatherStoredLocationObserverImpl @Inject constructor(
         return array
     }
 
-    private fun JsonObject.checkCoordinateConditions(coordinates: Coordinates): Boolean {
-        val isLatitudeLegit = get(LATITUDE).asString.meetConditions(coordinates.latitude.toString())
+    private fun JsonObject.checkCoordinateConditions(locateAble: LocateAble): Boolean {
+        val isLatitudeLegit = get(LATITUDE).asString.meetConditions(locateAble.latitude.toString())
         val isLongitudeLegit =
-            get(LONGITUDE).asString.meetConditions(coordinates.latitude.toString())
+            get(LONGITUDE).asString.meetConditions(locateAble.latitude.toString())
         return isLatitudeLegit && isLongitudeLegit
     }
 
