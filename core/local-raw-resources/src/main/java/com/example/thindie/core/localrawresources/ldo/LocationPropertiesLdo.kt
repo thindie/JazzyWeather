@@ -1,7 +1,11 @@
 package com.example.thindie.core.localrawresources.ldo
-@Suppress("ConstructorParameterNaming")
+
+import com.google.gson.annotations.SerializedName
+
+
 data class LocationPropertiesLdo(
-    val admin_name: String,
+    @SerializedName("admin_name")
+    val adminName: String,
     val capital: String,
     val city: String,
     val country: String,
@@ -9,5 +13,6 @@ data class LocationPropertiesLdo(
     val lat: String,
     val lng: String,
     val population: String,
-    val population_proper: String
+    @SerializedName("population_proper")
+    val populationProper: String,
 )
