@@ -2,6 +2,7 @@
 
 package com.example.thindie.core.network
 
+import com.example.thindie.core.network.dto.hourlydto.WeatherHourlyResponse
 import com.google.gson.JsonObject
 import retrofit2.Response
 import retrofit2.http.GET
@@ -30,7 +31,7 @@ internal interface WeatherApiService {
         @Query(QUERY_PARAM_WINDSPEED_UNIT) windSpeed: String = "ms",
         @Query(QUERY_PARAM_TIMEZONE, encoded = true) timeZone: String,
         @Query(QUERY_CURRENT_WEATHER) boolean: Boolean = true,
-    ): Response<JsonObject>
+    ): WeatherHourlyResponse
 
 
 }
@@ -47,5 +48,8 @@ private const val NETWORK_QUERY =
     "weathercode,temperature_2m_max,temperature_2m_min,apparent_temperature_max," +
             "apparent_temperature_min,sunrise,sunset,precipitation_sum,rain_sum,showers_sum," +
             "snowfall_sum,windspeed_10m_max,windgusts_10m_max"
-private const val HOURLY_NETWORK_QUERY = "temperature_2m,precipitation,weathercode,windspeed_10m"
+private const val HOURLY_NETWORK_QUERY =
+    "temperature_2m,apparent_temperature,precipitation," +
+            "rain,showers,snowfall,weathercode,visibility,windspeed_10m" +
+            ",windgusts_10m"
 
