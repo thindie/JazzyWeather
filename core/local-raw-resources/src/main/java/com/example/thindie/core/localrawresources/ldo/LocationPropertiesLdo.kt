@@ -10,8 +10,10 @@ data class LocationPropertiesLdo(
     val city: String,
     val country: String,
     val iso2: String,
-    val lat: String,
-    val lng: String,
+    @SerializedName("lat")
+    val latitude: String,
+    @SerializedName("lng")
+    val longitude: String,
     val population: String,
     @SerializedName("population_proper")
     val populationProper: String,
