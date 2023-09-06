@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 internal const val ENDPOINT = "/v1/forecast"
 
-internal interface WeatherApiService {
+interface WeatherApiService {
 
 
     @GET(ENDPOINT)
