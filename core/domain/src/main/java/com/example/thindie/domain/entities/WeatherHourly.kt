@@ -18,4 +18,11 @@ data class WeatherHourly(
     val weatherCode: List<Int>,
     val windGusts10m: List<Double>,
     val windSpeed10m: List<Double>,
-)
+): ForecastAble {
+    override fun getPlace() = this.place
+
+    override fun getLatitude() = this.latitude
+
+    override fun getLongitude() = this.longitude
+
+}

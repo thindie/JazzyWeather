@@ -19,4 +19,11 @@ data class WeatherDaily(
     val windDirection10mDominant: List<Int>,
     val windGusts10mMax: List<Double>,
     val windSpeed10mMax: List<Double>,
-)
+) : ForecastAble {
+    override fun getPlace() = this.place
+
+    override fun getLatitude() = this.latitude
+
+    override fun getLongitude() = this.longitude
+
+}

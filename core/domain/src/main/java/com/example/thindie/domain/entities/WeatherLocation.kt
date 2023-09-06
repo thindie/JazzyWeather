@@ -10,4 +10,19 @@ data class WeatherLocation(
     val longitude: String,
     val population: String,
     val populationProper: String,
-)
+) : ForecastAble {
+    override fun getPlace() = this.city
+
+    override fun getLatitude() = try {
+        this.latitude.toDouble()
+    } catch (e: NumberFormatException) {
+        0.0
+    }
+
+    override fun getLongitude() = try {
+        this.latitude.toDouble()
+    } catch (e: NumberFormatException) {
+        0.0
+    }
+
+}
