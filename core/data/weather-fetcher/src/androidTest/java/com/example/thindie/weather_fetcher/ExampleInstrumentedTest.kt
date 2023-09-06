@@ -1,4 +1,4 @@
-package com.example.thindie.data.localresourceobserver
+package com.example.thindie.weather_fetcher
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.thindie.data.localresourceobserver.test", appContext.packageName)
+        assertEquals("com.example.thindie.weather_fetcher.test", appContext.packageName)
     }
 }

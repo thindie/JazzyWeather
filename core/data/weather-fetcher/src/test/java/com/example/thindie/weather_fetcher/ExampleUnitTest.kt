@@ -1,4 +1,4 @@
-package com.example.thindie.data.localresourceobserver
+package com.example.thindie.weather_fetcher
 
 import org.junit.Test
 
