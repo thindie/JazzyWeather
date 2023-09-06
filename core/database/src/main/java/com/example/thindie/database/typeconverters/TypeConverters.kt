@@ -1,4 +1,4 @@
-package com.example.thindie.database.room
+package com.example.thindie.database.typeconverters
 
 import androidx.room.TypeConverter
 

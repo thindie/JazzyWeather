@@ -1,22 +1,20 @@
 package com.example.thindie.database.di
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.thindie.database.room.DoubleListTypeConverter
-import com.example.thindie.database.room.IntListTypeConverter
-import com.example.thindie.database.room.PinnedWeatherDao
-import com.example.thindie.database.room.PinnedWeatherDbModel
-import com.example.thindie.database.room.StringListTypeConverter
-import com.example.thindie.database.room.WeatherDbModel
-import com.example.thindie.database.room.WeatherRoomDao
+import com.example.thindie.database.typeconverters.DoubleListTypeConverter
+import com.example.thindie.database.typeconverters.IntListTypeConverter
+import com.example.thindie.database.typeconverters.StringListTypeConverter
+import com.example.thindie.database.room.WeatherDailyDbModel
+import com.example.thindie.database.room.WeatherDailyDao
+import com.example.thindie.database.room.WeatherHourlyDao
 import javax.inject.Singleton
 
 @Singleton
 @Database(
-    entities = [WeatherDbModel::class, PinnedWeatherDbModel::class],
-    version = 2,
+    entities = [WeatherDailyDbModel::class],
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(
@@ -25,7 +23,6 @@ import javax.inject.Singleton
     IntListTypeConverter::class
 )
 internal abstract class WeatherDataBase : RoomDatabase() {
-    abstract fun bindWeatherRoomDao(): WeatherRoomDao
-    abstract fun getPinnedWeatherDao(): PinnedWeatherDao
-
+    abstract fun weatherDailyInstance(): WeatherDailyDao
+    abstract fun weatherHourlyInstance(): WeatherHourlyDao
 }
