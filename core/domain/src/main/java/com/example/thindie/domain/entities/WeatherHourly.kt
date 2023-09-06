@@ -1,6 +1,7 @@
 package com.example.thindie.domain.entities
 
 data class WeatherHourly(
+    val place: String,
     val latitude: Double,
     val longitude: Double,
     val timezone: String,
