@@ -4,8 +4,6 @@ package com.example.thindie.core.network
 
 import com.example.thindie.core.network.dto.dailydto.WeatherDailyResponse
 import com.example.thindie.core.network.dto.hourlydto.WeatherHourlyResponse
-import com.google.gson.JsonObject
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
