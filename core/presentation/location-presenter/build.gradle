@@ -43,6 +43,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:design-system"))
+    implementation(project(":core:domain"))
 
     def composeBom = platform('androidx.compose:compose-bom:2022.12.00')
     implementation composeBom
