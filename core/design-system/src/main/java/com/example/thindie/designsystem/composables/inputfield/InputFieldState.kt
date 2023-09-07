@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -20,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.StringHelper
 import kotlinx.coroutines.CoroutineScope
 
-@Stable
+
 open class InputFieldState(scope: CoroutineScope, helper: StringHelper) {
 
     private var isMaxWidth by mutableStateOf(true)
@@ -58,22 +59,25 @@ open class InputFieldState(scope: CoroutineScope, helper: StringHelper) {
     @OptIn(ExperimentalMaterial3Api::class)
     open val decorationBox: @Composable (innerTextField: @Composable () -> Unit) -> Unit =
         @Composable { innerTextField ->
-            TextFieldDefaults.OutlinedTextFieldDecorationBox(
+            OutlinedTextFieldDefaults.DecorationBox(
                 value = _fieldValue.value.value,
                 innerTextField = innerTextField,
                 enabled = true,
                 singleLine = true,
                 visualTransformation = VisualTransformation.None,
                 interactionSource = MutableInteractionSource(),
+                colors = textFieldColors,
                 contentPadding = PaddingValues(0.dp),
-                colors = textFieldColors
+                container = {
+                    //OutlinedTextFieldDefaults.ContainerBox(enabled, isError, interactionSource, colors)
+                },
             )
         }
 
     @OptIn(ExperimentalMaterial3Api::class)
     open val textFieldColors: TextFieldColors
-        @Composable get() = TextFieldDefaults.outlinedTextFieldColors(
-            textColor = MaterialTheme.colorScheme.primary,
+        @Composable get() = OutlinedTextFieldDefaults.colors(
+            //textColor = MaterialTheme.colorScheme.primary,
             disabledTextColor = MaterialTheme.colorScheme.secondary,
             cursorColor = MaterialTheme.colorScheme.primary,
             errorCursorColor = MaterialTheme.colorScheme.error,

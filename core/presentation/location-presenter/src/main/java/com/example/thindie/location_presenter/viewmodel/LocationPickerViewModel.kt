@@ -1,5 +1,6 @@
 package com.example.thindie.location_presenter.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thindie.domain.entities.WeatherLocation
@@ -26,8 +27,10 @@ internal class LocationPickerViewModel @Inject constructor(private val getLocati
         )
 
     fun onSearchReact(printedLine: String) {
+        Log.d("SERVICE_TAG", printedLine)
         getLocation(printedLine)
             .onEach {
+                Log.d("SERVICE_TAG", it.toString())
                 _uiState.tryEmit(LocationsScreenState(it))
             }
             .launchIn(viewModelScope)

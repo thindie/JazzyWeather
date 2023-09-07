@@ -6,7 +6,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 private fun JazzyWeatherTheme(boolean: Boolean): ColorScheme {
     return if (!boolean) LightColors else DarkColors
@@ -83,8 +82,8 @@ fun JazzyWeatherTheme(
     content: @Composable() () -> Unit,
 ) {
 
-    val systemUIcontroller = rememberSystemUiController()
-    systemUIcontroller.setSystemBarsColor(JazzyWeatherTheme(useDarkTheme).surface)
+   // val systemUIcontroller = rememberSystemUiController()
+   // systemUIcontroller.setSystemBarsColor(JazzyWeatherTheme(useDarkTheme).surface)
 
     MaterialTheme(
         colorScheme = JazzyWeatherTheme(useDarkTheme),

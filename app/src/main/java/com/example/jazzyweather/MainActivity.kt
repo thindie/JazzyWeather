@@ -4,12 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.core.view.WindowCompat
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
+import com.example.thindie.location_presenter.route.LocationPickerRouting
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +26,7 @@ class MainActivity : ComponentActivity() {
             val isWindowSizeExpanded = checkWindowSizeIsExpanded()
             val isSystemDarkThemed = isSystemInDarkTheme()
              JazzyWeatherTheme {
-
+               LocationPickerRouting()
             }
         }
     }
