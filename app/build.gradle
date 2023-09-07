@@ -55,6 +55,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:domain"))
     implementation(project(':core:data:weather-fetcher'))
+    implementation(project(':core:data:local-resorces-location-fetcher'))
 
     implementation("com.google.dagger:hilt-android:2.47")
     kapt("com.google.dagger:hilt-android-compiler:2.47")

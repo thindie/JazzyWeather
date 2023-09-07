@@ -1,4 +1,4 @@
-package com.example.thindie.common
+package com.example.thindie.local_resorces_location_fetcher
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package com.example.thindie.common
+package com.example.thindie.local_resorces_location_fetcher
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,9 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.thindie.common.test", appContext.packageName)
+        assertEquals(
+            "com.example.thindie.local_resorces_location_fetcher.test",
+            appContext.packageName
+        )
     }
 }
