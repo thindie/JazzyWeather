@@ -9,11 +9,12 @@ import com.example.thindie.database.typeconverters.StringListTypeConverter
 import com.example.thindie.database.room.WeatherDailyDbModel
 import com.example.thindie.database.room.WeatherDailyDao
 import com.example.thindie.database.room.WeatherHourlyDao
+import com.example.thindie.database.room.WeatherHourlyDbModel
 import javax.inject.Singleton
 
 @Singleton
 @Database(
-    entities = [WeatherDailyDbModel::class],
+    entities = [WeatherDailyDbModel::class, WeatherHourlyDbModel::class],
     version = 3,
     exportSchema = false
 )
