@@ -33,6 +33,7 @@
     <string name="location_card_label_forecast_location">населенный пункт: %s</string>
     <string name="message_error_screen">looks like connection lost</string>
     <string name="message_location_choser_screen">Пока нечего посмотреть</string>
+    <string name="button_label_cancel">Отмена</string>
     <string name="weathercode_0">Ясно</string>
     <string name="weathercode_1">В основном Ясно</string>
     <string name="weathercode_3">Пасмурно</string>
@@ -61,4 +62,5 @@
     <string name="weathercode_95">Небольшая Гроза</string>
     <string name="weathercode_96">Гроза</string>
     <string name="weathercode_99">Грозище</string>
+    <string name="initial_value" />
 </resources>
