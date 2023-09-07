@@ -11,18 +11,22 @@ data class WeatherLocation(
     val population: String,
     val populationProper: String,
 ) : ForecastAble {
-    override fun getPlace() = this.city
+    override fun getSight() = this.city
 
-    override fun getLatitude() = try {
-        this.latitude.toDouble()
+    override fun getSightLatitude() = try {
+        this.latitude.toFloat()
     } catch (e: NumberFormatException) {
-        0.0
+        0.0F
     }
 
-    override fun getLongitude() = try {
-        this.latitude.toDouble()
+    override fun getSightLongitude() = try {
+        this.latitude.toFloat()
     } catch (e: NumberFormatException) {
-        0.0
+        0.0F
+    }
+
+    override fun getTimeZone(): String {
+        return "GMT"
     }
 
 }

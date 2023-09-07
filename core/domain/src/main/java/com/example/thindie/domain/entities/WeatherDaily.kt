@@ -20,10 +20,12 @@ data class WeatherDaily(
     val windGusts10mMax: List<Double>,
     val windSpeed10mMax: List<Double>,
 ) : ForecastAble {
-    override fun getPlace() = this.place
+    override fun getSight() = this.place
 
-    override fun getLatitude() = this.latitude
+    override fun getSightLatitude() = this.latitude.toFloat()
 
-    override fun getLongitude() = this.longitude
+    override fun getSightLongitude() = this.longitude.toFloat()
+
+    override fun getTimeZone() = this.timezone
 
 }
