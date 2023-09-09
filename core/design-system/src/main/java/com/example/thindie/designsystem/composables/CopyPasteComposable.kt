@@ -6,13 +6,13 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun JazzySome(modifier: Modifier = Modifier) {
+internal fun JazzySome(modifier: Modifier = Modifier) {
 
 }
 
 @Composable
 @Preview(showBackground = true, device = Devices.PIXEL_2)
-fun previewJazzySome() {
+internal fun previewJazzySome() {
     com.example.thindie.designsystem.theme.JazzyWeatherTheme {
 
     }
