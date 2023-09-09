@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 internal class LocationRepositoryImpl @Inject constructor(private val locationObserver: WeatherStoredLocationObserver) :
     LocationRepository {
     override fun observeLocationCurrentRequest(currentRequest: String): Flow<List<WeatherLocation>> {
-        return if (currentRequest.isCoordinates()) {
+        return if (!currentRequest.isCoordinates()) {
             onRequestTitle(currentRequest)
         } else onRequestCoordinates(currentRequest.toAnonymeLocateAble())
     }
