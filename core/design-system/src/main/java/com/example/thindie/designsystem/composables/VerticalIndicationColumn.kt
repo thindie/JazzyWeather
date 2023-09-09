@@ -18,14 +18,25 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.thindie.designsystem.animators.FloatAnimator
 import com.example.thindie.designsystem.customizerFullHeight
 import com.example.thindie.designsystem.customizerLessHeight
+import com.example.thindie.designsystem.fakeColorCustomizerAnimator
+import com.example.thindie.designsystem.fakeHeightAnimator
 
 @Composable
-fun VerticalIndicationColumn(width: Dp = 20.dp, customizer: VisualCustomizer) {
+fun VerticalIndicationColumn(
+    width: Dp = 20.dp,
+    customizer: VisualCustomizer,
+    animator: FloatAnimator? = null,
+) {
+
     val modifier: Modifier = Modifier
         .width(width)
         .height(width * 3)
+
+    val maxHeight = animator?.animatedValue?.value ?: customizer.getShapeComponent()
+
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Bottom,
@@ -39,7 +50,7 @@ fun VerticalIndicationColumn(width: Dp = 20.dp, customizer: VisualCustomizer) {
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(customizer.getShapeComponent())
+                    .fillMaxHeight(maxHeight)
                     .clip(RoundedCornerShape(10.dp))
                     .background(customizer.getColorComponent())
             )
@@ -51,11 +62,14 @@ fun VerticalIndicationColumn(width: Dp = 20.dp, customizer: VisualCustomizer) {
 @Preview(showBackground = true, device = Devices.PIXEL_2)
 internal fun previewVerticalIndicationColumn() {
     com.example.thindie.designsystem.theme.JazzyWeatherTheme {
+
+
         Column {
             Row {
                 VerticalIndicationColumn(
                     width = 10.dp,
-                    customizer = customizerFullHeight
+                    customizer = customizerFullHeight,
+                    animator = fakeHeightAnimator
                 )
                 VerticalIndicationColumn(
                     width = 10.dp,
@@ -68,12 +82,14 @@ internal fun previewVerticalIndicationColumn() {
             ) {
                 VerticalIndicationColumn(
                     width = 40.dp,
+                    animator = fakeHeightAnimator,
                     customizer = customizerFullHeight
                 )
                 VerticalIndicationColumn(
                     width = 40.dp,
                     customizerLessHeight
                 )
+                VerticalIndicationColumn(customizer = fakeColorCustomizerAnimator, width = 20.dp)
             }
         }
 
