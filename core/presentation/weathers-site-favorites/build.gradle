@@ -7,10 +7,11 @@ plugins {
 
 android {
     namespace 'com.example.thindie.weathers_site_favorites'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 24
+        targetSdk 34
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -28,6 +29,18 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs += '-opt-in=kotlin.RequiresOptIn'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.5.0'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
     }
 }
 
@@ -35,6 +48,8 @@ dependencies {
 
     implementation(project(":core:design-system"))
     implementation(project(":core:domain"))
+
+
 
     implementation("com.google.dagger:hilt-android:2.47")
     kapt("com.google.dagger:hilt-android-compiler:2.47")
@@ -54,6 +69,8 @@ dependencies {
 
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
     implementation "androidx.navigation:navigation-compose:2.7.1"
+
+    //
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
