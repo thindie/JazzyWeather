@@ -8,11 +8,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ColorAnimatorVisualCustomizer(
-    private val targetValue: Float,
+class SimpleVisualCustomizer(
+    val initialValue: String,
+    private val customizeValue: Float,
     private val positiveColor: Color,
     private val negativeColor: Color,
-    private val coroutineScope: CoroutineScope,
+    coroutineScope: CoroutineScope,
     private val time: Int = 1000,
 ) : FloatAnimator(), VisualCustomizer {
 
@@ -26,17 +27,15 @@ class ColorAnimatorVisualCustomizer(
 
     override fun animate(scope: CoroutineScope) {
         scope.launch {
-            delay(animationTime.toLong())
+            delay(time.toLong())
             currentAnimationValue.floatValue = getShapeComponent()
-            delay(animationTime.toLong() / 3)
-
         }
     }
 
     @Composable
     override fun getColorComponent(): Brush {
 
-        return if (targetValue <= 0) Brush.verticalGradient(
+        return if (customizeValue <= 0) Brush.verticalGradient(
             listOf(
                 negativeColor.copy(alpha = 0.5F),
                 negativeColor,
@@ -55,11 +54,15 @@ class ColorAnimatorVisualCustomizer(
     }
 
     override fun getShapeComponent(): Float {
-        return targetValue.positive()
+        return customizeValue
+            .positive()
+            .notFullSize()
     }
 
     private fun Float.positive(): Float {
         val some = this
         return if (this <= 0) some * -1f else some
     }
+
+    private fun Float.notFullSize(): Float = this * 0.85F
 }
