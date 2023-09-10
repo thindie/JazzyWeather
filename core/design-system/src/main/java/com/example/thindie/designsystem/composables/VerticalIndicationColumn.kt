@@ -7,9 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,10 +21,10 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.thindie.designsystem.VisualCustomizer
 import com.example.thindie.designsystem.animators.FloatAnimator
 import com.example.thindie.designsystem.customizerFullHeight
 import com.example.thindie.designsystem.customizerLessHeight
-import com.example.thindie.designsystem.fakeColorCustomizerAnimator
 import com.example.thindie.designsystem.fakeHeightAnimator
 
 @Composable
@@ -29,22 +32,23 @@ fun VerticalIndicationColumn(
     width: Dp = 20.dp,
     customizer: VisualCustomizer,
     animator: FloatAnimator? = null,
+    textLabel: String = "",
 ) {
 
     val modifier: Modifier = Modifier
         .width(width)
-        .height(width * 3)
+        .heightIn(max = width * 5)
 
     val maxHeight = animator?.animatedValue?.value ?: customizer.getShapeComponent()
 
     Column(
-        modifier = modifier,
+        modifier = modifier.wrapContentHeight(),
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(
-            modifier = modifier,
-            verticalArrangement = Arrangement.Bottom
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             Spacer(
@@ -54,7 +58,15 @@ fun VerticalIndicationColumn(
                     .clip(RoundedCornerShape(10.dp))
                     .background(customizer.getColorComponent())
             )
+            Spacer(modifier = Modifier.size(4.dp))
+
         }
+        Text(
+            text = textLabel,
+            style = androidx.compose.material3.MaterialTheme.typography.titleSmall.copy(
+                customizer.getColorComponent()
+            )
+        )
     }
 }
 
@@ -89,7 +101,6 @@ internal fun previewVerticalIndicationColumn() {
                     width = 40.dp,
                     customizerLessHeight
                 )
-                VerticalIndicationColumn(customizer = fakeColorCustomizerAnimator, width = 20.dp)
             }
         }
 
