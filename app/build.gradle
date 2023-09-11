@@ -57,6 +57,8 @@ dependencies {
     implementation(project(':core:data:weather-fetcher'))
     implementation(project(':core:data:local-resorces-location-fetcher'))
     implementation(project(':core:presentation:location-presenter'))
+    implementation(project(':core:presentation:weather-concrete'))
+    implementation(project(':core:presentation:weathers-site-favorites'))
 
     implementation("com.google.dagger:hilt-android:2.47")
     kapt("com.google.dagger:hilt-android-compiler:2.47")

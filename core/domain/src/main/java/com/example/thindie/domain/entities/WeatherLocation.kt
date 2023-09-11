@@ -20,7 +20,7 @@ data class WeatherLocation(
     }
 
     override fun getSightLongitude() = try {
-        this.latitude.toFloat()
+        this.longitude.toFloat()
     } catch (e: NumberFormatException) {
         0.0F
     }
