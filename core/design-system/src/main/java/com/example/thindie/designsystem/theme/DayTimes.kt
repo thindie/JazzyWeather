@@ -1,5 +1,5 @@
 package com.example.thindie.designsystem.theme
 
-import androidx.compose.ui.graphics.Color
-
-
+enum class DayTimes {
+    LIGHT, DARK
+}
