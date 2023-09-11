@@ -27,4 +27,34 @@ data class WeatherHourly(
 
     override fun getTimeZone() = this.timezone
 
+    fun getHourlyForecast(): List<OneHourWeather> {
+        val oneHourWeather = mutableListOf<OneHourWeather>()
+        time.forEachIndexed { index, hour ->
+            if (index < 24) {
+                OneHourWeather(
+                    place = place,
+                    latitude = latitude,
+                    longitude = longitude,
+                    timezone = timezone,
+                    timeZoneAbbreviation = timeZoneAbbreviation,
+                    utcOffsetSeconds = utcOffsetSeconds,
+                    apparentTemperature = apparentTemperature[index],
+                    precipitation = precipitation[index],
+                    rain = rain[index],
+                    showers = showers[index],
+                    snowfall = snowfall[index],
+                    temperature2m = temperature2m[index],
+                    time = hour,
+                    visibility = visibility[index],
+                    weatherCode = weatherCode[index],
+                    windGusts10m = windGusts10m[index],
+                    windSpeed10m = windSpeed10m[index]
+                ).apply {
+                    oneHourWeather.add(this)
+                }
+            }
+        }
+        return oneHourWeather
+    }
+
 }

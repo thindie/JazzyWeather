@@ -28,4 +28,34 @@ data class WeatherDaily(
 
     override fun getTimeZone() = this.timezone
 
+    fun getDailyForecast(): List<OneDayWeather> {
+        val oneDayWeather = mutableListOf<OneDayWeather>()
+        time.forEachIndexed { index, hour ->
+            if (index < 7) {
+                OneDayWeather(
+                    place = place,
+                    latitude = latitude,
+                    longitude = longitude,
+                    timezone = timezone,
+                    timeZoneAbbreviation = timeZoneAbbreviation,
+                    utcOffsetSeconds = utcOffsetSeconds,
+                    precipitationHours = precipitationHours[index],
+                    precipitationProbabilityMax = precipitationProbabilityMax[index],
+                    precipitationSum = precipitationSum[index],
+                    rainSum = rainSum[index],
+                    showersSum = showersSum[index],
+                    snowfallSum = snowfallSum[index],
+                    time = hour,
+                    uvIndexMax = uvIndexMax[index],
+                    windDirection10mDominant = windDirection10mDominant[index],
+                    windGusts10mMax = windGusts10mMax[index],
+                    windSpeed10mMax = windSpeed10mMax[index],
+                    elevation = elevation
+                ).apply {
+                    oneDayWeather.add(this)
+                }
+            }
+        }
+        return oneDayWeather
+    }
 }
