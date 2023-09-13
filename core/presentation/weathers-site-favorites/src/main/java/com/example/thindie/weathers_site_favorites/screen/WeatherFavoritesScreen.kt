@@ -50,7 +50,7 @@ internal fun WeatherFavoritesScreen(
                             time = hourlyWeather.time,
                             celsium = hourlyWeather.apparentTemperature,
                             windSpeed = hourlyWeather.windSpeed10m.toString(),
-                            precipitation = hourlyWeather.precipitation.toString()
+                            precipitation = hourlyWeather.precipitation
                         )
                     }
                 }

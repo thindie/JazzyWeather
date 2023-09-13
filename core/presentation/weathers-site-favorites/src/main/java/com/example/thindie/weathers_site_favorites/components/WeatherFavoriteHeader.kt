@@ -121,7 +121,7 @@ internal fun previewWeatherFavoriteHeader() {
                 time = "14:00",
                 celsium = 25.00,
                 windSpeed = "wind 4 m/s",
-                precipitation = "clear",
+                precipitation = 0.3,
                 contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
                     MaterialTheme.colorScheme.surface.TransGradientVerticalInverse()
                 } else {
@@ -160,7 +160,7 @@ internal fun previewWeatherFavoriteHeaderDark() {
                 time = "14:00",
                 celsium = 24.00,
                 windSpeed = "wind 4 m/s",
-                precipitation = "clear",
+                precipitation = 0.3,
                 contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
                     MaterialTheme.colorScheme.onPrimary.TransGradientVertical()
                 } else {

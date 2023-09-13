@@ -66,4 +66,9 @@ object WeatherFavoritesColors {
             }
         }
     }
+
+    @Composable
+    fun precipitationClearColor(): Color {
+        return if (isSystemInDarkTheme()) theme.colorScheme.tertiary.copy(alpha = 0.5f) else theme.colorScheme.surfaceVariant
+    }
 }
