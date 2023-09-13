@@ -5,15 +5,15 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 @Composable
-fun Color.TransGradientVertical(): Brush {
+fun Color.TransGradientVertical(color: Color = Color.Transparent): Brush {
     return Brush.verticalGradient(
-        listOf(Color.Transparent, this)
+        listOf(color, this)
     )
 }
 
 @Composable
-fun Color.TransGradientVerticalInverse(): Brush {
+fun Color.TransGradientVerticalInverse(color: Color = Color.Transparent): Brush {
     return Brush.verticalGradient(
-        listOf(this, Color.Transparent)
+        listOf(this, color)
     )
 }

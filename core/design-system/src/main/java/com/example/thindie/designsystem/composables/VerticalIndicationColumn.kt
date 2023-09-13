@@ -63,7 +63,7 @@ fun VerticalIndicationColumn(
         }
         Text(
             text = textLabel,
-            style = androidx.compose.material3.MaterialTheme.typography.titleSmall.copy(
+            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(
                 customizer.getColorComponent()
             )
         )
