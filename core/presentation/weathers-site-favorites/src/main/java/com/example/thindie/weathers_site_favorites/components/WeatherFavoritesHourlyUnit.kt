@@ -28,7 +28,7 @@ internal fun WeatherFavoriteHourlyUnit(
     modifier: Modifier = Modifier,
     contextDependableSurfaceColor: Brush,
     time: String,
-    celsium: String,
+    celsium: Double,
     windSpeed: String,
     precipitation: String,
 ) {
@@ -56,9 +56,10 @@ internal fun WeatherFavoriteHourlyUnit(
                 )
             )
             Text(
-                text = celsium,
+                text = celsium.toString(),
                 style = MaterialTheme.typography.headlineLarge.copy(
-                    MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.W700
+                    color = WeatherFavoritesColors.temperatureColor(temperature = celsium),
+                    fontWeight = FontWeight.W700
                 )
             )
             Text(
@@ -83,7 +84,7 @@ internal fun previewWeatherFavoriteHourlyUnit() {
     com.example.thindie.designsystem.theme.JazzyWeatherTheme {
         WeatherFavoriteHourlyUnit(
             time = "14:00",
-            celsium = "5",
+            celsium = 5.00,
             windSpeed = "ветер 4 м/с",
             precipitation = "дождь 24 мм",
             contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
@@ -101,7 +102,7 @@ internal fun previewWeatherFavoriteHourlyUnitDark() {
     com.example.thindie.designsystem.theme.JazzyWeatherTheme(true) {
         WeatherFavoriteHourlyUnit(
             time = "14:00",
-            celsium = "5",
+            celsium = 5.00,
             windSpeed = "ветер 4 м/с",
             precipitation = "дождь 24 мм",
             contextDependableSurfaceColor = if (isSystemInDarkTheme()) {

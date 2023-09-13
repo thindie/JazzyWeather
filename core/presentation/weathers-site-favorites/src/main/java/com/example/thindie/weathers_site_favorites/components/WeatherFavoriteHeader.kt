@@ -119,7 +119,7 @@ internal fun previewWeatherFavoriteHeader() {
             )
             WeatherFavoriteHourlyUnit(
                 time = "14:00",
-                celsium = "24",
+                celsium = 25.00,
                 windSpeed = "wind 4 m/s",
                 precipitation = "clear",
                 contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
@@ -158,7 +158,7 @@ internal fun previewWeatherFavoriteHeaderDark() {
             )
             WeatherFavoriteHourlyUnit(
                 time = "14:00",
-                celsium = "24",
+                celsium = 24.00,
                 windSpeed = "wind 4 m/s",
                 precipitation = "clear",
                 contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
