@@ -1,24 +1,29 @@
 package com.example.thindie.date_time_management.di
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import javax.inject.Named
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Module
-@InstallIn(ViewModelComponent::class)
-internal object TimePatterns {
-    @Named("pattern_week_day")
-    @Provides
-    fun patternWeekDay() = "dddd"
+@Singleton
+internal class TimePatterns @Inject constructor() {
 
-    @Named("pattern_month")
-    @Provides
-    fun patternMonth() = "MMM"
+    fun patternWeekDay(): String {
+        return "dddd"
+    }
 
-    @Named("pattern_year")
-    @Provides
-    fun patternYear() = "yyyy"
+    fun patternMonth(): String {
+        return "MMM"
+    }
+
+    fun patternYear(): String {
+        return "yyyy"
+    }
+
+    fun patternHour(): String {
+        return "HH:mm"
+    }
+
+    fun patternIso(): String {
+        return "yyyy-MM-dd'T'HH:mm"
+    }
 
 }
