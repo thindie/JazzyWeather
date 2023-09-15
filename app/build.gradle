@@ -59,6 +59,7 @@ dependencies {
     implementation(project(':core:presentation:location-presenter'))
     implementation(project(':core:presentation:weather-concrete'))
     implementation(project(':core:presentation:weathers-site-favorites'))
+    implementation(project(':core:date-time-management'))
 
     implementation("com.google.dagger:hilt-android:2.47")
     kapt("com.google.dagger:hilt-android-compiler:2.47")
