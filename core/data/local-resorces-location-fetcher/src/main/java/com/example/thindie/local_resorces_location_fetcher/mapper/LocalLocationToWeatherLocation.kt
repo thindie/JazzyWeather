@@ -13,6 +13,9 @@ fun LocationPropertiesLdo.map(): WeatherLocation {
         latitude = latitude,
         longitude = longitude,
         population = population,
-        populationProper = populationProper
+        populationProper = populationProper,
+        timezone = INITIAL_TIMEZONE
     )
 }
+
+private const val INITIAL_TIMEZONE = "GMT"

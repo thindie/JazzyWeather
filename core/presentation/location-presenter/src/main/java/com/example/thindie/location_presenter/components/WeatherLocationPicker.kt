@@ -80,8 +80,9 @@ internal fun previewWeatherLocationPickerUnit() {
                     latitude = "1234442",
                     longitude = "4323423",
                     population = "12345",
-                    populationProper = ""
-                ), onClickFavorite = {}, modifier = Modifier
+                    populationProper = "", timezone = "",
+
+                    ), onClickFavorite = {}, modifier = Modifier
             )
             WeatherLocationPickerUnit(
                 location = WeatherLocation(
@@ -93,9 +94,10 @@ internal fun previewWeatherLocationPickerUnit() {
                     latitude = "",
                     longitude = "",
                     population = "12345",
-                    populationProper = ""
+                    populationProper = "", timezone = "",
                 ), onClickFavorite = {}, modifier = Modifier
             )
         }
     }
 }
+
