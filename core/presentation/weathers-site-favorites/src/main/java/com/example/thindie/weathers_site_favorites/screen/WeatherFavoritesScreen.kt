@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,13 +30,16 @@ internal fun WeatherFavoritesScreen(
     viewModel.onSelectFavoriteWeatherPlacesScreen()
     val favoritesScreenState =
         viewModel.screenState.collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
+
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(WeatherFavoritesColors.backGroundColors)
     ) {
         LazyColumn() {
+
             items(favoritesScreenState.value.list) { weather ->
+                val lazyRowState: LazyListState = rememberLazyListState()
                 WeatherFavoriteHeader(
                     city = weather.place,
                     celsium = weather.apparentTemperature.first().toString(),
@@ -43,7 +48,12 @@ internal fun WeatherFavoritesScreen(
                     precipitation = "C",
                     contextDependableSurfaceColor = WeatherFavoritesColors.titleColors
                 )
-                LazyRow() {
+                LaunchedEffect(true) {
+                    lazyRowState.animateScrollToItem(favoritesScreenState.value.currentHour)
+                }
+
+
+                LazyRow(state = lazyRowState) {
                     items(weather.getHourlyForecast()) { hourlyWeather ->
                         WeatherFavoriteHourlyUnit(
                             contextDependableSurfaceColor = WeatherFavoritesColors.unitColors,
