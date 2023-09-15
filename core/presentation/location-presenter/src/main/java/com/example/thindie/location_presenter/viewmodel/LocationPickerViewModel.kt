@@ -2,10 +2,10 @@ package com.example.thindie.location_presenter.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.WeatherLocation
 import com.example.thindie.domain.usecases.GetLocationUseCase
 import com.example.thindie.domain.usecases.RememberWeatherSiteUseCase
+import com.example.thindie.domain.usecases.timeusecases.GetTimeZoneUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 internal class LocationPickerViewModel @Inject constructor(
     private val getLocation: GetLocationUseCase,
+    private val getTimeZoneUseCase: GetTimeZoneUseCase,
     private val rememberWeatherSiteUseCase: RememberWeatherSiteUseCase,
 ) :
     ViewModel() {
@@ -39,9 +40,10 @@ internal class LocationPickerViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun onClickAddFavorites(forecastAble: ForecastAble) {
+    fun onClickAddFavorites(forecastAble: WeatherLocation) {
+
         viewModelScope.launch {
-            rememberWeatherSiteUseCase(forecastAble)
+            rememberWeatherSiteUseCase(forecastAble.copy(timezone = getTimeZoneUseCase()))
         }
     }
 
