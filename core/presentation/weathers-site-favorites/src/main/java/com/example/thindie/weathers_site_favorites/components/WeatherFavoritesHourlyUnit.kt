@@ -72,12 +72,12 @@ internal fun WeatherFavoriteHourlyUnit(
                 Text(
                     text = windSpeed,
                     style = MaterialTheme.typography.labelMedium.copy(
-                        MaterialTheme.colorScheme.onSurfaceVariant
+                        WeatherFavoritesColors.windIndicationsColor()
                     )
                 )
                 Icon(
                     painter = painterResource(id = R.drawable.icon_windy),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = WeatherFavoritesColors.windIndicationsColor(),
                     contentDescription = null
                 )
             }
@@ -87,7 +87,7 @@ internal fun WeatherFavoriteHourlyUnit(
                     Text(
                         text = precipitation.toString(),
                         style = MaterialTheme.typography.labelMedium.copy(
-                            MaterialTheme.colorScheme.onSurface
+                            MaterialTheme.colorScheme.onPrimary
                         )
                     )
                     Icon(

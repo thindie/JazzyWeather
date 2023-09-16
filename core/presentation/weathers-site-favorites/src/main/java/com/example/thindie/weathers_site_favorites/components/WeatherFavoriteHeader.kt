@@ -1,5 +1,7 @@
 package com.example.thindie.weathers_site_favorites.components
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,9 +32,8 @@ internal fun WeatherFavoriteHeader(
     modifier: Modifier = Modifier,
     city: String,
     celsium: String,
-    sunrise: String,
-    sunset: String,
-    precipitation: String,
+    @StringRes weatherCurrent: Int,
+    @DrawableRes weatherCurrentPic: Int,
     contextDependableSurfaceColor: Brush,
 ) {
     Surface(
@@ -53,7 +55,7 @@ internal fun WeatherFavoriteHeader(
                     .fillMaxWidth(0.7F)
                     .fillMaxHeight()
                     .padding(all = 8.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
+                verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
@@ -62,16 +64,14 @@ internal fun WeatherFavoriteHeader(
                 )
                 Row(
                     modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = sunrise,
-                        style = MaterialTheme.typography.labelSmall.copy(MaterialTheme.colorScheme.onPrimary)
-                    )
-                    Text(
-                        text = sunset,
-                        style = MaterialTheme.typography.labelSmall.copy(MaterialTheme.colorScheme.onPrimary)
-                    )
+                    if (weatherCurrent != 0) {
+                        Text(
+                            text = stringResource(id = weatherCurrent),
+                            style = MaterialTheme.typography.labelSmall.copy(MaterialTheme.colorScheme.onPrimary)
+                        )
+                    }
                 }
             }
             Column(
@@ -85,10 +85,6 @@ internal fun WeatherFavoriteHeader(
                 Text(
                     text = celsium,
                     style = MaterialTheme.typography.headlineLarge.copy(Color.White)
-                )
-                Text(
-                    text = precipitation,
-                    style = MaterialTheme.typography.titleMedium.copy(MaterialTheme.colorScheme.onPrimary)
                 )
             }
         }
@@ -108,14 +104,11 @@ internal fun previewWeatherFavoriteHeader() {
             WeatherFavoriteHeader(
                 city = "Kaliningrad",
                 celsium = "24",
-                sunrise = "sunrise 06:32",
-                sunset = "sunset 19:32",
-                precipitation = "clear",
                 contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
                     MaterialTheme.colorScheme.surface.TransGradientVertical()
                 } else {
                     MaterialTheme.colorScheme.primary.TransGradientVerticalInverse()
-                }
+                }, weatherCurrent = 0, weatherCurrentPic = 0
             )
             WeatherFavoriteHourlyUnit(
                 time = "14:00",
@@ -146,14 +139,12 @@ internal fun previewWeatherFavoriteHeaderDark() {
             WeatherFavoriteHeader(
                 city = "Kaliningrad",
                 celsium = "24",
-                sunrise = "sunrise 06:32",
-                sunset = "sunset 19:32",
-                precipitation = "clear",
+
                 contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
                     MaterialTheme.colorScheme.onPrimary.TransGradientVerticalInverse()
                 } else {
                     MaterialTheme.colorScheme.surface.TransGradientVertical()
-                }
+                }, weatherCurrent = 0, weatherCurrentPic = 0
 
             )
             WeatherFavoriteHourlyUnit(

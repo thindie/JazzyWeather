@@ -3,6 +3,7 @@ package com.example.thindie.weathers_site_favorites.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,17 +45,16 @@ internal fun WeatherFavoritesScreen(
                 WeatherFavoriteHeader(
                     city = weather.place,
                     celsium = weather.apparentTemperature.first().toString(),
-                    sunrise = "A",
-                    sunset = "B",
-                    precipitation = "C",
-                    contextDependableSurfaceColor = WeatherFavoritesColors.titleColors
+                    contextDependableSurfaceColor = WeatherFavoritesColors.titleColors,
+                    weatherCurrent = favoritesScreenState.value.decodedWeather,
+                    weatherCurrentPic = favoritesScreenState.value.decodedWeatherDrawable,
                 )
                 LaunchedEffect(true) {
                     lazyRowState.animateScrollToItem(favoritesScreenState.value.currentHour)
                 }
 
 
-                LazyRow(state = lazyRowState) {
+                LazyRow(state = lazyRowState, modifier = modifier.padding(horizontal = 8.dp)) {
                     items(weather.getHourlyForecast()) { hourlyWeather ->
                         WeatherFavoriteHourlyUnit(
                             contextDependableSurfaceColor = WeatherFavoritesColors.unitColors,

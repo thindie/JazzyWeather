@@ -69,6 +69,11 @@ object WeatherFavoritesColors {
 
     @Composable
     fun precipitationClearColor(): Color {
-        return if (isSystemInDarkTheme()) theme.colorScheme.tertiary.copy(alpha = 0.5f) else theme.colorScheme.surfaceVariant
+        return if (isSystemInDarkTheme()) theme.colorScheme.tertiary.copy(alpha = 0.7f) else theme.colorScheme.surfaceVariant
+    }
+
+    @Composable
+    fun windIndicationsColor(): Color {
+        return if (isSystemInDarkTheme()) theme.colorScheme.onSurface.copy(alpha = 0.7f) else theme.colorScheme.onSurfaceVariant
     }
 }

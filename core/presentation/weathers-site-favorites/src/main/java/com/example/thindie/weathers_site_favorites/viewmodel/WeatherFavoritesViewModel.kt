@@ -1,7 +1,10 @@
 package com.example.thindie.weathers_site_favorites.viewmodel
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thindie.designsystem.DecodeAble
 import com.example.thindie.designsystem.utils.act
 import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.domain.usecases.DeleteWeatherSiteUseCase
@@ -22,6 +25,7 @@ class WeatherFavoritesViewModel @Inject constructor(
     private val reserveWeatherInteractor: ReserveWeatherInteractor,
     private val getCurrentHourOfDayUseCase: GetCurrentHourOfDayUseCase,
     private val getHourUseCase: GetHourUseCase,
+    private val decodeAble: DecodeAble,
 ) :
     ViewModel() {
 
@@ -35,10 +39,12 @@ class WeatherFavoritesViewModel @Inject constructor(
     fun onSelectFavoriteWeatherPlacesScreen() {
         act {
             getHourlyWeatherListUseCase()
-                .onSuccess {
+                .onSuccess { listWeatherHourly ->
                     _screenState.value = FavoriteWeatherSitesUiState(
-                        list = it.rawTimeTo24hHours(),
-                        currentHour = getCurrentHourOfDayUseCase()
+                        list = listWeatherHourly.rawTimeTo24hHours(),
+                        currentHour = getCurrentHourOfDayUseCase(),
+                        decodedWeather = decodeAble.decodeString(listWeatherHourly.getCurrentWeatherCode()),
+                        decodedWeatherDrawable = decodeAble.decodeDrawable(listWeatherHourly.getCurrentWeatherCode())
                     )
                 }
                 .onFailure {
@@ -50,7 +56,6 @@ class WeatherFavoritesViewModel @Inject constructor(
                             currentHour = getCurrentHourOfDayUseCase()
                         )
                 }
-
         }
     }
 
@@ -58,6 +63,12 @@ class WeatherFavoritesViewModel @Inject constructor(
         act {
             deleteWeatherSiteUseCase(weatherHourly.place)
         }
+    }
+
+    private fun List<WeatherHourly>.getCurrentWeatherCode(): Int {
+        val currentHour = getCurrentHourOfDayUseCase()
+        return this[currentHour]
+            .weatherCode[currentHour]
     }
 
     private fun List<WeatherHourly>.rawTimeTo24hHours(): List<WeatherHourly> {
@@ -69,5 +80,10 @@ class WeatherFavoritesViewModel @Inject constructor(
         }
     }
 
-    data class FavoriteWeatherSitesUiState(val list: List<WeatherHourly>, val currentHour: Int = 0)
+    data class FavoriteWeatherSitesUiState(
+        val list: List<WeatherHourly>,
+        val currentHour: Int = 0,
+        @StringRes val decodedWeather: Int = 0,
+        @DrawableRes val decodedWeatherDrawable: Int = 0,
+    )
 }
