@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +38,7 @@ fun VerticalIndicationColumn(
 
     val modifier: Modifier = Modifier
         .width(width)
-        .heightIn(max = width * 5)
+        .heightIn(max = width * 4)
 
     val maxHeight = animator?.animatedValue?.value ?: customizer.getShapeComponent()
 
@@ -63,8 +64,8 @@ fun VerticalIndicationColumn(
         }
         Text(
             text = textLabel,
-            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge.copy(
-                customizer.getColorComponent()
+            style = MaterialTheme.typography.bodyLarge.copy(
+                MaterialTheme.colorScheme.onSurface
             )
         )
     }
