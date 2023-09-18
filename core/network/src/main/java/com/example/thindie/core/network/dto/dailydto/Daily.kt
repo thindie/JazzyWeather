@@ -3,6 +3,16 @@ package com.example.thindie.core.network.dto.dailydto
 import com.google.gson.annotations.SerializedName
 
 data class Daily(
+    @SerializedName("weathercode")
+    val weatherCode: List<Int>,
+    @SerializedName("sunset")
+    val sunset: List<String>,
+    @SerializedName("sunrise")
+    val sunrise: List<String>,
+    @SerializedName("apparent_temperature_max")
+    val apparentTemperatureMax: List<Double>,
+    @SerializedName("apparent_temperature_min")
+    val apparentTemperatureMin: List<Double>,
     @SerializedName("precipitation_hours")
     val precipitationHours: List<Double>,
     @SerializedName("precipitation_probability_max")

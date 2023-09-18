@@ -19,6 +19,11 @@ data class WeatherDaily(
     val windDirection10mDominant: List<Int>,
     val windGusts10mMax: List<Double>,
     val windSpeed10mMax: List<Double>,
+    val weatherCode: List<Int>,
+    val sunset: List<String>,
+    val sunrise: List<String>,
+    val apparentTemperatureMax: List<Double>,
+    val apparentTemperatureMin: List<Double>,
 ) : ForecastAble {
     override fun getSight() = this.place
 
@@ -50,7 +55,12 @@ data class WeatherDaily(
                     windDirection10mDominant = windDirection10mDominant[index],
                     windGusts10mMax = windGusts10mMax[index],
                     windSpeed10mMax = windSpeed10mMax[index],
-                    elevation = elevation
+                    elevation = elevation,
+                    weatherCode = weatherCode[index],
+                    sunset = sunset[index],
+                    sunrise = sunrise[index],
+                    apparentTemperatureMax = apparentTemperatureMax[index],
+                    apparentTemperatureMin = apparentTemperatureMin[index]
                 ).apply {
                     oneDayWeather.add(this)
                 }

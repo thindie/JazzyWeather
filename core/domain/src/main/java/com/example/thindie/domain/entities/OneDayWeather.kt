@@ -19,4 +19,9 @@ data class OneDayWeather(
     val windDirection10mDominant: Int,
     val windGusts10mMax: Double,
     val windSpeed10mMax: Double,
+    val weatherCode: Int,
+    val sunset: String,
+    val sunrise: String,
+    val apparentTemperatureMax: Double,
+    val apparentTemperatureMin: Double,
 )

@@ -21,6 +21,12 @@ fun WeatherDailyResponse.map(): WeatherDailyDto {
         windDirection10mDominant = daily.windDirection10mDominant,
         windGusts10mMax = daily.windGusts10mMax,
         windSpeed10mMax = daily.windSpeed10mMax,
+        weatherCode = daily.weatherCode,
+        sunset = daily.sunset,
+        sunrise = daily.sunrise,
+        apparentTemperatureMax = daily.apparentTemperatureMax,
+        apparentTemperatureMin = daily.apparentTemperatureMin,
+
 
         )
 }
