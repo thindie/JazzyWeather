@@ -14,7 +14,7 @@ class SimpleVisualCustomizer(
     private val positiveColor: Color,
     private val negativeColor: Color,
     coroutineScope: CoroutineScope,
-    private val time: Int = 1000,
+    private val time: Int,
 ) : FloatAnimator(), VisualCustomizer {
 
 
@@ -27,7 +27,7 @@ class SimpleVisualCustomizer(
 
     override fun animate(scope: CoroutineScope) {
         scope.launch {
-            delay(time.toLong())
+            delay(time.toLong()/3)
             currentAnimationValue.floatValue = getShapeComponent()
         }
     }
@@ -37,18 +37,16 @@ class SimpleVisualCustomizer(
 
         return if (customizeValue <= 0) Brush.verticalGradient(
             listOf(
-                negativeColor.copy(alpha = 0.5F),
+                negativeColor.copy(alpha = 0.7F),
                 negativeColor,
                 negativeColor,
-                negativeColor.copy(alpha = 0.5F),
             )
         )
         else Brush.verticalGradient(
             listOf(
-                positiveColor.copy(alpha = 0.5F),
+                positiveColor.copy(alpha = 0.7F),
                 positiveColor,
                 positiveColor,
-                positiveColor.copy(alpha = 0.5F),
             )
         )
     }
