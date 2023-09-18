@@ -9,8 +9,9 @@
     <string name="text_label_all_snow_argument">"‣Снег, см"</string>
     <string name="text_label_all_rain_argument">"‣Дождь, мм"</string>
     <string name="text_label_all_showers_argument">"‣Ливни, мм"</string>
-    <string name="text_label_sunrise">"Восход "</string>
-    <string name="text_label_sunset">" Закат "</string>
+    <string name="text_label_sunrise_argument">"восход: %s"</string>
+    <string name="text_label_sunset_argument">"закат: %s"</string>
+    <string name="text_label_timezone_argument">"время: %s"</string>
     <string name="text_label_t_max">"‣T°C Max:"</string>
     <string name="text_label_t_min">"‣T°C Min:"</string>
     <string name="text_label_falls">"Осадки: "</string>
@@ -63,4 +64,9 @@
     <string name="weathercode_96">Гроза</string>
     <string name="weathercode_99">Грозище</string>
     <string name="initial_value" />
+    <string name="text_information">"Как понять?"</string>
+    <string name="text_temperature_representation">"температура представлена в градусах Цельсия,"</string>
+    <string name="text_wind_representation">"скорость ветра представлена в отношении метр в секунду,"</string>
+    <string name="text_temperature_precipitation_representation">"величины осадков представлены: дождь - в миллиметрах, снег в сантиметрах."</string>
+    <string name="text_information_location_values">""широта %s, долгота %s, высота на уровнем моря %sм"</string>
 </resources>
