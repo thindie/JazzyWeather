@@ -65,6 +65,14 @@ internal fun WeatherForecastColumnGraph(
 @Preview(showBackground = true, device = Devices.PIXEL_2)
 internal fun previewWeatherForecastColumnGraph() {
     JazzyWeatherTheme {
+
+        val list = buildList {
+            repeat(7) {
+                add(it)
+            }
+        }
+
+
         val colorComponent =
             animateColorAsState(
                 targetValue = Color.Cyan.copy(alpha = 0.1f), label = "",
@@ -72,6 +80,7 @@ internal fun previewWeatherForecastColumnGraph() {
             )
 
         Column {
+            DatePlanchette(days = list, currentDay = 4)
             WeatherForecastColumnGraph(
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
