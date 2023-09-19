@@ -3,7 +3,6 @@ package com.example.thindie.weather_concrete.components
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.designsystem.utils.TransGradientVerticalInverse
 
@@ -51,26 +50,4 @@ object WeatherConcreteColors {
     val rainValue
         @Composable get() = MaterialTheme.colorScheme.onSecondaryContainer
 
-
-    val neutralTemperature
-        @Composable get() = if (isSystemInDarkTheme()) {
-            MaterialTheme.colorScheme.surface
-        } else {
-            MaterialTheme.colorScheme.primary
-        }
-
-
-    @Composable
-    fun dayIndicationColor(boolean: Boolean): Color {
-        return if (boolean) {
-            MaterialTheme.colorScheme.onPrimary
-        } else MaterialTheme.colorScheme.primary
-    }
-
-
-    @Composable
-    fun subTitleColor(): Color {
-        return if (isSystemInDarkTheme())
-            MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f) else MaterialTheme.colorScheme.onSurfaceVariant
-    }
 }
