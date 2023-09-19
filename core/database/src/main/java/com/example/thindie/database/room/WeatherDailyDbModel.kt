@@ -24,5 +24,10 @@ data class WeatherDailyDbModel(
     val windDirection10mDominant: List<Int>,
     val windGusts10mMax: List<Double>,
     val windSpeed10mMax: List<Double>,
+    val weatherCode: List<Int>,
+    val sunset: List<String>,
+    val sunrise: List<String>,
+    val apparentTemperatureMax: List<Double>,
+    val apparentTemperatureMin: List<Double>,
 )
 

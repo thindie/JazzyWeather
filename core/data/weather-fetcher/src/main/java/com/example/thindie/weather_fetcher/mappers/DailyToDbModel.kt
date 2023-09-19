@@ -22,6 +22,11 @@ fun WeatherDaily.map(): WeatherDailyDbModel {
         uvIndexMax = uvIndexMax,
         windDirection10mDominant = windDirection10mDominant,
         windGusts10mMax = windGusts10mMax,
-        windSpeed10mMax = windSpeed10mMax
+        windSpeed10mMax = windSpeed10mMax,
+        weatherCode =weatherCode,
+        sunset = sunset,
+        sunrise = sunrise,
+        apparentTemperatureMax =apparentTemperatureMax,
+        apparentTemperatureMin = apparentTemperatureMin
     )
 }

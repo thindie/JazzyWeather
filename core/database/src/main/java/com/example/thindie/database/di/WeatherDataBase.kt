@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 @Database(
     entities = [WeatherDailyDbModel::class, WeatherHourlyDbModel::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(

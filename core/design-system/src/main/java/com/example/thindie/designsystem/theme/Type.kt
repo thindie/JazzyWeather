@@ -9,12 +9,12 @@ import androidx.compose.ui.unit.sp
 import com.example.thindie.presentation.R
 
 
-private val light = Font(R.font.sf_pro, FontWeight.W300)
-private val regular = Font(R.font.sf_pro, FontWeight.W400)
-private val medium = Font(R.font.sf_pro, FontWeight.W500)
-private val semibold = Font(R.font.sf_pro, FontWeight.W600)
+private val black = Font(R.font.inter_black)
+private val regular = Font(R.font.inter_regular)
+private val bold = Font(R.font.inter_bold)
+private val extraBold = Font(R.font.inter_extra_bold)
 
-private val JazzyWeatherFonts = FontFamily(fonts = listOf(light, regular, medium, semibold))
+private val JazzyWeatherFonts = FontFamily(fonts = listOf(black, regular, bold, extraBold))
 
 val JazzyWeatherTypography = Typography(
     displayLarge = TextStyle(

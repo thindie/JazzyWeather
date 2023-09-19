@@ -7,5 +7,4 @@ interface ForecastAble {
 
     fun getTimeZone(): String
 
-    fun <T> getReified(): T = this as T
 }
