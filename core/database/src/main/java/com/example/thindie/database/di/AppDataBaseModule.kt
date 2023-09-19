@@ -22,6 +22,7 @@ internal object AppDataBaseModule {
                 klass = WeatherDataBase::class.java,
                 name = DB_NAME
             )
+                .fallbackToDestructiveMigration()
                 .build()
         }
 
