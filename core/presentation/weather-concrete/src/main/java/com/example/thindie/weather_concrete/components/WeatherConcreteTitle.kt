@@ -19,44 +19,31 @@ import androidx.compose.material.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.example.thindie.presentation.R
 
 @Composable
 internal fun WeatherConcreteTitle(
     modifier: Modifier = Modifier,
+    state: WeatherConcreteTitleState = rememberWeatherTitleState(),
     city: String,
     timeSunset: String,
     timeSunrise: String,
     timeZone: String,
-    latitude: Float,
-    longitude: Float,
-    elevation: Float,
+    latitude: Double,
+    longitude: Double,
+    elevation: Double,
 ) {
-    val shouldShowDialog = remember { mutableStateOf(false) }
-
-    if (shouldShowDialog.value) {
-        Dialog(onDismissRequest = { shouldShowDialog.value = false }) {
-            WeatherConcreteDialogContent(
-                latitude = latitude,
-                longitude = longitude,
-                elevation = elevation.toDouble()
-            )
-        }
-    }
-
     Column(
         modifier = modifier
-            .height(155.dp)
+            .height(state.height.value)
             .padding(horizontal = 8.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
@@ -106,13 +93,21 @@ internal fun WeatherConcreteTitle(
                 icon = R.drawable.icon_time_outline,
                 title = timeZone
             )
-            IconButton(onClick = { shouldShowDialog.value = true }) {
+            IconButton(onClick = state::onClickInformation) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_information),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onTertiary
                 )
             }
+        }
+
+        if (state.shouldExpand.value) {
+            TitleInformation(
+                latitude = latitude,
+                longitude = longitude,
+                elevation = elevation
+            )
         }
     }
 }
@@ -130,9 +125,8 @@ internal fun previewWeatherConcreteTitle() {
                 city = "Санкт-Петербург",
                 timeSunset = "333",
                 timeSunrise = "444",
-                timeZone = "EET", latitude = 0.2f, longitude = 0.3f, elevation = 0.1f,
-
-                )
+                timeZone = "EET", latitude = 0.2, longitude = 0.3, elevation = 0.1,
+            )
             DatePlanchette(days = listOf(12, 23, 62, 73, 48, 64, 25), currentDay = 5)
             LazyColumn() {
                 item {
@@ -172,10 +166,11 @@ internal fun previewWeatherConcreteTitle() {
 }
 
 @Composable
-private fun IconTextSection(
+internal fun IconTextSection(
     modifier: Modifier,
     @DrawableRes icon: Int,
     title: String,
+    color: Color = MaterialTheme.colorScheme.onTertiary,
 ) {
     Row(
         modifier = modifier
@@ -187,12 +182,12 @@ private fun IconTextSection(
             modifier = modifier.padding(horizontal = 8.dp),
             painter = painterResource(id = icon),
             contentDescription = null,
-            tint = MaterialTheme.colorScheme.onTertiary
+            tint = color
         )
         Text(
             text = title,
             style = MaterialTheme.typography.labelMedium.copy(
-                MaterialTheme.colorScheme.onTertiary
+                color
             )
         )
     }
