@@ -7,7 +7,7 @@ import javax.inject.Singleton
 internal class TimePatterns @Inject constructor() {
 
     fun patternWeekDay(): String {
-        return "dddd"
+        return "d"
     }
 
     fun patternMonth(): String {
@@ -24,6 +24,10 @@ internal class TimePatterns @Inject constructor() {
 
     fun patternIso(): String {
         return "yyyy-MM-dd'T'HH:mm"
+    }
+
+    fun patternSimple(): String {
+        return "yyyy-MM-dd"
     }
 
 }

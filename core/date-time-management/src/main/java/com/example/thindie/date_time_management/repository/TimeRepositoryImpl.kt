@@ -15,6 +15,7 @@ internal class TimeRepositoryImpl @Inject constructor(
     @Named("year") private val yearFormat: SimpleDateFormat,
     @Named("hour") private val hourFormat: SimpleDateFormat,
     @Named("ISO8601") private val isoFormat: SimpleDateFormat,
+    @Named("simpleDate") private val simpleDate: SimpleDateFormat,
 ) :
     TimeRepository {
     override fun getToday(): Int {
@@ -36,13 +37,14 @@ internal class TimeRepositoryImpl @Inject constructor(
         return calendar.get(Calendar.HOUR_OF_DAY)
     }
 
-    override fun getWeekDayNumber(): List<Int> {
-        var currentDay = getToday()
-        return buildList {
-            repeat(7) {
-                this.add(currentDay++)
-            }
-        }
+    override fun getWeekInNumbers(listIso8106: List<String>): List<Int> {
+        return listIso8106.map {
+            simpleDate.parse(it)
+        }.map {
+            if (it != null) {
+                weekDayFormat.format(it).toInt()
+            } else 0
+        }.take(7)
     }
 
     override fun getCurrentWeekDay(): String {

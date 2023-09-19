@@ -43,4 +43,10 @@ internal class SimpleDateFormatModule {
     fun provideSimpleDateFormat8601(timePattern: TimePatterns): SimpleDateFormat {
         return SimpleDateFormat(timePattern.patternIso(), Locale.getDefault())
     }
+
+    @Provides
+    @Named("simpleDate")
+    fun provideSimpleDateFormatSimpleDate(timePattern: TimePatterns): SimpleDateFormat {
+        return SimpleDateFormat(timePattern.patternSimple(), Locale.getDefault())
+    }
 }
