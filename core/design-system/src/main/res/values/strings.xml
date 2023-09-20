@@ -68,5 +68,6 @@
     <string name="text_wind_representation">"м/сек"</string>
     <string name="text_temperature_precipitation_representation">"мм"</string>
     <string name="text_ultraviolet_index">"UV индекс"</string>
+    <string name="text_field_edit">Изменить</string>
 
 </resources>
