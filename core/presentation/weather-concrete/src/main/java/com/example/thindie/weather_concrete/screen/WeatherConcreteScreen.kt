@@ -17,6 +17,8 @@ import com.example.thindie.weather_concrete.components.DatePlanchette
 import com.example.thindie.weather_concrete.components.WeatherConcreteColors
 import com.example.thindie.weather_concrete.components.WeatherConcreteTitle
 import com.example.thindie.weather_concrete.components.WeatherNamedGraph
+import com.example.thindie.weather_concrete.components.graphcomposables.WeatherTemperatureGraphHigh
+import com.example.thindie.weather_concrete.components.graphcomposables.WeatherTemperatureGraphLow
 import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 
 @Composable
@@ -46,29 +48,54 @@ internal fun WeatherConcreteScreen(
                 DatePlanchette(days = weekDays, currentDay = currentDay)
                 LazyColumn() {
                     item {
-                        WeatherNamedGraph(
+                        WeatherTemperatureGraphLow(
                             graphValues = weatherDaily.apparentTemperatureMin,
-                            titlePic = R.drawable.icon_celsius,
-                            positiveColor = WeatherConcreteColors.positiveTemperature,
-                            negativeColor = WeatherConcreteColors.negativeTemperature
                         )
                     }
+
+                    item {
+                        WeatherTemperatureGraphHigh(graphValues = weatherDaily.apparentTemperatureMax)
+                    }
+
+                    if (weatherDaily.rainSum.sum() != 0.0) {
+                        item {
+                            WeatherNamedGraph(
+                                graphValues = weatherDaily.rainSum,
+                                titlePic = R.drawable.icon_water_drop,
+                                positiveColor = WeatherConcreteColors.rainValue,
+                                negativeColor = WeatherConcreteColors.rainValue,
+                                animationTime = 800
+                            )
+                        }
+                    }
+                    if (weatherDaily.snowfallSum.sum() != 0.0) {
+                        item {
+                            WeatherNamedGraph(
+                                graphValues = weatherDaily.snowfallSum,
+                                titlePic = R.drawable.icon_snowflake,
+                                positiveColor = WeatherConcreteColors.rainValue,
+                                negativeColor = WeatherConcreteColors.rainValue,
+                                animationTime = 800
+                            )
+                        }
+                    }
+
                     item {
                         WeatherNamedGraph(
                             graphValues = weatherDaily.windSpeed10mMax,
                             titlePic = R.drawable.icon_windy,
                             positiveColor = WeatherConcreteColors.windValue,
                             negativeColor = WeatherConcreteColors.windValue,
-                            animationTime = 800
+                            animationTime = 1200
                         )
                     }
                     item {
                         WeatherNamedGraph(
-                            graphValues = weatherDaily.precipitationSum,
-                            titlePic = R.drawable.icon_water_drop,
-                            positiveColor = WeatherConcreteColors.rainValue,
-                            negativeColor = WeatherConcreteColors.rainValue,
-                            animationTime = 1200
+                            graphValues = weatherDaily.uvIndexMax,
+                            titlePic = R.drawable.icon_ultraviolet,
+                            positiveColor = WeatherConcreteColors.uvValue,
+                            negativeColor = WeatherConcreteColors.uvValue,
+                            animationTime = 1300
                         )
                     }
                 }
