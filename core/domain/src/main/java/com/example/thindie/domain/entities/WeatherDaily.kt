@@ -68,4 +68,19 @@ data class WeatherDaily(
         }
         return oneDayWeather
     }
+
+    private fun List<Double>.getAverage(min: List<Double>): List<Double> {
+        val resultList = mutableListOf<Double>()
+        if (this.size == min.size) {
+            forEachIndexed { index, value ->
+                resultList.add((value + min[index]).div(2))
+            }
+        } else {
+            resultList.addAll(this)
+        }
+        return resultList
+    }
+
+    val temperature
+        get() = apparentTemperatureMax.getAverage(apparentTemperatureMin)
 }
