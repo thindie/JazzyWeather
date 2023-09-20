@@ -24,6 +24,7 @@ internal fun TitleInformation(
 ) {
     Column {
         val currentColor = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.7f)
+
         Row(
             modifier = modifier
                 .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly
@@ -39,6 +40,7 @@ internal fun TitleInformation(
                 icon = R.drawable.icon_windy,
                 title = stringResource(id = R.string.text_wind_representation),
                 color = currentColor
+
             )
 
             IconTextSection(
@@ -52,6 +54,7 @@ internal fun TitleInformation(
                 icon = R.drawable.icon_ultraviolet,
                 title = stringResource(id = R.string.text_ultraviolet_index),
                 color = currentColor
+
             )
         }
         Spacer(modifier = modifier.height(8.dp))
@@ -65,19 +68,21 @@ internal fun TitleInformation(
                 modifier = modifier,
                 icon = R.drawable.icon_latitude,
                 title = latitude.toString(),
-                color = currentColor.copy(alpha = 0.5f)
+                color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.3f)
             )
             IconTextSection(
                 modifier = modifier,
                 icon = R.drawable.icon_longitude,
                 title = longitude.toString(),
                 color = currentColor.copy(alpha = 0.5f)
+
             )
             IconTextSection(
                 modifier = modifier,
                 icon = R.drawable.icon_elevation,
                 title = elevation.toString(),
                 color = currentColor.copy(alpha = 0.5f)
+
             )
 
         }
