@@ -1,4 +1,4 @@
-package com.example.thindie.weather_concrete.components
+package com.example.thindie.designsystem.animators
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
