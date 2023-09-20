@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.thindie.designsystem.animators.ExpandAnimator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
