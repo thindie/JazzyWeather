@@ -14,7 +14,8 @@ internal fun WeatherConcreteScreenState(
 ) {
     viewModel.onLoadConcreteScreen(onClickNavigation())
     val screenState =
-        viewModel.concreteScreenState
+        viewModel
+            .concreteScreenState
             .collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
     WeatherConcreteScreen(screenState = screenState.value)
 }
