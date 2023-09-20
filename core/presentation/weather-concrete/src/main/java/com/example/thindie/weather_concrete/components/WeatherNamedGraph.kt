@@ -19,6 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.utils.toVisualCustomizersList
+import com.example.thindie.weather_concrete.components.graphcomposables.WeatherForecastColumnGraph
 
 @Composable
 internal fun WeatherNamedGraph(
@@ -39,8 +40,7 @@ internal fun WeatherNamedGraph(
         Icon(
             modifier = modifier
                 .padding(all = 20.dp)
-                .size(36.dp)
-            ,
+                .size(36.dp),
             painter = painterResource(id = titlePic),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface
@@ -53,12 +53,15 @@ internal fun WeatherNamedGraph(
                     WeatherConcreteColors.unitColors
                 )
                 .padding(horizontal = 8.dp, vertical = 4.dp),
-            customizersList = graphValues.map { it.toFloat() }.toVisualCustomizersList(
-                positiveColor = positiveColor,
-                negativeColor = negativeColor,
-                scope = rememberCoroutineScope(),
-                animationTime = animationTime
-            ), columnWidth = columnWidth
+            customizersList = graphValues
+                .map { it.toFloat() }
+                .toVisualCustomizersList(
+                    positiveColor = positiveColor,
+                    negativeColor = negativeColor,
+                    scope = rememberCoroutineScope(),
+                    animationTime = animationTime
+                ),
+            columnWidth = columnWidth
         )
 
     }

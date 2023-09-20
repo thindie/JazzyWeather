@@ -1,4 +1,4 @@
-package com.example.thindie.weather_concrete.components
+package com.example.thindie.weather_concrete.components.graphcomposables
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
@@ -28,6 +28,7 @@ import com.example.thindie.designsystem.SimpleVisualCustomizer
 import com.example.thindie.designsystem.composables.VerticalIndicationColumn
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.designsystem.utils.toVisualCustomizersList
+import com.example.thindie.weather_concrete.components.DatePlanchette
 
 
 @Composable
