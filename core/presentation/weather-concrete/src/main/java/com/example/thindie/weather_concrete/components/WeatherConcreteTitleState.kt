@@ -18,6 +18,7 @@ internal fun rememberWeatherTitleState(scope: CoroutineScope = rememberCoroutine
 
     return remember {
         WeatherConcreteTitleState(scope = scope)
+
     }
 }
 
@@ -31,6 +32,7 @@ internal class WeatherConcreteTitleState(
 
     private val _shouldExpand = mutableStateOf(false)
     private val animationSpec = tween<Dp>(durationMillis = animationTime)
+
 
 
     val shouldExpand: State<Boolean>

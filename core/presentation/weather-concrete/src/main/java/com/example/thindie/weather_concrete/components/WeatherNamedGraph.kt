@@ -41,6 +41,7 @@ internal fun WeatherNamedGraph(
             modifier = modifier
                 .padding(all = 20.dp)
                 .size(36.dp),
+
             painter = painterResource(id = titlePic),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.onSurface
@@ -62,6 +63,7 @@ internal fun WeatherNamedGraph(
                     animationTime = animationTime
                 ),
             columnWidth = columnWidth
+
         )
 
     }

@@ -86,7 +86,9 @@ internal fun WeatherConcreteScreen(
                             titlePic = R.drawable.icon_windy,
                             positiveColor = WeatherConcreteColors.windValue,
                             negativeColor = WeatherConcreteColors.windValue,
+
                             animationTime = 1200
+
                         )
                     }
                     item {
@@ -96,6 +98,7 @@ internal fun WeatherConcreteScreen(
                             positiveColor = WeatherConcreteColors.uvValue,
                             negativeColor = WeatherConcreteColors.uvValue,
                             animationTime = 1300
+
                         )
                     }
                 }
