@@ -17,17 +17,23 @@ import kotlinx.coroutines.launch
 internal fun rememberWeatherTitleState(scope: CoroutineScope = rememberCoroutineScope()): WeatherConcreteTitleState {
 
     return remember {
-        WeatherConcreteTitleState(scope)
+        WeatherConcreteTitleState(scope = scope)
+
     }
 }
 
 @Stable
-internal class WeatherConcreteTitleState(private val scope: CoroutineScope) {
-    private val animationTime = 1000
+internal class WeatherConcreteTitleState(
+    animationTime: Int = 1000,
+    private val _height: Dp = 155.dp,
+    private val _expanded: Dp = 330.dp,
+    private val scope: CoroutineScope,
+) {
+
     private val _shouldExpand = mutableStateOf(false)
     private val animationSpec = tween<Dp>(durationMillis = animationTime)
-    private val _height = 155.dp
-    private val _expanded = 330.dp
+
+
 
     val shouldExpand: State<Boolean>
         get() = _shouldExpand
@@ -51,7 +57,5 @@ internal class WeatherConcreteTitleState(private val scope: CoroutineScope) {
                 _shouldExpand.value = !_shouldExpand.value
             }
         }
-
-
     }
 }

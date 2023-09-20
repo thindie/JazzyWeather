@@ -23,6 +23,7 @@ internal fun TitleInformation(
     elevation: Double,
 ) {
     Column {
+        val currentColor = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.7f)
 
         Row(
             modifier = modifier
@@ -32,20 +33,28 @@ internal fun TitleInformation(
                 modifier = modifier,
                 icon = R.drawable.icon_celsius,
                 title = stringResource(id = R.string.text_temperature_representation),
-                color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.5f)
+                color = currentColor
             )
             IconTextSection(
                 modifier = modifier,
                 icon = R.drawable.icon_windy,
                 title = stringResource(id = R.string.text_wind_representation),
-                color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.5f)
+                color = currentColor
+
             )
 
             IconTextSection(
                 modifier = modifier,
                 icon = R.drawable.icon_water_drop,
                 title = stringResource(id = R.string.text_temperature_precipitation_representation),
-                color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.5f)
+                color = currentColor
+            )
+            IconTextSection(
+                modifier = modifier,
+                icon = R.drawable.icon_ultraviolet,
+                title = stringResource(id = R.string.text_ultraviolet_index),
+                color = currentColor
+
             )
         }
         Spacer(modifier = modifier.height(8.dp))
@@ -65,13 +74,15 @@ internal fun TitleInformation(
                 modifier = modifier,
                 icon = R.drawable.icon_longitude,
                 title = longitude.toString(),
-                color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.3f)
+                color = currentColor.copy(alpha = 0.5f)
+
             )
             IconTextSection(
                 modifier = modifier,
                 icon = R.drawable.icon_elevation,
                 title = elevation.toString(),
-                color = MaterialTheme.colorScheme.onTertiary.copy(alpha = 0.3f)
+                color = currentColor.copy(alpha = 0.5f)
+
             )
 
         }

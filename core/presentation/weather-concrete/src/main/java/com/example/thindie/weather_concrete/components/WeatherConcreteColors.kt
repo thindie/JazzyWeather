@@ -50,4 +50,8 @@ object WeatherConcreteColors {
     val rainValue
         @Composable get() = MaterialTheme.colorScheme.onSecondaryContainer
 
+    val uvValue
+        @Composable
+        get() = rainValue.copy(alpha = 0.5f)
+
 }
