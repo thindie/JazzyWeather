@@ -1,11 +1,7 @@
 package com.example.thindie.weather_concrete.components
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.Dp
@@ -18,7 +14,6 @@ internal fun rememberWeatherTitleState(scope: CoroutineScope = rememberCoroutine
 
     return remember {
         WeatherConcreteTitleState(scope = scope)
-
     }
 }
 
@@ -28,24 +23,11 @@ internal class WeatherConcreteTitleState(
     private val _height: Dp = 155.dp,
     private val _expanded: Dp = 330.dp,
     private val scope: CoroutineScope,
+) : ExpandAnimator(
+    animationTime = animationTime,
+    initialHeight = _height
 ) {
 
-    private val _shouldExpand = mutableStateOf(false)
-    private val animationSpec = tween<Dp>(durationMillis = animationTime)
-
-
-
-    val shouldExpand: State<Boolean>
-        get() = _shouldExpand
-
-    private val _heightValue = mutableStateOf(_height)
-
-    val height
-        @Composable get() = animateDpAsState(
-            targetValue = _heightValue.value,
-            animationSpec = animationSpec,
-            label = ""
-        )
 
     fun onClickInformation() {
         scope.launch {
