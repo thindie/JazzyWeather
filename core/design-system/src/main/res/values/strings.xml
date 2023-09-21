@@ -17,7 +17,7 @@
     <string name="text_label_falls">"Осадки: "</string>
     <string name="text_label_expecting">"Ожидаются"</string>
     <string name="text_label_unexpecting">"Не ожидаются"</string>
-    <string name="hint_searh">"place or latitude and longitude"</string>
+    <string name="hint_searh">"type place.."</string>
     <string name="text_label_place_argument">"локация: %s"</string>
     <string name="text_label_daily_argument">"%s, посуточно"</string>
     <string name="text_label_hourly_argument">"%s, почасовой"</string>
