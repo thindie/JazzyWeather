@@ -1,18 +1,20 @@
 package com.example.thindie.location_presenter.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.IconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,36 +39,65 @@ internal fun WeatherLocationPickerUnit(
         mutableStateOf(false)
     }
 
-    val minValue = 0.5f
+    val minValue = 0.7f
     val maxValue = 1f
 
     val alpha =
-        animateFloatAsState(targetValue = if (isSelected.value) maxValue else minValue, label = "")
+        animateFloatAsState(
+            targetValue = if (isSelected.value) maxValue else minValue,
+            label = "",
+            animationSpec = tween(durationMillis = 700)
+        )
 
 
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(LocationPresenterColors.titleColors)
-            .height(80.dp)
-            .padding(horizontal = 8.dp, vertical = 2.dp),
+            .background(LocationPresenterColors.unitColors)
+            .height(120.dp)
     ) {
         Row(
             modifier = Modifier
                 .padding(start = 8.dp)
-                .fillMaxSize(),
+                .fillMaxWidth()
+                .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            LazyRow(modifier = modifier.widthIn(max = 120.dp)) {
+            LazyRow(modifier = modifier.fillMaxWidth(0.8f)) {
                 item {
                     IconTextSection(
                         modifier = modifier,
                         icon = R.drawable.icon_location,
-                        title = location.city
+                        title = location.city,
+                        style = MaterialTheme.typography.headlineLarge,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }
+            IconButton(onClick = {
+                isSelected.value = !isSelected.value
+                if (isSelected.value) {
+                    onClickFavorite(location)
+                } else onDismissFavorite(location)
+            }) {
+                Icon(
+                    modifier = modifier,
+                    painter = painterResource(id = R.drawable.icon_favorite),
+                    contentDescription = "",
+                    tint = LocationPresenterColors.starValue.copy(alpha.value)
+                )
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth()
+                .wrapContentHeight(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
 
             IconTextSection(
                 modifier = modifier,
@@ -90,20 +121,8 @@ internal fun WeatherLocationPickerUnit(
                 )
 
             }
-            IconButton(onClick = {
-                isSelected.value = !isSelected.value
-                if (isSelected.value) {
-                    onClickFavorite(location)
-                } else onDismissFavorite(location)
-            }) {
-                Icon(
-                    modifier = modifier,
-                    painter = painterResource(id = R.drawable.icon_favorite),
-                    contentDescription = "",
-                    tint = LocationPresenterColors.starValue.copy(alpha.value)
-                )
-            }
         }
     }
 }
+
 
