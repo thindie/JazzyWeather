@@ -3,6 +3,7 @@ package com.example.thindie.location_presenter.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thindie.domain.entities.WeatherLocation
+import com.example.thindie.domain.usecases.DeleteWeatherSiteUseCase
 import com.example.thindie.domain.usecases.GetLocationUseCase
 import com.example.thindie.domain.usecases.RememberWeatherSiteUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTimeZoneUseCase
@@ -21,6 +22,7 @@ internal class LocationPickerViewModel @Inject constructor(
     private val getLocation: GetLocationUseCase,
     private val getTimeZoneUseCase: GetTimeZoneUseCase,
     private val rememberWeatherSiteUseCase: RememberWeatherSiteUseCase,
+    private val deleteWeatherSiteUseCase: DeleteWeatherSiteUseCase,
 ) :
     ViewModel() {
 
@@ -39,6 +41,17 @@ internal class LocationPickerViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
     }
+
+    fun onDeleteWeatherSite(place: String) {
+        viewModelScope.launch {
+            try {
+                deleteWeatherSiteUseCase(place)
+            } catch (_: Exception) {
+            }
+
+        }
+    }
+
 
     fun onClickAddFavorites(forecastAble: WeatherLocation) {
 
