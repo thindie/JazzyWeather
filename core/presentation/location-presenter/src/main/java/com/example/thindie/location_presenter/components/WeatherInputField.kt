@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.TextField
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,7 +35,9 @@ internal fun WeatherInputField(modifier: Modifier = Modifier, state: InputFieldS
             value = state.fieldValue.value.value,
             onValueChange = state::onValueChange,
             shape = RoundedCornerShape(20.dp),
-            label = { Text(text = stringResource(id = R.string.hint_searh)) }
+            label = { },
+            placeholder = { Text(text = stringResource(id = R.string.hint_searh)) },
+            colors = LocationPresenterColors.textFieldColors
         )
     }
 }
