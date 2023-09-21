@@ -1,10 +1,13 @@
 package com.example.thindie.location_presenter.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.TextField
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,8 +21,13 @@ import com.example.thindie.presentation.R
 
 @Composable
 internal fun WeatherInputField(modifier: Modifier = Modifier, state: InputFieldState) {
-    Surface(
-        color = LocationPresenterColors.backGroundColors
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(
+                LocationPresenterColors.titleColors
+            )
     ) {
         OutlinedTextField(
             modifier = modifier
