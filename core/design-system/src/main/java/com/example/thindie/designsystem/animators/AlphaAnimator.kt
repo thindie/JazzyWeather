@@ -7,23 +7,31 @@ import kotlinx.coroutines.launch
 
 
 @Stable
-class AlphaAnimator(private val time: Int, private val minimumValue: Float) : FloatAnimator() {
+class AlphaAnimator(
+    private val time: Int,
+    private val minimumValue: Float,
+    isMinValue: Boolean,
+) : FloatAnimator() {
+
+    private val _isSelected = mutableStateOf(isMinValue)
 
     init {
         currentAnimationValue.floatValue = minimumValue
     }
 
-    private val isSelected = mutableStateOf(false)
 
     override val animationTime: Int
         get() = time
 
     override fun animate(scope: CoroutineScope) {
-        isSelected.value = !isSelected.value
         scope.launch {
-            if (isSelected.value)
+            if (_isSelected.value)
                 currentAnimationValue.floatValue = 1f
             else currentAnimationValue.floatValue = minimumValue
         }
+    }
+
+    fun setIsSelected(isSelected: Boolean) {
+        _isSelected.value = isSelected
     }
 }
