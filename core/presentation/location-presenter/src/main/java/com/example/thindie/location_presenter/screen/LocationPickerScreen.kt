@@ -17,6 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thindie.designsystem.composables.inputfield.InputFieldState
 import com.example.thindie.designsystem.composables.inputfield.rememberInputFieldState
+import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.location_presenter.components.LocationPresenterColors
 import com.example.thindie.location_presenter.components.WeatherInputField
 import com.example.thindie.location_presenter.components.WeatherLocationPickerUnit
@@ -27,6 +28,7 @@ internal fun LocationPickerScreen(
     modifier: Modifier = Modifier,
     inputFieldState: InputFieldState = rememberInputFieldState(),
     viewModel: LocationPickerViewModel = hiltViewModel(),
+    onClickConcrete: (ForecastAble) -> Unit,
 ) {
     val state =
         viewModel.uiState.collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
@@ -58,7 +60,8 @@ internal fun LocationPickerScreen(
                     },
                     onDismissFavorite = {
                         viewModel.onDeleteWeatherSite(it.city)
-                    }
+                    },
+                    onNavigateConcrete = onClickConcrete
                 )
             }
         }
