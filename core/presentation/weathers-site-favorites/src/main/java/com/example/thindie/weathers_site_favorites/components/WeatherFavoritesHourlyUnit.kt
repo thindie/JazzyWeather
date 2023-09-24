@@ -38,7 +38,7 @@ internal fun WeatherFavoriteHourlyUnit(
     isFalls: Boolean = precipitation != 0.0,
     isSnowy: Boolean = celsium < 0.5,
 ) {
-    Surface(
+    Column(
         modifier = modifier
             .clip(RoundedCornerShape(21.dp))
             .wrapContentWidth()
