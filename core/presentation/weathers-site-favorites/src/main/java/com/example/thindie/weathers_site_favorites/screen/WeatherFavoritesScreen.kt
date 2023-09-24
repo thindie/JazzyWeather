@@ -1,6 +1,7 @@
 package com.example.thindie.weathers_site_favorites.screen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
+import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.weathers_site_favorites.components.WeatherFavoriteHeader
 import com.example.thindie.weathers_site_favorites.components.WeatherFavoriteHourlyUnit
 import com.example.thindie.weathers_site_favorites.components.WeatherFavoritesColors
@@ -28,6 +30,9 @@ import com.example.thindie.weathers_site_favorites.viewmodel.WeatherFavoritesVie
 internal fun WeatherFavoritesScreen(
     modifier: Modifier = Modifier,
     viewModel: WeatherFavoritesViewModel = hiltViewModel(),
+    onClickNavigation: (ForecastAble) -> Unit,
+    onClickBack: () -> Unit,
+    onClickAll: () -> Unit,
 ) {
     viewModel.onSelectFavoriteWeatherPlacesScreen()
     val favoritesScreenState =
@@ -48,9 +53,10 @@ internal fun WeatherFavoritesScreen(
                     contextDependableSurfaceColor = WeatherFavoritesColors.titleColors,
                     weatherCurrent = favoritesScreenState.value.decodedWeather,
                     weatherCurrentPic = favoritesScreenState.value.decodedWeatherDrawable,
+                    onClickHeader = { onClickNavigation(weather) }
                 )
                 LaunchedEffect(true) {
-                    lazyRowState.animateScrollToItem(favoritesScreenState.value.currentHour)
+                    lazyRowState.scrollToItem(favoritesScreenState.value.currentHour)
                 }
 
 

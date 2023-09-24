@@ -3,6 +3,7 @@ package com.example.thindie.weathers_site_favorites.components
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,7 +12,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,10 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.thindie.designsystem.composables.IconTextSection
 import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.designsystem.utils.TransGradientVerticalInverse
 
@@ -35,8 +38,9 @@ internal fun WeatherFavoriteHeader(
     @StringRes weatherCurrent: Int,
     @DrawableRes weatherCurrentPic: Int,
     contextDependableSurfaceColor: Brush,
+    onClickHeader: () -> Unit,
 ) {
-    Surface(
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -48,46 +52,38 @@ internal fun WeatherFavoriteHeader(
                 .fillMaxHeight()
                 .fillMaxWidth()
                 .background(contextDependableSurfaceColor)
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = 8.dp),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                modifier = modifier
-                    .fillMaxWidth(0.7F)
-                    .fillMaxHeight()
-                    .padding(all = 8.dp),
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = city,
-                    style = MaterialTheme.typography.headlineLarge.copy(MaterialTheme.colorScheme.onSurfaceVariant)
-                )
-                Row(
-                    modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    if (weatherCurrent != 0) {
-                        Text(
-                            text = stringResource(id = weatherCurrent),
-                            style = MaterialTheme.typography.labelSmall.copy(MaterialTheme.colorScheme.onPrimary)
-                        )
-                    }
+
+            LazyRow(modifier = modifier.fillMaxWidth(0.6f), content = {
+                item {
+                    Text(
+                        modifier = Modifier
+                            .padding(all = 2.dp)
+                            .clip(RoundedCornerShape(20.dp))
+                            .clickable { onClickHeader() },
+                        text = city,
+                        style = MaterialTheme
+                            .typography
+                            .headlineLarge
+                            .copy(Color.White)
+                    )
                 }
-            }
-            Column(
+            })
+
+            IconTextSection(
                 modifier = modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(all = 8.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.End
-            ) {
-                Text(
-                    text = celsium,
-                    style = MaterialTheme.typography.headlineLarge.copy(Color.White)
-                )
-            }
+                    .wrapContentSize(align = Alignment.Center),
+                icon = com.example.thindie.presentation.R.drawable.icon_celsius,
+                title = celsium,
+                style = MaterialTheme.typography.headlineLarge,
+                color = Color.White
+            )
+
         }
+
     }
 }
 
@@ -101,15 +97,16 @@ internal fun previewWeatherFavoriteHeader() {
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
-            WeatherFavoriteHeader(
-                city = "Kaliningrad",
+            WeatherFavoriteHeader(city = "Kaliningrad",
                 celsium = "24",
                 contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
                     MaterialTheme.colorScheme.surface.TransGradientVertical()
                 } else {
                     MaterialTheme.colorScheme.primary.TransGradientVerticalInverse()
-                }, weatherCurrent = 0, weatherCurrentPic = 0
-            )
+                },
+                weatherCurrent = 0,
+                weatherCurrentPic = 0,
+                onClickHeader = {})
             WeatherFavoriteHourlyUnit(
                 time = "14:00",
                 celsium = 25.00,
@@ -122,9 +119,9 @@ internal fun previewWeatherFavoriteHeader() {
                 }
             )
         }
-
     }
 }
+
 
 @Composable
 @Preview(showBackground = true, device = Devices.PIXEL_2)
@@ -136,15 +133,13 @@ internal fun previewWeatherFavoriteHeaderDark() {
                 .fillMaxWidth()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
-            WeatherFavoriteHeader(
-                city = "Kaliningrad",
-                celsium = "24",
+            WeatherFavoriteHeader(city = "Kaliningrad", celsium = "24",
 
                 contextDependableSurfaceColor = if (isSystemInDarkTheme()) {
                     MaterialTheme.colorScheme.onPrimary.TransGradientVerticalInverse()
                 } else {
                     MaterialTheme.colorScheme.surface.TransGradientVertical()
-                }, weatherCurrent = 0, weatherCurrentPic = 0
+                }, weatherCurrent = 0, weatherCurrentPic = 0, onClickHeader = {}
 
             )
             WeatherFavoriteHourlyUnit(

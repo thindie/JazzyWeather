@@ -54,7 +54,6 @@ internal class LocationPickerViewModel @Inject constructor(
 
 
     fun onClickAddFavorites(forecastAble: WeatherLocation) {
-
         viewModelScope.launch {
             rememberWeatherSiteUseCase(forecastAble.copy(timezone = getTimeZoneUseCase()))
         }

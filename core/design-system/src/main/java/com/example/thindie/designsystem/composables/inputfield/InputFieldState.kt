@@ -1,58 +1,62 @@
 package com.example.thindie.designsystem.composables.inputfield
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.StringHelper
+import com.example.thindie.designsystem.animators.FloatAnimator
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
-open class InputFieldState(scope: CoroutineScope, helper: StringHelper) {
-
-    private var isMaxWidth by mutableStateOf(true)
-    val isCleaningButtonVisible: State<Boolean>
-        get() = mutableStateOf(isMaxWidth)
-
+open class InputFieldState(val scope: CoroutineScope, helper: StringHelper) : FloatAnimator() {
     private val maxWidth = 1f
-    private val lesserWidth = 0.6f
 
-    val animatedWidth
-        @Composable
-        get() = animateFloatAsState(
-            targetValue = if (isMaxWidth) maxWidth else lesserWidth,
-            label = "",
-            animationSpec = spring()
-        )
+    init {
+        currentAnimationValue.floatValue = maxWidth
+    }
+
+    private val lesserWidth = 0.6f
+    private var isMaxWidth by mutableStateOf(true)
 
     private val _fieldValue = mutableStateOf(helper)
     val fieldValue: State<StringHelper>
         get() = _fieldValue
 
-    fun onToggleWidth() {
-        isMaxWidth = !isMaxWidth
-    }
 
-    fun onClean() {
-        onValueChange("")
+    fun onClearField() {
+        _fieldValue.value = StringHelper.Line("")
+        isMaxWidth = true
+        animate(scope)
     }
 
     fun onValueChange(string: String) {
+        if (string.isBlank()) {
+            onClearField()
+        } else {
+            isMaxWidth = false
+            animate(scope)
+        }
         _fieldValue.value = StringHelper.Line(string)
+    }
+
+    fun onFocusChange(state: FocusState) {
+        if (state.isFocused) {
+            isMaxWidth = false
+            animate(scope)
+        }
     }
 
 
@@ -94,4 +98,14 @@ open class InputFieldState(scope: CoroutineScope, helper: StringHelper) {
             disabledTrailingIconColor = MaterialTheme.colorScheme.primary,
             errorTrailingIconColor = MaterialTheme.colorScheme.primary,
         )
+    override val animationTime: Int
+        get() = 700
+
+    override fun animate(scope: CoroutineScope) {
+        scope.launch {
+            if (isMaxWidth) currentAnimationValue.floatValue =
+                maxWidth else currentAnimationValue.floatValue = lesserWidth
+        }
+
+    }
 }

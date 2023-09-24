@@ -3,43 +3,29 @@ package com.example.jazzyweather
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
-import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
-import androidx.compose.runtime.Composable
-import androidx.core.view.WindowCompat
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import com.example.thindie.designsystem.TransparentSystemBars
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
-import com.example.thindie.location_presenter.route.LocationPickerRouting
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-
+        mainViewModel.onStart()
         setContent {
-            val isWindowSizeExpanded = checkWindowSizeIsExpanded()
-            val isSystemDarkThemed = isSystemInDarkTheme()
-             JazzyWeatherTheme {
-               LocationPickerRouting()
+            JazzyWeatherTheme {
+                TransparentSystemBars()
+                WeatherApp(
+                    viewModel = mainViewModel,
+                    weatherScreen = mainViewModel.destinationState.collectAsState().value
+                )
+
             }
-        }
-    }
-
-
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    @Composable
-    internal fun checkWindowSizeIsExpanded(): Boolean {
-        val windowSize = calculateWindowSizeClass(activity = this)
-        return when (windowSize.widthSizeClass) {
-            WindowWidthSizeClass.Expanded -> true
-            WindowWidthSizeClass.Medium -> true
-            else -> false
         }
     }
 }

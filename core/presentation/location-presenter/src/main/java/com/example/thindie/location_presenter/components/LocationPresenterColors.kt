@@ -36,10 +36,27 @@ internal object LocationPresenterColors {
     val starValue
         @Composable get() =
             if (isSystemInDarkTheme()) {
-                MaterialTheme.colorScheme.onPrimary
+                MaterialTheme.colorScheme.tertiary
+            } else {
+                MaterialTheme.colorScheme.secondary
+            }
+
+    val coordinatesValue
+        @Composable get() =
+            if (isSystemInDarkTheme()) {
+                MaterialTheme.colorScheme.onSecondaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSecondaryContainer
+            }
+
+    val populationValue
+        @Composable get() =
+            if (isSystemInDarkTheme()) {
+                MaterialTheme.colorScheme.onSecondaryContainer
             } else {
                 MaterialTheme.colorScheme.primaryContainer
             }
+
 
     val textFieldColors: TextFieldColors
         @Composable get() = OutlinedTextFieldDefaults.colors(

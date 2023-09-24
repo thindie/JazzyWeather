@@ -1,10 +1,23 @@
 package com.example.thindie.weather_concrete.route
 
-import androidx.compose.runtime.Composable
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.weather_concrete.screen.WeatherConcreteScreenState
 
-@Composable
-fun WeatherConcreteRouting(onClickNavigation: () -> ForecastAble) {
-    WeatherConcreteScreenState(onClickNavigation = onClickNavigation)
+internal const val concrete = "concrete"
+
+fun NavGraphBuilder.WeatherConcrete(
+    onClickNavigation: () -> ForecastAble?,
+    onClickBack: () -> Unit,
+    onClickAll: () -> Unit,
+) {
+    composable(route = concrete) {
+        WeatherConcreteScreenState(
+            onClickNavigation = onClickNavigation,
+            onClickBack = onClickBack,
+            onClickAll = onClickAll
+        )
+    }
+
 }

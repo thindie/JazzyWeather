@@ -12,7 +12,7 @@ import com.example.thindie.presentation.R
 @Composable
 fun InputField(modifier: Modifier = Modifier, state: InputFieldState) {
     BasicTextField(
-        modifier = modifier.fillMaxWidth(state.animatedWidth.value),
+        modifier = modifier.fillMaxWidth(state.animatedValue.value),
         value = state.fieldValue.value.value,
         onValueChange = state::onValueChange
     ) {
