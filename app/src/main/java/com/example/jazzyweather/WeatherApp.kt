@@ -37,8 +37,6 @@ fun WeatherApp(
         ) {
             LocationPicker(
                 onClickConcrete = { viewModel.onChoseForecastAble(it); state.concreteScreen() },
-                onClickBack = state::back,
-                onClickAll = state::favoritesScreen
             )
 
             WeatherFavorites(
