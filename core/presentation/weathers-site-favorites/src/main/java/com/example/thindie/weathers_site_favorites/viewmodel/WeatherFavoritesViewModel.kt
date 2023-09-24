@@ -67,8 +67,12 @@ class WeatherFavoritesViewModel @Inject constructor(
 
     private fun List<WeatherHourly>.getCurrentWeatherCode(): Int {
         val currentHour = getCurrentHourOfDayUseCase()
-        return this[currentHour]
-            .weatherCode[currentHour]
+        return try {
+            this[currentHour]
+                .weatherCode[currentHour]
+        } catch (_: Exception) {
+            0
+        }
     }
 
     private fun List<WeatherHourly>.rawTimeTo24hHours(): List<WeatherHourly> {
