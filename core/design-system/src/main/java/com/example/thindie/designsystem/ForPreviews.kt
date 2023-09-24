@@ -36,3 +36,20 @@ val fakeHeightAnimator: FloatAnimator = HeightAnimator(
     scope = CoroutineScope(Dispatchers.Main),
     animationTarget = customizerFullHeight.getShapeComponent()
 )
+
+
+data class A(val simpleRoute: String, val simpleRes: Int) : NavigationAble {
+    override fun getRoute(): String {
+        return simpleRoute
+    }
+
+    override fun getVision(): Int {
+        return simpleRes
+    }
+}
+
+val back = A("", com.example.thindie.presentation.R.drawable.nav_icon_arrow)
+val search = A("", com.example.thindie.presentation.R.drawable.nav_icon_search)
+val favs = A("", com.example.thindie.presentation.R.drawable.nav_icon_favorite)
+
+val navList = listOf(back, search, favs)
