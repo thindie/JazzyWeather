@@ -9,8 +9,10 @@ import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 
 @Composable
 internal fun WeatherConcreteScreenState(
-    onClickNavigation: () -> ForecastAble,
+    onClickNavigation: () -> ForecastAble?,
     viewModel: WeatherConcreteViewModel = hiltViewModel(),
+    onClickBack: () -> Unit,
+    onClickAll: () -> Unit,
 ) {
     viewModel.onLoadConcreteScreen(onClickNavigation())
     val screenState =

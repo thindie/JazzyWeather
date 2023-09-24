@@ -43,35 +43,37 @@ internal class WeatherConcreteViewModel @Inject constructor(
                 ConcreteWeatherScreenState()
             )
 
-    fun onLoadConcreteScreen(forecastAble: ForecastAble) {
-        val innerForecastAble = CurrentScreenForecastAble(
-            place = forecastAble.getSight(),
-            latitude = forecastAble.getSightLatitude(),
-            longitude = forecastAble.getSightLongitude(),
-            timezone = getTimeZoneUseCase()
-        )
-        viewModelScope.launch {
-            getDailyWeatherUseCase(innerForecastAble)
-                .onSuccess {
-                    val today = getTodayUseCase()
-                    val currentWeek = getWeekUseCase(it.time)
-                    val sunset = getHourUseCase(it.sunset.first())
-                    val sunrise = getHourUseCase(it.sunrise.first())
+    fun onLoadConcreteScreen(forecastAble: ForecastAble?) {
+        if (forecastAble != null) {
+            val innerForecastAble = CurrentScreenForecastAble(
+                place = forecastAble.getSight(),
+                latitude = forecastAble.getSightLatitude(),
+                longitude = forecastAble.getSightLongitude(),
+                timezone = getTimeZoneUseCase()
+            )
+            viewModelScope.launch {
+                getDailyWeatherUseCase(innerForecastAble)
+                    .onSuccess {
+                        val today = getTodayUseCase()
+                        val currentWeek = getWeekUseCase(it.time)
+                        val sunset = getHourUseCase(it.sunset.first())
+                        val sunrise = getHourUseCase(it.sunrise.first())
 
-                    val screenState = ConcreteWeatherScreenState(
-                        weatherDaily = it,
-                        isFreshForecast = true,
-                        currentDay = today,
-                        sunset = sunset,
-                        sunrise = sunrise,
-                        weekDays = currentWeek,
-                    )
+                        val screenState = ConcreteWeatherScreenState(
+                            weatherDaily = it,
+                            isFreshForecast = true,
+                            currentDay = today,
+                            sunset = sunset,
+                            sunrise = sunrise,
+                            weekDays = currentWeek,
+                        )
 
-                    _concreteScreenState.value = screenState
-                }
-                .onFailure {
+                        _concreteScreenState.value = screenState
+                    }
+                    .onFailure {
 
-                }
+                    }
+            }
         }
     }
 
