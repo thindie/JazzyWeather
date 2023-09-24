@@ -7,6 +7,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.example.thindie.designsystem.TransparentSystemBars
 
 private fun JazzyWeatherTheme(boolean: Boolean): ColorScheme {
     return if (!boolean) LightColors else DarkColors
@@ -46,6 +47,7 @@ fun JazzyWeatherTheme(
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable() () -> Unit,
 ) {
+
 
     MaterialTheme(
         colorScheme = JazzyWeatherTheme(useDarkTheme),
