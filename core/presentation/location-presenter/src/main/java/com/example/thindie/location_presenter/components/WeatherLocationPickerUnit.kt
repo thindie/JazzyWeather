@@ -3,6 +3,7 @@ package com.example.thindie.location_presenter.components
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.composables.IconTextSection
@@ -33,13 +35,14 @@ internal fun WeatherLocationPickerUnit(
     location: WeatherLocation,
     onClickFavorite: (WeatherLocation) -> Unit,
     onDismissFavorite: (WeatherLocation) -> Unit,
+    onNavigateConcrete: (WeatherLocation) -> Unit,
 ) {
 
     val isSelected = rememberSaveable {
         mutableStateOf(false)
     }
 
-    val minValue = 0.7f
+    val minValue = 0.5f
     val maxValue = 1f
 
     val alpha =
@@ -53,25 +56,33 @@ internal fun WeatherLocationPickerUnit(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(LocationPresenterColors.unitColors)
-            .height(120.dp)
+            .background(LocationPresenterColors.titleColors)
+            .height(150.dp),
+        verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Row(
             modifier = Modifier
-                .padding(start = 8.dp)
-                .fillMaxWidth()
-                .wrapContentHeight(),
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            LazyRow(modifier = modifier.fillMaxWidth(0.8f)) {
+            LazyRow(
+                modifier = modifier
+                    .fillMaxWidth(0.8f)
+            ) {
                 item {
                     IconTextSection(
-                        modifier = modifier,
+                        modifier = modifier
+                            .padding(all = 2.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .clickable {
+                                onNavigateConcrete(location)
+                            },
                         icon = R.drawable.icon_location,
                         title = location.city,
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onSurface
+                        style = MaterialTheme.typography.displaySmall,
+                        color = Color.White
                     )
                 }
             }
@@ -103,7 +114,7 @@ internal fun WeatherLocationPickerUnit(
                 modifier = modifier,
                 icon = R.drawable.icon_population,
                 title = location.population,
-                color = LocationPresenterColors.starValue.copy(alpha.value)
+                color = LocationPresenterColors.populationValue.copy(alpha.value)
             )
 
             Column {
@@ -111,13 +122,13 @@ internal fun WeatherLocationPickerUnit(
                     modifier = modifier.height(14.dp),
                     icon = R.drawable.icon_latitude,
                     title = location.latitude,
-                    color = LocationPresenterColors.starValue.copy(alpha.value)
+                    color = LocationPresenterColors.coordinatesValue.copy(alpha.value)
                 )
                 IconTextSection(
                     modifier = modifier.height(14.dp),
                     icon = R.drawable.icon_longitude,
                     title = location.longitude,
-                    color = LocationPresenterColors.starValue.copy(alpha.value)
+                    color = LocationPresenterColors.coordinatesValue.copy(alpha.value)
                 )
 
             }
