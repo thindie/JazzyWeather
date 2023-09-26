@@ -1,7 +1,8 @@
 package com.example.thindie.weathers_site_favorites.screen
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,47 +17,46 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.thindie.designsystem.AnimatedContent
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.domain.entities.ForecastAble
+import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.weathers_site_favorites.components.WeatherFavoriteHeader
 import com.example.thindie.weathers_site_favorites.components.WeatherFavoriteHourlyUnit
 import com.example.thindie.weathers_site_favorites.components.WeatherFavoritesColors
-import com.example.thindie.weathers_site_favorites.viewmodel.WeatherFavoritesViewModel
 
 @Composable
 internal fun WeatherFavoritesScreen(
     modifier: Modifier = Modifier,
-    viewModel: WeatherFavoritesViewModel = hiltViewModel(),
     onClickNavigation: (ForecastAble) -> Unit,
     onClickBack: () -> Unit,
     onClickAll: () -> Unit,
+    list: List<WeatherHourly>,
+    currentHour: Int,
+    @StringRes decodedWeather: Int,
+    @DrawableRes decodedWeatherDrawable: Int,
 ) {
-    viewModel.onSelectFavoriteWeatherPlacesScreen()
-    val favoritesScreenState =
-        viewModel.screenState.collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
+
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(WeatherFavoritesColors.backGroundColors)
     ) {
-        LazyColumn() {
+        LazyColumn {
 
-            items(favoritesScreenState.value.list) { weather ->
+            items(list) { weather ->
                 val lazyRowState: LazyListState = rememberLazyListState()
                 WeatherFavoriteHeader(
                     city = weather.place,
                     celsium = weather.apparentTemperature.first().toString(),
                     contextDependableSurfaceColor = WeatherFavoritesColors.titleColors,
-                    weatherCurrent = favoritesScreenState.value.decodedWeather,
-                    weatherCurrentPic = favoritesScreenState.value.decodedWeatherDrawable,
+                    weatherCurrent = decodedWeather,
+                    weatherCurrentPic = decodedWeatherDrawable,
                     onClickHeader = { onClickNavigation(weather) }
                 )
                 LaunchedEffect(true) {
-                    lazyRowState.scrollToItem(favoritesScreenState.value.currentHour)
+                    lazyRowState.scrollToItem(currentHour)
                 }
 
 
