@@ -43,7 +43,6 @@ internal fun LocationPickerScreen(
         Spacer(
             modifier = modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surface)
                 .height(40.dp)
         )
         LazyColumn(

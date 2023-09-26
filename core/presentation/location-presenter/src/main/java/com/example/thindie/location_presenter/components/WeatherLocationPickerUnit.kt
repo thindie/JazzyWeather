@@ -56,7 +56,7 @@ internal fun WeatherLocationPickerUnit(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(LocationPresenterColors.titleColors)
+            .background(LocationPresenterColors.unitColors)
             .height(150.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
