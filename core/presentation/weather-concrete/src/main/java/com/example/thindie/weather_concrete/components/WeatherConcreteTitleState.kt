@@ -2,6 +2,8 @@ package com.example.thindie.weather_concrete.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.Dp
@@ -28,6 +30,24 @@ internal class WeatherConcreteTitleState(
     animationTime = animationTime,
     initialHeight = _height
 ) {
+
+    private val _shouldConfirmEditingTitle =  mutableStateOf(false)
+
+    val shouldConfirmEditingTitle: State<Boolean>
+        get() =_shouldConfirmEditingTitle
+
+    private val _shouldShowInputField = mutableStateOf(false)
+
+    val shouldShowInputField: State<Boolean>
+        get() = _shouldShowInputField
+
+    fun onClickEdit() {
+        _shouldShowInputField.value = !_shouldShowInputField.value
+    }
+
+    fun onTitleSuccessEdition() {
+        _shouldConfirmEditingTitle.value = true
+    }
 
 
     fun onClickInformation() {

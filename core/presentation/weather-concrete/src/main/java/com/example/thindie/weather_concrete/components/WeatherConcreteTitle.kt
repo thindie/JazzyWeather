@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,7 +26,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.thindie.designsystem.StringHelper
 import com.example.thindie.designsystem.composables.IconTextSection
+import com.example.thindie.designsystem.composables.inputfield.InputFieldState
+import com.example.thindie.designsystem.composables.inputfield.rememberInputFieldState
 import com.example.thindie.presentation.R
 
 @Composable
@@ -39,7 +43,17 @@ internal fun WeatherConcreteTitle(
     latitude: Double,
     longitude: Double,
     elevation: Double,
+    inputFieldState: InputFieldState = rememberInputFieldState(helper = StringHelper.Line(city)),
+    onEdit: (String) -> Unit,
+    onRemove: (String) -> Unit,
 ) {
+
+    if (state.shouldConfirmEditingTitle.value) {
+        val editedTitle = inputFieldState.fieldValue.value.value
+        onEdit(editedTitle)
+    }
+
+
     Column(
         modifier = modifier
             .height(state.height.value)
@@ -57,7 +71,8 @@ internal fun WeatherConcreteTitle(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            LazyRow(modifier = modifier.padding(horizontal = 20.dp)) {
+
+            LazyRow(modifier = modifier.padding(horizontal = 4.dp)) {
                 item {
                     Text(
                         text = city,
@@ -70,6 +85,34 @@ internal fun WeatherConcreteTitle(
 
             }
 
+        }
+        if (state.shouldExpand.value) {
+            Row(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                IconButton(onClick = { onRemove(city) }) {
+                    Icon(
+                        modifier = Modifier
+                            .size(24.dp),
+                        painter = painterResource(id = R.drawable.icon_delete),
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+                IconButton(onClick = state::onClickEdit) {
+                    Icon(
+                        modifier = Modifier
+                            .size(24.dp),
+                        painter = painterResource(id = R.drawable.icon_edit),
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
+            }
         }
         Row(
             modifier = modifier
@@ -108,6 +151,13 @@ internal fun WeatherConcreteTitle(
                 elevation = elevation
             )
         }
+        if (state.shouldExpand.value && state.shouldShowInputField.value) {
+
+            WeatherTitleCorrection(
+                state = inputFieldState,
+                onClickConfirm = state::onTitleSuccessEdition
+            )
+        }
     }
 }
 
@@ -124,7 +174,12 @@ internal fun previewWeatherConcreteTitle() {
                 city = "Санкт-Петербург",
                 timeSunset = "333",
                 timeSunrise = "444",
-                timeZone = "EET", latitude = 0.2, longitude = 0.3, elevation = 0.1,
+                timeZone = "EET",
+                latitude = 0.2,
+                longitude = 0.3,
+                elevation = 0.1,
+                onRemove = { _ -> },
+                onEdit = { _ -> }
             )
             DatePlanchette(days = listOf(12, 23, 62, 73, 48, 64, 25), currentDay = 5)
             LazyColumn() {
