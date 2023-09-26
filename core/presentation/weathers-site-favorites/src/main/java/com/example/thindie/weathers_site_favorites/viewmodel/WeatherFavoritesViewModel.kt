@@ -29,15 +29,18 @@ class WeatherFavoritesViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _screenState = MutableStateFlow(FavoriteWeatherSitesUiState(emptyList()))
+    private val _screenState =
+        MutableStateFlow(FavoriteWeatherSitesUiState(emptyList()))
     val screenState = _screenState.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5_000L),
-        FavoriteWeatherSitesUiState(emptyList())
+        FavoriteWeatherSitesUiState(list = emptyList())
     )
 
     fun onSelectFavoriteWeatherPlacesScreen() {
+        _screenState.value = FavoriteWeatherSitesUiState(list = emptyList())
         act {
+
             getHourlyWeatherListUseCase()
                 .onSuccess { listWeatherHourly ->
                     _screenState.value = FavoriteWeatherSitesUiState(
@@ -55,6 +58,7 @@ class WeatherFavoritesViewModel @Inject constructor(
                                 .rawTimeTo24hHours(),
                             currentHour = getCurrentHourOfDayUseCase()
                         )
+                    return@onFailure
                 }
         }
     }
