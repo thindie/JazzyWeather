@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
+import com.example.jazzyweather.loadScreen.LoadingScreen
 import com.example.thindie.designsystem.TransparentSystemBars
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,11 +21,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             JazzyWeatherTheme {
                 TransparentSystemBars()
-                WeatherApp(
-                    viewModel = mainViewModel,
-                    weatherScreen = mainViewModel.destinationState.collectAsState().value
-                )
-
+                LoadingScreen(time = mainViewModel.hottingTime)
+                if (mainViewModel.shouldStart.value)
+                    WeatherApp(
+                        viewModel = mainViewModel,
+                        weatherScreen = mainViewModel.destinationState.collectAsState().value
+                    )
             }
         }
     }
