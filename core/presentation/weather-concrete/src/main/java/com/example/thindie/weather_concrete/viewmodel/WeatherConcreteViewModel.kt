@@ -2,11 +2,11 @@ package com.example.thindie.weather_concrete.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thindie.designsystem.utils.dangerAbleAct
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.domain.usecases.DeleteWeatherSiteUseCase
 import com.example.thindie.domain.usecases.GetDailyWeatherUseCase
-import com.example.thindie.domain.usecases.RememberWeatherSiteUseCase
 import com.example.thindie.domain.usecases.ReserveWeatherInteractor
 import com.example.thindie.domain.usecases.timeusecases.GetHourUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTimeZoneUseCase
@@ -18,14 +18,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class WeatherConcreteViewModel @Inject constructor(
     private val getTimeZoneUseCase: GetTimeZoneUseCase,
     private val getDailyWeatherUseCase: GetDailyWeatherUseCase,
     private val deleteWeatherSiteUseCase: DeleteWeatherSiteUseCase,
-    private val rememberWeatherSiteUseCase: RememberWeatherSiteUseCase,
     private val getTodayUseCase: GetTodayUseCase,
     private val getWeekUseCase: GetWeekUseCase,
     private val getHourUseCase: GetHourUseCase,
@@ -45,32 +43,20 @@ internal class WeatherConcreteViewModel @Inject constructor(
 
     fun onLoadConcreteScreen(forecastAble: ForecastAble?) {
         if (forecastAble != null) {
-            val innerForecastAble = CurrentScreenForecastAble(
-                place = forecastAble.getSight(),
-                latitude = forecastAble.getSightLatitude(),
-                longitude = forecastAble.getSightLongitude(),
-                timezone = getTimeZoneUseCase()
-            )
-            viewModelScope.launch {
+            val innerForecastAble = forecastAble.timeZoneApproved()
+
+            dangerAbleAct {
                 getDailyWeatherUseCase(innerForecastAble)
                     .onSuccess {
-                        val today = getTodayUseCase()
-                        val currentWeek = getWeekUseCase(it.time)
-                        val sunset = getHourUseCase(it.sunset.first())
-                        val sunrise = getHourUseCase(it.sunrise.first())
-
-                        val screenState = ConcreteWeatherScreenState(
-                            weatherDaily = it,
-                            isFreshForecast = true,
-                            currentDay = today,
-                            sunset = sunset,
-                            sunrise = sunrise,
-                            weekDays = currentWeek,
-                        )
-
-                        _concreteScreenState.value = screenState
+                        renewScreenStateValue(it)
                     }
                     .onFailure {
+                        try {
+                            val reserveDaily = interactor.getDailyWeatherSite(innerForecastAble)
+                            renewScreenStateValue(reserveDaily)
+                        } catch (_: Exception) {
+
+                        }
 
                     }
             }
@@ -78,14 +64,42 @@ internal class WeatherConcreteViewModel @Inject constructor(
     }
 
     fun onRememberChanges(daily: WeatherDaily) {
-        viewModelScope.launch {
-            rememberWeatherSiteUseCase(daily)
+        dangerAbleAct {
+            interactor.updateWeatherSite(daily)
         }
     }
 
     fun onDeleteLocation(place: String) {
-        viewModelScope.launch { deleteWeatherSiteUseCase(place) }
+        dangerAbleAct {
+            deleteWeatherSiteUseCase(place)
+        }
     }
+
+    private fun renewScreenStateValue(weatherDaily: WeatherDaily) {
+        val today = getTodayUseCase()
+        val currentWeek = getWeekUseCase(weatherDaily.time)
+        val sunset = getHourUseCase(weatherDaily.sunset.first())
+        val sunrise = getHourUseCase(weatherDaily.sunrise.first())
+
+        val screenState = ConcreteWeatherScreenState(
+            weatherDaily = weatherDaily,
+            isFreshForecast = true,
+            currentDay = today,
+            sunset = sunset,
+            sunrise = sunrise,
+            weekDays = currentWeek,
+        )
+
+        _concreteScreenState.value = screenState
+    }
+
+    private fun ForecastAble.timeZoneApproved() = CurrentScreenForecastAble(
+        place = getSight(),
+        latitude = getSightLatitude(),
+        longitude = getSightLongitude(),
+        timezone = getTimeZoneUseCase()
+    )
+
 
     data class ConcreteWeatherScreenState(
         val weatherDaily: WeatherDaily? = null,
@@ -119,5 +133,4 @@ internal class WeatherConcreteViewModel @Inject constructor(
         }
 
     }
-
 }
