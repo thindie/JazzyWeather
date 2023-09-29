@@ -56,7 +56,7 @@ internal fun WeatherLocationPickerUnit(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(LocationPresenterColors.titleColors)
+            .background(LocationPresenterColors.unitColors)
             .height(150.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -94,7 +94,7 @@ internal fun WeatherLocationPickerUnit(
             }) {
                 Icon(
                     modifier = modifier,
-                    painter = painterResource(id = R.drawable.icon_favorite),
+                    painter = painterResource(id = R.drawable.nav_icon_favorite),
                     contentDescription = "",
                     tint = LocationPresenterColors.starValue.copy(alpha.value)
                 )

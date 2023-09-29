@@ -4,10 +4,11 @@ import com.example.thindie.core.localrawresources.parserules.SPLIT_BY_WHITESPACE
 import com.example.thindie.core.localrawresources.parserules.fewSymbolsMapTranscryptions
 import com.example.thindie.core.localrawresources.parserules.singleSymbolMapTranscrypt
 
+private const val SOMETHING_THAT_DONT_FIND = "543534rsfdslferqfseiporw;.dbaweqw432rf"
 @Suppress("ComplexCondition", "ReturnCount")
 internal fun String.returnCapitalNameOrTranscryptInstead(): String {
-    return if (this == ""
-        || "Moskva".contains(this, true)
+    if (this.isBlank()) return SOMETHING_THAT_DONT_FIND
+    return if ("Moskva".contains(this, true)
         || "Москва".contains(this, true)
     ) {
         return "Moscow"
@@ -29,8 +30,8 @@ internal fun String.capitalizeFirstCharsAndTranscrypt(): String {
         .map { cityNamed ->
             cityNamed
                 .replaceFirstChar { firstChar ->
-                firstChar.uppercase()
-            }
+                    firstChar.uppercase()
+                }
         }
         .joinToString(separator = SPLIT_BY_WHITESPACE) { everyCityName ->
             everyCityName

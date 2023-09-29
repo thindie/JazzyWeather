@@ -3,7 +3,7 @@ package com.example.thindie.location_presenter.route
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.example.thindie.domain.entities.ForecastAble
-import com.example.thindie.weathers_site_favorites.screen.WeatherFavoritesScreen
+import com.example.thindie.weathers_site_favorites.screen.WeatherFavoriteScreenState
 
 internal const val all = "all"
 fun NavGraphBuilder.WeatherFavorites(
@@ -12,10 +12,10 @@ fun NavGraphBuilder.WeatherFavorites(
     onClickAll: () -> Unit,
 ) {
     composable(route = all) {
-        WeatherFavoritesScreen(
-            onClickAll = onClickAll,
+        WeatherFavoriteScreenState(
             onClickNavigation = onClickNavigation,
             onClickBack = onClickBack,
+            onClickAll = onClickAll
         )
     }
 

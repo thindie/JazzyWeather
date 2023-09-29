@@ -43,9 +43,7 @@ internal fun WeatherInputField(modifier: Modifier = Modifier, state: InputFieldS
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
-            .background(
-                LocationPresenterColors.titleColors
-            )
+
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

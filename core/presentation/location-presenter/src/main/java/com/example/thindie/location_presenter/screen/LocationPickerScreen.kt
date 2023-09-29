@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -18,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thindie.designsystem.composables.inputfield.InputFieldState
 import com.example.thindie.designsystem.composables.inputfield.rememberInputFieldState
 import com.example.thindie.domain.entities.ForecastAble
+import com.example.thindie.location_presenter.components.EmptySearchContent
 import com.example.thindie.location_presenter.components.LocationPresenterColors
 import com.example.thindie.location_presenter.components.WeatherInputField
 import com.example.thindie.location_presenter.components.WeatherLocationPickerUnit
@@ -43,28 +43,31 @@ internal fun LocationPickerScreen(
         Spacer(
             modifier = modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surface)
                 .height(40.dp)
         )
-        LazyColumn(
-            modifier = modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            items(state.value.locationsList, key = { it.latitude + it.longitude }) { location ->
 
-                WeatherLocationPickerUnit(
-                    location = location,
-                    onClickFavorite = {
-                        viewModel.onClickAddFavorites(it)
-                    },
-                    onDismissFavorite = {
-                        viewModel.onDeleteWeatherSite(it.city)
-                    },
-                    onNavigateConcrete = onClickConcrete
-                )
+        if (state.value.locationsList.isEmpty()) {
+            EmptySearchContent()
+        } else
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+            ) {
+                items(state.value.locationsList, key = { it.latitude + it.longitude }) { location ->
+
+                    WeatherLocationPickerUnit(
+                        location = location,
+                        onClickFavorite = {
+                            viewModel.onClickAddFavorites(it)
+                        },
+                        onDismissFavorite = {
+                            viewModel.onDeleteWeatherSite(it.city)
+                        },
+                        onNavigateConcrete = onClickConcrete
+                    )
+                }
             }
-        }
     }
 }
 
