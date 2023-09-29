@@ -26,9 +26,9 @@ internal fun WeatherConcreteScreenState(
         screenState = screenState.value,
         onEdit = {
             viewModel.onRememberChanges(screenState.value.weatherDaily.about(it));
-            onRemove()
+           onTitleComplete()
         },
-        onRemove = { viewModel.onDeleteLocation(it); onTitleComplete() })
+        onRemove = { viewModel.onDeleteLocation(it); onRemove() })
 }
 
 

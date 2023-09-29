@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.thindie.designsystem.AnimatedContent
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.presentation.R
 import com.example.thindie.weather_concrete.components.DatePlanchette
@@ -25,8 +26,9 @@ import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 internal fun WeatherConcreteScreen(
     modifier: Modifier = Modifier,
     screenState: WeatherConcreteViewModel.ConcreteWeatherScreenState,
+    onEdit: (String) -> Unit,
+    onRemove: (String) -> Unit,
 ) {
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -44,6 +46,8 @@ internal fun WeatherConcreteScreen(
                     latitude = weatherDaily.latitude,
                     longitude = weatherDaily.longitude,
                     elevation = weatherDaily.elevation,
+                    onRemove = onRemove,
+                    onEdit = onEdit
                 )
                 DatePlanchette(days = weekDays, currentDay = currentDay)
                 LazyColumn() {
@@ -102,6 +106,10 @@ internal fun WeatherConcreteScreen(
                         )
                     }
                 }
+            } else {
+                AnimatedContent(
+                    tint = WeatherConcreteColors.uvValue
+                )
             }
         }
     }
