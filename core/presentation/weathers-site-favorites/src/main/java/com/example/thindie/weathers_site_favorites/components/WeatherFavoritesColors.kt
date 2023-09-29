@@ -13,7 +13,7 @@ object WeatherFavoritesColors {
     val cloudyAnimColors
         @Composable get() = if (isSystemInDarkTheme()) {
             theme.colorScheme.onPrimary
-        } else theme.colorScheme.secondary
+        } else theme.colorScheme.surface
     val titleColors
         @Composable get() = if (isSystemInDarkTheme()) {
             theme
