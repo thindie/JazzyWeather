@@ -52,7 +52,7 @@ internal fun WeatherFavoriteHeader(
                 .fillMaxHeight()
                 .fillMaxWidth()
                 .background(contextDependableSurfaceColor)
-                .padding(horizontal = 8.dp),
+                .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.Top,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -61,8 +61,8 @@ internal fun WeatherFavoriteHeader(
                 item {
                     Text(
                         modifier = Modifier
-                            .padding(all = 2.dp)
-                            .clip(RoundedCornerShape(20.dp))
+                            .padding(horizontal = 8.dp)
+                            .clip(RoundedCornerShape(5.dp))
                             .clickable { onClickHeader() },
                         text = city,
                         style = MaterialTheme
