@@ -5,7 +5,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 fun <T> ViewModel.act(action: suspend () -> T) {
-  viewModelScope.launch {
+    viewModelScope.launch {
         action()
     }
+}
+
+fun <T> ViewModel.dangerAbleAct(action: suspend () -> T) {
+    act { action.invoke() }
 }
