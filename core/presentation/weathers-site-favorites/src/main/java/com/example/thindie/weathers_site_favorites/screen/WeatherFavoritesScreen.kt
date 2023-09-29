@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.thindie.designsystem.AnimatedContent
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.WeatherHourly
@@ -49,7 +48,7 @@ internal fun WeatherFavoritesScreen(
                 val lazyRowState: LazyListState = rememberLazyListState()
                 WeatherFavoriteHeader(
                     city = weather.place,
-                    celsium = weather.apparentTemperature.first().toString(),
+                    celsium = weather.apparentTemperature[currentHour].toString(),
                     contextDependableSurfaceColor = WeatherFavoritesColors.titleColors,
                     weatherCurrent = decodedWeather,
                     weatherCurrentPic = decodedWeatherDrawable,
