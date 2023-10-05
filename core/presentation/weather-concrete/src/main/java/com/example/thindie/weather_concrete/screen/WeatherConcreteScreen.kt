@@ -3,7 +3,9 @@ package com.example.thindie.weather_concrete.screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -50,60 +52,50 @@ internal fun WeatherConcreteScreen(
                     onEdit = onEdit
                 )
                 DatePlanchette(days = weekDays, currentDay = currentDay)
-                LazyColumn() {
+                LazyColumn {
                     item {
-                        WeatherTemperatureGraphLow(
-                            graphValues = weatherDaily.apparentTemperatureMin,
-                        )
-                    }
-
-                    item {
-                        WeatherTemperatureGraphHigh(graphValues = weatherDaily.apparentTemperatureMax)
-                    }
-
-                    if (weatherDaily.rainSum.sum() != 0.0) {
-                        item {
+                        Column(
+                            modifier = modifier
+                                .fillMaxHeight()
+                                .fillMaxWidth()
+                        ) {
+                            WeatherTemperatureGraphLow(
+                                graphValues = weatherDaily.apparentTemperatureMin,
+                            )
+                            WeatherTemperatureGraphHigh(graphValues = weatherDaily.apparentTemperatureMax)
+                            if (weatherDaily.rainSum.sum() != 0.0) {
+                                WeatherNamedGraph(
+                                    graphValues = weatherDaily.rainSum,
+                                    titlePic = R.drawable.icon_water_drop,
+                                    positiveColor = WeatherConcreteColors.rainValue,
+                                    negativeColor = WeatherConcreteColors.rainValue,
+                                    animationTime = 800
+                                )
+                            }
+                            if (weatherDaily.snowfallSum.sum() != 0.0) {
+                                WeatherNamedGraph(
+                                    graphValues = weatherDaily.snowfallSum,
+                                    titlePic = R.drawable.icon_snowflake,
+                                    positiveColor = WeatherConcreteColors.rainValue,
+                                    negativeColor = WeatherConcreteColors.rainValue,
+                                    animationTime = 800
+                                )
+                            }
                             WeatherNamedGraph(
-                                graphValues = weatherDaily.rainSum,
-                                titlePic = R.drawable.icon_water_drop,
-                                positiveColor = WeatherConcreteColors.rainValue,
-                                negativeColor = WeatherConcreteColors.rainValue,
-                                animationTime = 800
+                                graphValues = weatherDaily.windSpeed10mMax,
+                                titlePic = R.drawable.icon_windy,
+                                positiveColor = WeatherConcreteColors.windValue,
+                                negativeColor = WeatherConcreteColors.windValue,
+                                animationTime = 1200
+                            )
+                            WeatherNamedGraph(
+                                graphValues = weatherDaily.uvIndexMax,
+                                titlePic = R.drawable.icon_ultraviolet,
+                                positiveColor = WeatherConcreteColors.uvValue,
+                                negativeColor = WeatherConcreteColors.uvValue,
+                                animationTime = 1300
                             )
                         }
-                    }
-                    if (weatherDaily.snowfallSum.sum() != 0.0) {
-                        item {
-                            WeatherNamedGraph(
-                                graphValues = weatherDaily.snowfallSum,
-                                titlePic = R.drawable.icon_snowflake,
-                                positiveColor = WeatherConcreteColors.rainValue,
-                                negativeColor = WeatherConcreteColors.rainValue,
-                                animationTime = 800
-                            )
-                        }
-                    }
-
-                    item {
-                        WeatherNamedGraph(
-                            graphValues = weatherDaily.windSpeed10mMax,
-                            titlePic = R.drawable.icon_windy,
-                            positiveColor = WeatherConcreteColors.windValue,
-                            negativeColor = WeatherConcreteColors.windValue,
-
-                            animationTime = 1200
-
-                        )
-                    }
-                    item {
-                        WeatherNamedGraph(
-                            graphValues = weatherDaily.uvIndexMax,
-                            titlePic = R.drawable.icon_ultraviolet,
-                            positiveColor = WeatherConcreteColors.uvValue,
-                            negativeColor = WeatherConcreteColors.uvValue,
-                            animationTime = 1300
-
-                        )
                     }
                 }
             } else {
@@ -111,6 +103,7 @@ internal fun WeatherConcreteScreen(
                     tint = WeatherConcreteColors.uvValue
                 )
             }
+
         }
     }
 }

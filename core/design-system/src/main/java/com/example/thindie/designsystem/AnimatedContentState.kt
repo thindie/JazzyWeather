@@ -35,7 +35,6 @@ class AnimatedContentState(
             transition.animateFloat(
                 initialValue = yStart, targetValue = yEnd, animationSpec = infiniteRepeatable(
                     animation = tween(
-                        durationMillis = duration,
                         easing = LinearOutSlowInEasing,
                         delayMillis = duration / 3
                     )
@@ -47,7 +46,6 @@ class AnimatedContentState(
             transition.animateFloat(
                 initialValue = xStart, targetValue = xEnd, animationSpec = infiniteRepeatable(
                     animation = tween(
-                        durationMillis = duration,
                         easing = LinearOutSlowInEasing,
                         delayMillis = duration / 3
                     )
