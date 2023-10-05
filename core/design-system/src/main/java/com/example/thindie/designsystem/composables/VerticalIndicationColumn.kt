@@ -1,5 +1,9 @@
 package com.example.thindie.designsystem.composables
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,28 +18,45 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.VisualCustomizer
-import com.example.thindie.designsystem.animators.FloatAnimator
+import kotlinx.coroutines.delay
+import kotlin.random.Random
 
 
 @Composable
 fun VerticalIndicationColumn(
     width: Dp = 20.dp,
     customizer: VisualCustomizer,
-    animator: FloatAnimator? = null,
     textLabel: String = "",
 ) {
+
+    val shouldAnimate = remember {
+        mutableStateOf(false)
+    }
+
+    val height =
+        if (!shouldAnimate.value) 0f
+        else customizer.getShapeComponent()
+
+
+    LaunchedEffect(true) {
+        delay(Random.nextLong(until = 400))
+        shouldAnimate.value = true
+    }
 
     val modifier: Modifier = Modifier
         .width(width)
         .heightIn(max = width * 4)
 
-    val maxHeight = animator?.animatedValue?.value ?: customizer.getShapeComponent()
+
 
     Column(
         modifier = modifier.wrapContentHeight(),
@@ -50,7 +71,8 @@ fun VerticalIndicationColumn(
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(maxHeight)
+                    .fillMaxHeight(height)
+                    .animateContentSize(animationSpec = spring())
                     .clip(RoundedCornerShape(10.dp))
                     .background(customizer.getColorComponent())
             )

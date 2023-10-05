@@ -78,7 +78,7 @@ fun AnimatedContent(
             )
         }
         Column {
-            Canvas(
+            /*Canvas(
                 modifier = Modifier
                     .wrapContentSize()
             ) {
@@ -97,7 +97,7 @@ fun AnimatedContent(
                     strokeWidth = 9f,
                     color = dropsColor
                 )
-            }
+            }*/
         }
     }
 }

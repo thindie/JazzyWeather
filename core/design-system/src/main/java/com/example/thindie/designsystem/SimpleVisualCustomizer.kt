@@ -14,24 +14,9 @@ class SimpleVisualCustomizer(
     private val customizeValue: Float,
     private val positiveColor: Color,
     private val negativeColor: Color,
-    coroutineScope: CoroutineScope,
-    private val time: Int,
-) : FloatAnimator(), VisualCustomizer {
+) : VisualCustomizer {
 
 
-    init {
-        animate(scope = coroutineScope)
-    }
-
-    override val animationTime: Int
-        get() = time
-
-    override fun animate(scope: CoroutineScope) {
-        scope.launch {
-            delay(time.toLong()/3)
-            currentAnimationValue.floatValue = getShapeComponent()
-        }
-    }
 
     @Composable
     override fun getColorComponent(): Brush {
