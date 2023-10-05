@@ -55,4 +55,18 @@ class MainViewModel @Inject constructor(private val interactor: ReserveWeatherIn
     fun onChoseForecastAble(forecastAble: ForecastAble) {
         _forecastAbleState.value = forecastAble
     }
+
+     fun onClickDestination() {
+         viewModelScope.launch {
+             _shouldStart.value = false
+             delay(700)
+             onLoadedContent()
+         }
+
+
+    }
+
+    fun onLoadedContent() {
+        _shouldStart.value = true
+    }
 }

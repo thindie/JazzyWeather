@@ -1,54 +1,44 @@
 package com.example.thindie.designsystem
 
-import androidx.compose.animation.core.InfiniteTransition
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 @Composable
 fun rememberAnimatedContent(
-    xStart: Float,
-    yStart: Float = xStart.plus(10f),
-    duration: Int = 400,
 ): AnimatedContentState {
-    val transition: InfiniteTransition = rememberInfiniteTransition()
-    return  AnimatedContentState(transition, xStart, yStart, duration = duration)
-
+    val scope = rememberCoroutineScope()
+    return AnimatedContentState(scope)
 }
 
 @Stable
-class AnimatedContentState(
-    private val transition: InfiniteTransition,
-    private val xStart: Float,
-    private val yStart: Float,
-    val xEnd: Float = xStart.plus(10f),
-    val yEnd: Float = xEnd.plus(30f),
-    private val duration: Int = 400,
-) {
-    val y
-        @Composable get() =
-            transition.animateFloat(
-                initialValue = yStart, targetValue = yEnd, animationSpec = infiniteRepeatable(
-                    animation = tween(
-                        easing = LinearOutSlowInEasing,
-                        delayMillis = duration / 3
-                    )
-                )
-            )
+class AnimatedContentState(private val scope: CoroutineScope) {
 
-    val x
-        @Composable get() =
-            transition.animateFloat(
-                initialValue = xStart, targetValue = xEnd, animationSpec = infiniteRepeatable(
-                    animation = tween(
-                        easing = LinearOutSlowInEasing,
-                        delayMillis = duration / 3
-                    )
-                )
-            )
+    var rain by mutableStateOf(rainDrops())
+        private set
+
+    init {
+        produce()
+    }
+
+    private fun rainDrops() = buildList {
+        repeat(6) {
+            this.add(Random.nextFloat())
+        }
+    }
+
+
+    private fun produce() {
+        scope.launch {
+            repeat(5) {
+                rain = rainDrops()
+            }
+        }
+    }
 }

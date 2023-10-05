@@ -1,70 +1,70 @@
 package com.example.thindie.designsystem
 
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.InfiniteTransition
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.thindie.designsystem.composables.VerticalIndicationColumn
+import com.example.thindie.designsystem.utils.TransGradientVertical
+import com.example.thindie.designsystem.utils.TransGradientVerticalInverse
+import com.example.thindie.designsystem.utils.toVisualCustomizersList
+
 
 @Composable
 fun AnimatedContent(
     modifier: Modifier = Modifier,
+    state: AnimatedContentState = rememberAnimatedContent(),
     transition: InfiniteTransition = rememberInfiniteTransition(),
-    firstDrop: AnimatedContentState = rememberAnimatedContent(xStart = 0f, duration = 300),
-    secondDrop: AnimatedContentState = rememberAnimatedContent(xStart = -30f, duration = 400),
-    thirdDrop: AnimatedContentState = rememberAnimatedContent(
-        xStart = 30f,
-        duration = 500
-    ),
     tint: Color,
     dropsColor: Color = tint,
 ) {
+    val titleColors = if (isSystemInDarkTheme()) {
+        MaterialTheme
+            .colorScheme
+            .surface.TransGradientVertical(MaterialTheme.colorScheme.primary)
+    } else {
+        MaterialTheme.colorScheme.primary.TransGradientVerticalInverse(MaterialTheme.colorScheme.surface)
+    }
+
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .background(titleColors)
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
 
-        val xFirst = firstDrop.x
-        val yFirst = firstDrop.y
-
-        val xSecond = secondDrop.x
-        val ySecond = secondDrop.y
-
-        val xThird = thirdDrop.x
-        val yThird = thirdDrop.y
-
         val size = transition.animateValue(
             initialValue = 72.dp,
             targetValue = 192.dp,
             typeConverter = Dp.VectorConverter,
-            animationSpec = infiniteRepeatable(tween(6200, easing = FastOutLinearInEasing)),
+            animationSpec = infiniteRepeatable(tween(7000)),
             label = this::class.java.name
         )
-
 
         Column {
             Icon(
@@ -78,51 +78,22 @@ fun AnimatedContent(
             )
         }
         Column {
-            /*Canvas(
-                modifier = Modifier
-                    .wrapContentSize()
-            ) {
-                RainLine(
-                    x = xFirst, y = yFirst, xEnd = firstDrop.xEnd, yEnd = firstDrop.yEnd,
-                    strokeWidth = 9f,
-                    color = dropsColor
-                )
-                RainLine(
-                    x = xSecond, y = ySecond, xEnd = secondDrop.xEnd, yEnd = secondDrop.yEnd,
-                    strokeWidth = 9f,
-                    color = dropsColor
-                )
-                RainLine(
-                    x = xThird, y = yThird, xEnd = thirdDrop.xEnd, yEnd = thirdDrop.yEnd,
-                    strokeWidth = 9f,
-                    color = dropsColor
-                )
-            }*/
+            LazyRow() {
+                items(
+                    state.rain.toVisualCustomizersList(
+                        positiveColor = dropsColor,
+                        negativeColor = dropsColor
+                    )
+                ) {
+                    Spacer(modifier = Modifier.width(2.dp))
+                    VerticalIndicationColumn(customizer = it, width = 4.dp)
+                }
+
+            }
         }
     }
 }
 
-
-internal fun DrawScope.RainLine(
-    x: State<Float>,
-    y: State<Float>,
-    xEnd: Float,
-    yEnd: Float,
-    strokeWidth: Float,
-    color: Color,
-) {
-
-
-    val offsetStart = Offset(x.value, y.value)
-    val offsetEnd = Offset(xEnd, yEnd)
-    drawLine(
-        color = color,
-        offsetStart,
-        offsetEnd,
-        strokeWidth = strokeWidth,
-        cap = StrokeCap.Round
-    )
-}
 
 @Composable
 @Preview(showBackground = true, device = Devices.PIXEL_2)
