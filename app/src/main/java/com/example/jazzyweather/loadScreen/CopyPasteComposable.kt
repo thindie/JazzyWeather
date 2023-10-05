@@ -32,7 +32,6 @@ internal fun LoadingScreen(
     animator: AlphaAnimator = rememberAlphaAnimator(
         time = time,
         minValue = 0.2f,
-        isMinValue = true
     ),
 ) {
     LaunchedEffect(true) {

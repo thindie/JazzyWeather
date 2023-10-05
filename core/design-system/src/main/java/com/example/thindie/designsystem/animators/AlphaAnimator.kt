@@ -1,7 +1,6 @@
 package com.example.thindie.designsystem.animators
 
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -9,11 +8,9 @@ import kotlinx.coroutines.launch
 @Stable
 class AlphaAnimator(
     private val time: Int,
-    private val minimumValue: Float,
-    isMinValue: Boolean,
+    minimumValue: Float,
 ) : FloatAnimator() {
 
-    private val _isSelected = mutableStateOf(isMinValue)
 
     init {
         currentAnimationValue.floatValue = minimumValue
@@ -25,13 +22,10 @@ class AlphaAnimator(
 
     override fun animate(scope: CoroutineScope) {
         scope.launch {
-            if (_isSelected.value)
-                currentAnimationValue.floatValue = 1f
-            else currentAnimationValue.floatValue = minimumValue
+            currentAnimationValue.floatValue = 1f
         }
+
     }
 
-    fun setIsSelected(isSelected: Boolean) {
-        _isSelected.value = isSelected
-    }
+
 }

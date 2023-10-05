@@ -19,7 +19,6 @@ import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -62,7 +61,8 @@ fun AnimatedContent(
             initialValue = 72.dp,
             targetValue = 192.dp,
             typeConverter = Dp.VectorConverter,
-            animationSpec = infiniteRepeatable(tween(6200, easing = FastOutLinearInEasing))
+            animationSpec = infiniteRepeatable(tween(6200, easing = FastOutLinearInEasing)),
+            label = this::class.java.name
         )
 
 
@@ -130,7 +130,7 @@ internal fun previewAnimatedContent() {
     com.example.thindie.designsystem.theme.JazzyWeatherTheme {
         AnimatedContent(
             tint = Color.Cyan,
-            dropsColor =  Color.Blue
+            dropsColor = Color.Blue
         )
     }
 }

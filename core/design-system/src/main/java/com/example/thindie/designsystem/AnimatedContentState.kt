@@ -7,6 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 
 @Composable
@@ -16,11 +17,11 @@ fun rememberAnimatedContent(
     duration: Int = 400,
 ): AnimatedContentState {
     val transition: InfiniteTransition = rememberInfiniteTransition()
-    return remember {
-        AnimatedContentState(transition, xStart, yStart, duration = duration)
-    }
+    return  AnimatedContentState(transition, xStart, yStart, duration = duration)
+
 }
 
+@Stable
 class AnimatedContentState(
     private val transition: InfiniteTransition,
     private val xStart: Float,

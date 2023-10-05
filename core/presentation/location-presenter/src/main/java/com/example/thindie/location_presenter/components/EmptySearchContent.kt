@@ -24,7 +24,6 @@ internal fun EmptySearchContent(
     alphaAnimator: AlphaAnimator = rememberAlphaAnimator(
         time = 2700,
         minValue = 0.1f,
-        isMinValue = true
     ),
 
 ) {
