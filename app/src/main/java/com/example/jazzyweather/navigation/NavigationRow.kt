@@ -9,7 +9,7 @@ import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.designsystem.utils.TransGradientVerticalInverse
 
 @Composable
-fun NavigationRow(state: NavigationState, onClick: () -> Unit) {
+fun NavigationRow(state: NavigationState) {
     ClickAbleRow(
         rowColor = if (isSystemInDarkTheme()) {
             MaterialTheme.colorScheme
@@ -20,7 +20,6 @@ fun NavigationRow(state: NavigationState, onClick: () -> Unit) {
         contentColor = Color.White,
         list = navigationAbles,
         onClick = {
-            onClick()
             state.navigate(it)  }
     )
 }

@@ -17,6 +17,8 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
@@ -31,10 +33,29 @@ internal class WeatherConcreteViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _concreteScreenState: MutableStateFlow<ConcreteWeatherScreenState> =
-        MutableStateFlow(ConcreteWeatherScreenState())
+    private val _isLoading = MutableStateFlow(true)
+    private var lastFetchedForecastAble: ForecastAble? = null
+
+    private val _concreteScreenState: MutableStateFlow<WeatherDaily?> =
+        MutableStateFlow(null)
     val concreteScreenState: StateFlow<ConcreteWeatherScreenState> =
-        _concreteScreenState
+        combine(_concreteScreenState.filterNotNull(), _isLoading) { concrete, loading ->
+
+            val today = getTodayUseCase()
+            val currentWeek = getWeekUseCase(concrete.time)
+            val sunset = getHourUseCase(concrete.sunset.first())
+            val sunrise = getHourUseCase(concrete.sunrise.first())
+
+            ConcreteWeatherScreenState(
+                weatherDaily = concrete,
+                isFreshForecast = true,
+                currentDay = today,
+                sunset = sunset,
+                sunrise = sunrise,
+                weekDays = currentWeek,
+                isLoading = loading
+            )
+        }
             .stateIn(
                 viewModelScope,
                 SharingStarted.WhileSubscribed(5_000L),
@@ -42,10 +63,12 @@ internal class WeatherConcreteViewModel @Inject constructor(
             )
 
     fun onLoadConcreteScreen(forecastAble: ForecastAble?) {
-        if (forecastAble != null) {
+        if (forecastAble != null && forecastAble != lastFetchedForecastAble) {
+            lastFetchedForecastAble = forecastAble
             val innerForecastAble = forecastAble.timeZoneApproved()
 
             dangerAbleAct {
+                _isLoading.value = true
                 getDailyWeatherUseCase(innerForecastAble)
                     .onSuccess {
                         renewScreenStateValue(it)
@@ -57,7 +80,6 @@ internal class WeatherConcreteViewModel @Inject constructor(
                         } catch (_: Exception) {
 
                         }
-
                     }
             }
         }
@@ -76,21 +98,8 @@ internal class WeatherConcreteViewModel @Inject constructor(
     }
 
     private fun renewScreenStateValue(weatherDaily: WeatherDaily) {
-        val today = getTodayUseCase()
-        val currentWeek = getWeekUseCase(weatherDaily.time)
-        val sunset = getHourUseCase(weatherDaily.sunset.first())
-        val sunrise = getHourUseCase(weatherDaily.sunrise.first())
-
-        val screenState = ConcreteWeatherScreenState(
-            weatherDaily = weatherDaily,
-            isFreshForecast = true,
-            currentDay = today,
-            sunset = sunset,
-            sunrise = sunrise,
-            weekDays = currentWeek,
-        )
-
-        _concreteScreenState.value = screenState
+        _isLoading.value = false
+        _concreteScreenState.value = weatherDaily
     }
 
     private fun ForecastAble.timeZoneApproved() = CurrentScreenForecastAble(
@@ -108,6 +117,7 @@ internal class WeatherConcreteViewModel @Inject constructor(
         val sunset: String = "",
         val sunrise: String = "",
         val weekDays: List<Int> = emptyList(),
+        val isLoading: Boolean = true,
     )
 
     data class CurrentScreenForecastAble(

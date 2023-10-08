@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
             JazzyWeatherTheme {
                 TransparentSystemBars()
                 LoadingScreen(time = mainViewModel.hottingTime)
+                if (mainViewModel.shouldStart.value)
                     WeatherApp(
                         viewModel = mainViewModel,
                         weatherScreen = mainViewModel.destinationState.collectAsState().value

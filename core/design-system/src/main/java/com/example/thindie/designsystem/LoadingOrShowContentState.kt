@@ -12,13 +12,13 @@ import kotlin.random.Random
 
 @Composable
 fun rememberAnimatedContent(
-): AnimatedContentState {
+): LoadingOrShowContentState {
     val scope = rememberCoroutineScope()
-    return AnimatedContentState(scope)
+    return LoadingOrShowContentState(scope)
 }
 
 @Stable
-class AnimatedContentState(private val scope: CoroutineScope) {
+class LoadingOrShowContentState(private val scope: CoroutineScope) {
 
     var rain by mutableStateOf(rainDrops())
         private set
