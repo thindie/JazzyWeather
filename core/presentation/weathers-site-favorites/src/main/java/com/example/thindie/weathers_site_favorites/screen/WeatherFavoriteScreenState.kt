@@ -1,13 +1,10 @@
 package com.example.thindie.weathers_site_favorites.screen
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.thindie.designsystem.AnimatedContent
+import com.example.thindie.designsystem.LoadingOrShowContent
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.weathers_site_favorites.components.WeatherFavoritesColors
 import com.example.thindie.weathers_site_favorites.viewmodel.WeatherFavoritesViewModel
@@ -26,18 +23,10 @@ fun WeatherFavoriteScreenState(
             .screenState
             .collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
 
-    val list = favoritesScreenState.value.list
-
-    if (list.isEmpty()) {
-        AnimatedContent(
-            modifier = Modifier
-                .background(WeatherFavoritesColors.unitColors)
-                .fillMaxSize(),
-            tint = WeatherFavoritesColors.cloudyAnimColors
-        )
-    } else {
-
-
+    LoadingOrShowContent(
+        tint = WeatherFavoritesColors.cloudyAnimColors,
+        isLoading = favoritesScreenState.value.isLoading
+    ) {
         WeatherFavoritesScreen(
             onClickNavigation = onClickNavigation,
             onClickBack = onClickBack,
@@ -48,5 +37,6 @@ fun WeatherFavoriteScreenState(
             decodedWeatherDrawable = favoritesScreenState.value.decodedWeatherDrawable
         )
     }
+
 }
 

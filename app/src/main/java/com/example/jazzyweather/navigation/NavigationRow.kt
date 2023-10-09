@@ -19,6 +19,7 @@ fun NavigationRow(state: NavigationState) {
         },
         contentColor = Color.White,
         list = navigationAbles,
-        onClick = state::navigate
+        onClick = {
+            state.navigate(it)  }
     )
 }

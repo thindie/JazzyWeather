@@ -14,7 +14,7 @@ abstract class FloatAnimator  {
 
     abstract val animationTime: Int
 
-    open val animatedValue
+    val animatedValue
         @Composable get() = animateFloatAsState(
             targetValue = currentAnimationValue.floatValue,
             label = "",

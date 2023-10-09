@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,7 +52,6 @@ internal fun WeatherForecastColumnGraph(
             items(customizersList) { simpleVisualCustomizer ->
                 VerticalIndicationColumn(
                     width = columnWidth,
-                    animator = simpleVisualCustomizer,
                     textLabel = simpleVisualCustomizer.initialValue,
                     customizer = simpleVisualCustomizer
                 )
@@ -99,8 +97,6 @@ internal fun previewWeatherForecastColumnGraph() {
                 customizersList = listOf(1f, -2f, 3f, 5f, -2f, -9f, 22f).toVisualCustomizersList(
                     positiveColor = MaterialTheme.colors.error,
                     negativeColor = MaterialTheme.colors.primarySurface,
-                    scope = rememberCoroutineScope(),
-                    animationTime = 1700
                 ), columnWidth = 40.dp
             )
 
@@ -129,8 +125,7 @@ internal fun previewWeatherForecastColumnGraph() {
                 ).toVisualCustomizersList(
                     positiveColor = MaterialTheme.colors.error,
                     negativeColor = MaterialTheme.colors.primarySurface,
-                    scope = rememberCoroutineScope(),
-                    animationTime = 700
+
                 ), columnWidth = 40.dp
             )
         }

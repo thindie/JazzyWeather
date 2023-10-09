@@ -8,7 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.thindie.designsystem.animators.ExpandAnimator
+import com.example.thindie.designsystem.animators.DpAnimator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -26,7 +26,7 @@ internal class WeatherConcreteTitleState(
     private val _height: Dp = 155.dp,
     private val _expanded: Dp = 330.dp,
     private val scope: CoroutineScope,
-) : ExpandAnimator(
+) : DpAnimator(
     animationTime = animationTime,
     initialHeight = _height
 ) {

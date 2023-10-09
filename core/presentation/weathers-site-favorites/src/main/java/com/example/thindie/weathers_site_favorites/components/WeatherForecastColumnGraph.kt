@@ -52,7 +52,6 @@ internal fun WeatherForecastColumnGraph(
             items(customizersList) { simpleVisualCustomizer ->
                 VerticalIndicationColumn(
                     width = columnWidth,
-                    animator = simpleVisualCustomizer,
                     textLabel = simpleVisualCustomizer.initialValue,
                     customizer = simpleVisualCustomizer
                 )
@@ -89,8 +88,6 @@ internal fun previewWeatherForecastColumnGraph() {
                 customizersList = listOf(1f, -2f, 3f, 5f, -2f, -9f, 22f).toVisualCustomizersList(
                     positiveColor = MaterialTheme.colors.error,
                     negativeColor = MaterialTheme.colors.primarySurface,
-                    scope = rememberCoroutineScope(),
-                    animationTime = 1700
                 ), columnWidth = 40.dp
             )
 
@@ -119,8 +116,6 @@ internal fun previewWeatherForecastColumnGraph() {
                 ).toVisualCustomizersList(
                     positiveColor = MaterialTheme.colors.error,
                     negativeColor = MaterialTheme.colors.primarySurface,
-                    scope = rememberCoroutineScope(),
-                    animationTime = 700
                 ), columnWidth = 40.dp
             )
         }

@@ -7,7 +7,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.Dp
 
-open class ExpandAnimator(
+abstract class DpAnimator(
     animationTime: Int,
     initialHeight: Dp,
 ) {

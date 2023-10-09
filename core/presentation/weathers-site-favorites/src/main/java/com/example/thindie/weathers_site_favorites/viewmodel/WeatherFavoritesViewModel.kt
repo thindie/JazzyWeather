@@ -16,9 +16,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.stateIn
 
 
@@ -31,17 +31,27 @@ class WeatherFavoritesViewModel @Inject constructor(
     private val requester: RequestHourlyWeatherListUseCase,
 ) :
     ViewModel() {
-
     private var isAlreadyObserve = false
+    private val _isLoading = MutableStateFlow(true)
 
-    private val _screenState =
-        MutableStateFlow(FavoriteWeatherSitesUiState(emptyList()))
 
-    val screenState = _screenState.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5_000L),
-        FavoriteWeatherSitesUiState(list = emptyList())
-    )
+    private val _screenWeatherList =
+        MutableStateFlow(emptyList<WeatherHourly>())
+
+    val screenState = combine(_isLoading, _screenWeatherList) { loading, list ->
+        FavoriteWeatherSitesUiState(
+            list = list,
+            isLoading = loading,
+            currentHour = getCurrentHourOfDayUseCase(),
+            decodedWeather = decodeAble.decodeString(list.getCurrentWeatherCode()),
+            decodedWeatherDrawable = decodeAble.decodeDrawable(list.getCurrentWeatherCode())
+        )
+    }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000L),
+            FavoriteWeatherSitesUiState(list = emptyList(), isLoading = true)
+        )
 
     @Inject
     fun onStart() {
@@ -50,9 +60,6 @@ class WeatherFavoritesViewModel @Inject constructor(
                 isAlreadyObserve = true
                 observeHourlyWeatherListUseCase
                     .invoke()
-                    .onEmpty {
-                        declareEmpty()
-                    }
                     .onEach { list ->
                         list.onStateRenew()
                     }
@@ -77,20 +84,15 @@ class WeatherFavoritesViewModel @Inject constructor(
         }
     }
 
-    private fun declareEmpty() {
-        _screenState.value = FavoriteWeatherSitesUiState(
-            list = emptyList()
-        )
-    }
 
     private fun List<WeatherHourly>.onStateRenew() {
-        _screenState.value =
-            FavoriteWeatherSitesUiState(
-                list = rawTimeTo24hHours(),
-                currentHour = getCurrentHourOfDayUseCase(),
-                decodedWeather = decodeAble.decodeString(getCurrentWeatherCode()),
-                decodedWeatherDrawable = decodeAble.decodeDrawable(getCurrentWeatherCode())
-            )
+        if (isEmpty()) {
+            _isLoading.value = true
+        } else {
+            _screenWeatherList.value = rawTimeTo24hHours()
+            _isLoading.value = false
+        }
+
 
     }
 
@@ -105,6 +107,7 @@ class WeatherFavoritesViewModel @Inject constructor(
 
     data class FavoriteWeatherSitesUiState(
         val list: List<WeatherHourly>,
+        val isLoading: Boolean,
         val currentHour: Int = 0,
         @StringRes val decodedWeather: Int = 0,
         @DrawableRes val decodedWeatherDrawable: Int = 0,
