@@ -5,7 +5,7 @@ import com.example.thindie.designsystem.SimpleVisualCustomizer
 import kotlinx.coroutines.CoroutineScope
 
 fun List<Float>.toVisualCustomizersList(
-    positiveColor: Color, negativeColor: Color, scope: CoroutineScope, animationTime: Int = 100,
+    positiveColor: Color, negativeColor: Color
 ): List<SimpleVisualCustomizer> {
     val max = maxBy {
         it.positive()
@@ -19,8 +19,6 @@ fun List<Float>.toVisualCustomizersList(
             customizeValue = it.div(max),
             positiveColor = positiveColor,
             negativeColor = negativeColor,
-            coroutineScope = scope,
-            time = animationTime
         )
     }
 }

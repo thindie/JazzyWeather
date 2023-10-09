@@ -26,7 +26,6 @@ internal fun WeatherNamedGraph(
     modifier: Modifier = Modifier,
     graphValues: List<Double>,
     @DrawableRes titlePic: Int,
-    animationTime: Int = 600,
     columnWidth: Dp = 40.dp,
     positiveColor: Color,
     negativeColor: Color,
@@ -59,8 +58,6 @@ internal fun WeatherNamedGraph(
                 .toVisualCustomizersList(
                     positiveColor = positiveColor,
                     negativeColor = negativeColor,
-                    scope = rememberCoroutineScope(),
-                    animationTime = animationTime
                 ),
             columnWidth = columnWidth
 

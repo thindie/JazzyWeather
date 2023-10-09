@@ -1,5 +1,6 @@
 package com.example.thindie.weather_concrete.components
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -154,6 +155,7 @@ internal fun WeatherConcreteTitle(
         if (state.shouldExpand.value && state.shouldShowInputField.value) {
 
             WeatherTitleCorrection(
+                modifier = modifier.animateContentSize(),
                 state = inputFieldState,
                 onClickConfirm = state::onTitleSuccessEdition
             )
@@ -197,8 +199,8 @@ internal fun previewWeatherConcreteTitle() {
                         titlePic = R.drawable.icon_windy,
                         positiveColor = WeatherConcreteColors.windValue,
                         negativeColor = WeatherConcreteColors.windValue,
-                        animationTime = 800
-                    )
+
+                        )
                 }
                 item {
                     WeatherNamedGraph(
@@ -206,8 +208,8 @@ internal fun previewWeatherConcreteTitle() {
                         titlePic = R.drawable.icon_water_drop,
                         positiveColor = WeatherConcreteColors.rainValue,
                         negativeColor = WeatherConcreteColors.rainValue,
-                        animationTime = 1200
-                    )
+
+                        )
                 }
 
 

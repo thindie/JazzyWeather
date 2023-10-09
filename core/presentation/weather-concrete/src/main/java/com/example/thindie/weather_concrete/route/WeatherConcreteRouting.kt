@@ -18,7 +18,7 @@ fun NavGraphBuilder.WeatherConcrete(
             onClickNavigation = onClickNavigation,
             onClickBack = onClickBack,
             onClickAll = onClickAll,
-            onRemove = onRemove
+            onRemove = onRemove,
         )
     }
 

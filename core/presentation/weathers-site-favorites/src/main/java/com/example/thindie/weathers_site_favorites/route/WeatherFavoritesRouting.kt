@@ -15,7 +15,7 @@ fun NavGraphBuilder.WeatherFavorites(
         WeatherFavoriteScreenState(
             onClickNavigation = onClickNavigation,
             onClickBack = onClickBack,
-            onClickAll = onClickAll
+            onClickAll = onClickAll,
         )
     }
 

@@ -3,10 +3,6 @@ package com.example.thindie.designsystem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.example.thindie.designsystem.animators.FloatAnimator
-import com.example.thindie.designsystem.animators.HeightAnimator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 val customizerFullHeight: VisualCustomizer = object : VisualCustomizer {
     @Composable
@@ -32,10 +28,7 @@ val customizerLessHeight: VisualCustomizer = object : VisualCustomizer {
 
 }
 
-val fakeHeightAnimator: FloatAnimator = HeightAnimator(
-    scope = CoroutineScope(Dispatchers.Main),
-    animationTarget = customizerFullHeight.getShapeComponent()
-)
+
 
 
 data class A(val simpleRoute: String, val simpleRes: Int) : NavigationAble {

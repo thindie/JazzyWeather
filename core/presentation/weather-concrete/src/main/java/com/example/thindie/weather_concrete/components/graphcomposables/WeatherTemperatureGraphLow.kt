@@ -73,8 +73,7 @@ internal fun WeatherTemperatureGraphLow(
             customizersList = graphValues.map { it.toFloat() }.toVisualCustomizersList(
                 positiveColor = positiveColor,
                 negativeColor = negativeColor,
-                scope = rememberCoroutineScope(),
-                animationTime = animationTime
+
             ), columnWidth = columnWidth
         )
 
