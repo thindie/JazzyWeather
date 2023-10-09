@@ -1,9 +1,7 @@
 package com.example.thindie.designsystem.composables
 
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,7 +31,7 @@ import kotlin.random.Random
 
 @Composable
 fun VerticalIndicationColumn(
-    width: Dp = 20.dp,
+    width: Dp,
     customizer: VisualCustomizer,
     textLabel: String = "",
 ) {
@@ -81,7 +79,7 @@ fun VerticalIndicationColumn(
         }
         Text(
             text = textLabel,
-            style = MaterialTheme.typography.bodyLarge.copy(
+            style = MaterialTheme.typography.labelMedium.copy(
                 MaterialTheme.colorScheme.onSurface
             )
         )

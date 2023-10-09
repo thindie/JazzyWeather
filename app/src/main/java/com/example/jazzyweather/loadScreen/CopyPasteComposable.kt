@@ -14,16 +14,17 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.thindie.designsystem.animators.AlphaAnimator
 import com.example.thindie.designsystem.animators.rememberAlphaAnimator
 import com.example.thindie.designsystem.composables.IconTextSection
 import com.example.thindie.presentation.R
+import kotlinx.coroutines.delay
 
 @Composable
 internal fun LoadingScreen(
@@ -33,46 +34,48 @@ internal fun LoadingScreen(
         time = time,
         minValue = 0.2f,
     ),
+    content: @Composable () -> Unit,
 ) {
+    val shouldShowContent = remember { mutableStateOf(false) }
+
     LaunchedEffect(true) {
         animator.animate(this)
+        delay(time.toLong())
+        shouldShowContent.value = true
     }
-    Spacer(modifier = modifier.height(80.dp))
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(LoadingColors.titleColors, alpha = animator.animatedValue.value),
-        verticalArrangement = Arrangement.SpaceBetween
-    ) {
-        LazyColumn(verticalArrangement = Arrangement.Center) {
-            items(values) {
-                IconTextSection(
-                    modifier = modifier.wrapContentSize(),
-                    icon = it.second,
-                    title = it.first,
-                    style = MaterialTheme.typography.displayLarge.copy(
-                        MaterialTheme.colorScheme.surface.copy(alpha = animator.animatedValue.value),
-                        fontSize = 102.sp
+    if (shouldShowContent.value) {
+        content()
+    } else {
+        Spacer(modifier = modifier.height(80.dp))
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(LoadingColors.titleColors, alpha = animator.animatedValue.value),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            LazyColumn(verticalArrangement = Arrangement.Center) {
+                items(values) {
+                    IconTextSection(
+                        modifier = modifier.wrapContentSize(),
+                        icon = it.second,
+                        title = it.first,
+                        style = MaterialTheme.typography.displayLarge.copy(
+                            MaterialTheme.colorScheme.surface.copy(alpha = animator.animatedValue.value),
+                            fontSize = 102.sp
+                        )
                     )
-                )
+                }
+
             }
-
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .height(2.dp)
+                    .fillMaxWidth(), strokeCap = StrokeCap.Square
+            )
         }
-        LinearProgressIndicator(
-            modifier = Modifier
-                .height(2.dp)
-                .fillMaxWidth(), strokeCap = StrokeCap.Square
-        )
     }
 }
 
-@Composable
-@Preview(showBackground = true, device = Devices.PIXEL_2)
-internal fun previewLoadingScreen() {
-    com.example.thindie.designsystem.theme.JazzyWeatherTheme {
-        LoadingScreen(time = 1400)
-    }
-}
 
 val values = listOf(
     "ЯС" to R.drawable.icon_windy,
