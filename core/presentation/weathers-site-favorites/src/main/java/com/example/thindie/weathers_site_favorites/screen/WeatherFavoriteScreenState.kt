@@ -1,6 +1,9 @@
 package com.example.thindie.weathers_site_favorites.screen
 
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -27,7 +30,15 @@ fun WeatherFavoriteScreenState(
         tint = MaterialTheme.colorScheme.surface,
         isLoading = favoritesScreenState.value.isLoading
     ) {
+        LazyColumn() {
+            items(favoritesScreenState.value.list) {
 
+
+                it.precipitation.forEach {
+                    Text(text = it.toString())
+                }
+            }
+        }
     }
 
 }
