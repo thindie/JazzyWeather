@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import com.example.compose.JazzyWeatherTheme
+import com.example.jazzyweather.navigation.WeatherScreen
 import com.example.thindie.designsystem.TransparentSystemBars
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                 TransparentSystemBars()
                 WeatherApp(
                     viewModel = mainViewModel,
-                    weatherScreen = mainViewModel.destinationState.collectAsState().value
+                    weatherScreen = WeatherScreen.LOCATION_PICKER
                 )
             }
         }

@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
@@ -26,18 +26,32 @@ internal class LocationPickerViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _uiState = MutableStateFlow(LocationsScreenState())
-    val uiState: StateFlow<LocationsScreenState>
-        get() = _uiState.stateIn(
+    private val locations = MutableStateFlow(emptyList<WeatherLocation>())
+    private val concreteLocation = MutableStateFlow<WeatherLocation?>(null)
+    private val searchField = MutableStateFlow("")
+
+    val uiState = combine(locations, searchField, concreteLocation) { places, input, concrete ->
+        LocationsScreenState(
+            locationsList = places,
+            searchFieldState = input,
+            focusedLocation = concrete
+        )
+    }
+        .stateIn(
             started = SharingStarted.WhileSubscribed(5_000L),
-            initialValue = LocationsScreenState(),
+            initialValue = LocationsScreenState(
+                locationsList = locations.value,
+                searchFieldState = searchField.value
+            ),
             scope = viewModelScope
         )
 
     fun onSearchReact(printedLine: String) {
+        if (printedLine.isBlank()) concreteLocation.value = null
         getLocation(printedLine)
             .onEach {
-                _uiState.tryEmit(LocationsScreenState(it))
+                searchField.tryEmit(printedLine)
+                locations.tryEmit(it)
             }
             .launchIn(viewModelScope)
     }
@@ -52,6 +66,10 @@ internal class LocationPickerViewModel @Inject constructor(
         }
     }
 
+    fun onClickWeatherLocationCard(weatherLocation: WeatherLocation?) {
+        concreteLocation.value = weatherLocation
+    }
+
 
     fun onClickAddFavorites(forecastAble: WeatherLocation) {
         viewModelScope.launch {
@@ -59,5 +77,9 @@ internal class LocationPickerViewModel @Inject constructor(
         }
     }
 
-    data class LocationsScreenState(val locationsList: List<WeatherLocation> = emptyList())
+    data class LocationsScreenState(
+        val locationsList: List<WeatherLocation> = emptyList(),
+        val searchFieldState: String,
+        val focusedLocation: WeatherLocation? = null,
+    )
 }
