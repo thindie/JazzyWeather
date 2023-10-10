@@ -30,13 +30,14 @@ fun ClickAbleRow(
     contentColor: Color,
     list: List<NavigationAble>,
     onClick: (String) -> Unit,
+    clickAbleContent: @Composable () -> Unit,
 ) {
     Row(
         modifier = modifier
             .background(brush = rowColor)
             .height(70.dp)
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         LazyRow(
@@ -57,6 +58,7 @@ fun ClickAbleRow(
             }
 
         }
+        clickAbleContent()
     }
 }
 
@@ -68,6 +70,6 @@ internal fun previewClickAbleRow() {
             rowColor = Brush.verticalGradient(listOf(Color.White, Color.Blue)),
             contentColor = Color.White,
             list = navList,
-            onClick = {})
+            onClick = {}, clickAbleContent =  {})
     }
 }

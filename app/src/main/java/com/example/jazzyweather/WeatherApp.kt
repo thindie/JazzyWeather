@@ -20,10 +20,11 @@ fun WeatherApp(
     viewModel: MainViewModel,
     weatherScreen: WeatherScreen,
     state: NavigationState = rememberNavigationState(),
+    themeChanger: @Composable () -> Unit,
 ) {
 
     Scaffold(
-        bottomBar = { NavigationRow(state = state) }
+        bottomBar = { NavigationRow(state = state, clickAbleContent = themeChanger) }
     ) {
 
         val currentForecastAble = viewModel.forecastAbleState.collectAsState()
