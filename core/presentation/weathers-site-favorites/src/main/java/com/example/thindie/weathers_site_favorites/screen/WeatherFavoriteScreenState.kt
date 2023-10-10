@@ -6,7 +6,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thindie.designsystem.LoadingOrShowContent
 import com.example.thindie.domain.entities.ForecastAble
-import com.example.thindie.weathers_site_favorites.components.WeatherFavoritesColors
 import com.example.thindie.weathers_site_favorites.viewmodel.WeatherFavoritesViewModel
 
 @Composable
@@ -24,18 +23,10 @@ fun WeatherFavoriteScreenState(
             .collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
 
     LoadingOrShowContent(
-        tint = WeatherFavoritesColors.cloudyAnimColors,
+        tint = ,
         isLoading = favoritesScreenState.value.isLoading
     ) {
-        WeatherFavoritesScreen(
-            onClickNavigation = onClickNavigation,
-            onClickBack = onClickBack,
-            onClickAll = onClickAll,
-            list = favoritesScreenState.value.list,
-            currentHour = favoritesScreenState.value.currentHour,
-            decodedWeather = favoritesScreenState.value.decodedWeather,
-            decodedWeatherDrawable = favoritesScreenState.value.decodedWeatherDrawable
-        )
+
     }
 
 }

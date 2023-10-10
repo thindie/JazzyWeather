@@ -31,7 +31,6 @@ class WeatherFavoritesViewModel @Inject constructor(
     private val requester: RequestHourlyWeatherListUseCase,
 ) :
     ViewModel() {
-    private var isAlreadyObserve = false
     private val _isLoading = MutableStateFlow(true)
 
 
@@ -55,23 +54,11 @@ class WeatherFavoritesViewModel @Inject constructor(
 
     @Inject
     fun onStart() {
-        act {
-            if (!isAlreadyObserve) {
-                isAlreadyObserve = true
-                observeHourlyWeatherListUseCase
-                    .invoke()
-                    .onEach { list ->
-                        list.onStateRenew()
-                    }
-                    .launchIn(viewModelScope)
-            }
-        }
+
     }
 
     fun onSelectFavoriteWeatherPlacesScreen() {
-        dangerAbleAct {
-            requester()
-        }
+
     }
 
     private fun List<WeatherHourly>.getCurrentWeatherCode(): Int {

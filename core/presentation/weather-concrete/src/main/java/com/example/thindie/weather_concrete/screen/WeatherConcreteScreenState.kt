@@ -1,13 +1,12 @@
 package com.example.thindie.weather_concrete.screen
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thindie.designsystem.LoadingOrShowContent
 import com.example.thindie.domain.entities.ForecastAble
-import com.example.thindie.domain.entities.WeatherDaily
-import com.example.thindie.weather_concrete.components.WeatherConcreteColors
 import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 
 @Composable
@@ -25,21 +24,16 @@ internal fun WeatherConcreteScreenState(
             .concreteScreenState
             .collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
     LoadingOrShowContent(
-        tint = WeatherConcreteColors.uvValue,
+        tint = MaterialTheme.colorScheme.onPrimary,
         isLoading = screenState.value.isLoading
     ) {
         WeatherConcreteScreen(
             screenState = screenState.value,
             onEdit = {
-                viewModel.onRememberChanges(screenState.value.weatherDaily.about(it));
-                onTitleComplete()
+
             },
             onRemove = { viewModel.onDeleteLocation(it); onRemove() })
     }
 
 }
 
-
-private fun WeatherDaily?.about(title: String): WeatherDaily {
-    return requireNotNull(this?.copy(place = title))
-}
