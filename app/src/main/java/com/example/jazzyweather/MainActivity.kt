@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
+import com.example.compose.JazzyWeatherTheme
 import com.example.thindie.designsystem.TransparentSystemBars
-import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

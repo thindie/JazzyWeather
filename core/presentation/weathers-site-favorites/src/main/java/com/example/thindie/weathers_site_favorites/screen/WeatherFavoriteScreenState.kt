@@ -1,5 +1,6 @@
 package com.example.thindie.weathers_site_favorites.screen
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -23,7 +24,7 @@ fun WeatherFavoriteScreenState(
             .collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
 
     LoadingOrShowContent(
-        tint = ,
+        tint = MaterialTheme.colorScheme.surface,
         isLoading = favoritesScreenState.value.isLoading
     ) {
 
