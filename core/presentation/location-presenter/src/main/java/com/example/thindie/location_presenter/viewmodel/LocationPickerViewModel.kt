@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.thindie.domain.entities.WeatherLocation
 import com.example.thindie.domain.usecases.DeleteWeatherSiteUseCase
 import com.example.thindie.domain.usecases.GetLocationUseCase
+import com.example.thindie.domain.usecases.ObserveHourlyWeatherListUseCase
 import com.example.thindie.domain.usecases.RememberWeatherSiteUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTimeZoneUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 internal class LocationPickerViewModel @Inject constructor(
     private val getLocation: GetLocationUseCase,
+    observeHourlyWeatherListUseCase: ObserveHourlyWeatherListUseCase,
     private val getTimeZoneUseCase: GetTimeZoneUseCase,
     private val rememberWeatherSiteUseCase: RememberWeatherSiteUseCase,
     private val deleteWeatherSiteUseCase: DeleteWeatherSiteUseCase,
@@ -30,11 +32,20 @@ internal class LocationPickerViewModel @Inject constructor(
     private val concreteLocation = MutableStateFlow<WeatherLocation?>(null)
     private val searchField = MutableStateFlow("")
 
-    val uiState = combine(locations, searchField, concreteLocation) { places, input, concrete ->
+    val uiState = combine(
+        locations,
+        searchField,
+        concreteLocation,
+        observeHourlyWeatherListUseCase()
+    ) { places, input, concrete, rememberedLocations ->
+        val isRemembered = rememberedLocations
+            .mapNotNull { if (concrete == null || it.place != concrete.city) null else true }
+
         LocationsScreenState(
             locationsList = places,
             searchFieldState = input,
-            focusedLocation = concrete
+            focusedLocation = concrete,
+            isFocusedLocationAlreadyRemembered = isRemembered.contains(true)
         )
     }
         .stateIn(
@@ -80,6 +91,7 @@ internal class LocationPickerViewModel @Inject constructor(
     data class LocationsScreenState(
         val locationsList: List<WeatherLocation> = emptyList(),
         val searchFieldState: String,
+        val isFocusedLocationAlreadyRemembered: Boolean = false,
         val focusedLocation: WeatherLocation? = null,
     )
 }

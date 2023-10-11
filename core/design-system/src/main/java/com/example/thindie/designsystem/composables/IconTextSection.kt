@@ -21,7 +21,7 @@ fun IconTextSection(
     modifier: Modifier,
     @DrawableRes icon: Int,
     title: String,
-    color: Color = MaterialTheme.colorScheme.onTertiary,
+    color: Color,
     style: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
     Row(

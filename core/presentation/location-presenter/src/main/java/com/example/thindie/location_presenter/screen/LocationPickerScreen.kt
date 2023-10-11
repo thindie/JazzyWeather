@@ -26,7 +26,9 @@ internal fun LocationPickerScreenState(
         fieldValue = state.value.searchFieldState,
         locations = state.value.locationsList,
         focusedLocation = state.value.focusedLocation,
-        onFocusLocation = viewModel::onClickWeatherLocationCard
+        onFocusLocation = viewModel::onClickWeatherLocationCard,
+        isFocusedLocationRemembered = state.value.isFocusedLocationAlreadyRemembered,
+        onRememberLocation = viewModel::onClickAddFavorites
     )
 
 }
