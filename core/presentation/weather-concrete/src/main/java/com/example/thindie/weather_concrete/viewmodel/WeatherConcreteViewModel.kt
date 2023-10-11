@@ -9,6 +9,7 @@ import com.example.thindie.domain.usecases.DeleteWeatherSiteUseCase
 import com.example.thindie.domain.usecases.GetDailyWeatherUseCase
 import com.example.thindie.domain.usecases.ReserveWeatherInteractor
 import com.example.thindie.domain.usecases.timeusecases.GetHourUseCase
+import com.example.thindie.domain.usecases.timeusecases.GetIncomingWeekByDaysUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTimeZoneUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTodayUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetWeekUseCase
@@ -29,6 +30,7 @@ internal class WeatherConcreteViewModel @Inject constructor(
     private val getTodayUseCase: GetTodayUseCase,
     private val getWeekUseCase: GetWeekUseCase,
     private val getHourUseCase: GetHourUseCase,
+    private val getIncomingWeekByDaysUseCase: GetIncomingWeekByDaysUseCase,
     private val interactor: ReserveWeatherInteractor,
 ) :
     ViewModel() {
@@ -43,6 +45,7 @@ internal class WeatherConcreteViewModel @Inject constructor(
 
             val today = getTodayUseCase()
             val currentWeek = getWeekUseCase(concrete.time)
+            val currentWeekByDaysNaming = getIncomingWeekByDaysUseCase()
             val sunset = getHourUseCase(concrete.sunset.first())
             val sunrise = getHourUseCase(concrete.sunrise.first())
 
@@ -53,7 +56,8 @@ internal class WeatherConcreteViewModel @Inject constructor(
                 sunset = sunset,
                 sunrise = sunrise,
                 weekDays = currentWeek,
-                isLoading = loading
+                isLoading = loading,
+                namedWeekDays = currentWeekByDaysNaming
             )
         }
             .stateIn(
@@ -117,6 +121,7 @@ internal class WeatherConcreteViewModel @Inject constructor(
         val sunset: String = "",
         val sunrise: String = "",
         val weekDays: List<Int> = emptyList(),
+        val namedWeekDays: List<String> = emptyList(),
         val isLoading: Boolean = true,
     )
 

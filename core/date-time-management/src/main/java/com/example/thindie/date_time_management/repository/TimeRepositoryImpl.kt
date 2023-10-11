@@ -16,6 +16,7 @@ internal class TimeRepositoryImpl @Inject constructor(
     @Named("hour") private val hourFormat: SimpleDateFormat,
     @Named("ISO8601") private val isoFormat: SimpleDateFormat,
     @Named("simpleDate") private val simpleDate: SimpleDateFormat,
+    private val weekDaysProvider: WeekDaysProvider,
 ) :
     TimeRepository {
     override fun getToday(): Int {
@@ -64,5 +65,9 @@ internal class TimeRepositoryImpl @Inject constructor(
 
     override fun getTimeZoneId(): String {
         return calendar.timeZone.id
+    }
+
+    override fun getIncomingWeekByDays(): List<String> {
+        return weekDaysProvider.returnWeekList()
     }
 }

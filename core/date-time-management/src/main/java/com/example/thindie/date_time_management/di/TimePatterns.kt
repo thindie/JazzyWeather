@@ -30,4 +30,8 @@ internal class TimePatterns @Inject constructor() {
         return "yyyy-MM-dd"
     }
 
+    fun patternStringWeek(): String {
+        return "E"
+    }
+
 }

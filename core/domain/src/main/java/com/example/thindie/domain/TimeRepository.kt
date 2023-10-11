@@ -12,4 +12,6 @@ interface TimeRepository {
 
     fun getCurrentHour(): Int
 
+    fun getIncomingWeekByDays(): List<String>
+
 }
