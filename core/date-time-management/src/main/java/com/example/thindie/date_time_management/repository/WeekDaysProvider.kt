@@ -1,29 +1,51 @@
 package com.example.thindie.date_time_management.repository
 
 
+import com.example.thindie.domain.entities.ForecastDay
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class WeekDaysProvider @Inject constructor(
     @Named("stringDay") private val dayOfWeek: SimpleDateFormat,
+    @Named("simpleDate") private val simpleDate: SimpleDateFormat,
+    @Named("simple_8106") private val simpleDate8106: SimpleDateFormat,
+    @Named("week_day") private val weekDayFormat: SimpleDateFormat,
     private val calendar: Calendar,
 ) {
 
-    fun returnWeekList(): List<String> {
-        val date: Date = calendar.time
-        val innerCalendar = calendar
+    fun returnWeekList(): List<ForecastDay> {
+        val timeInMillis = calendar.timeInMillis
 
         return buildList {
             repeat(DAYS_IN_WEEK) {
-                val inMillis = date.time.plus(it * MILLIS_IN_DAY)
-                innerCalendar.timeInMillis = inMillis
+                val inMillis = timeInMillis.plus(it * MILLIS_IN_DAY)
                 add(
-                    dayOfWeek.format(innerCalendar.time)
+                    ForecastDay(
+                        weekDay = dayOfWeek.format(inMillis),
+                        inMillis = inMillis
+                    )
                 )
             }
         }
+    }
+
+
+    fun getSimpleDateFromMillis(millis: Long): String {
+        return simpleDate8106.format(Date(millis))
+    }
+
+    fun getWeekInNumbers(listIso8106: List<String>): List<Int> {
+        return listIso8106.map {
+            simpleDate.parse(it)
+        }.map {
+            if (it != null) {
+                weekDayFormat.format(it).toInt()
+            } else 0
+        }.take(7)
     }
 
     companion object {

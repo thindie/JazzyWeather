@@ -51,6 +51,12 @@ internal class SimpleDateFormatModule {
     }
 
     @Provides
+    @Named("simple_8106")
+    fun provideSimpleDateFormatSimple8106Date(timePattern: TimePatterns): SimpleDateFormat {
+        return SimpleDateFormat(timePattern.patternSimple8106(), Locale.getDefault())
+    }
+
+    @Provides
     @Named("stringDay")
     fun provideSimpleDateFormatStringDay(timePattern: TimePatterns): SimpleDateFormat {
         return SimpleDateFormat(timePattern.patternStringWeek(), Locale.getDefault())
