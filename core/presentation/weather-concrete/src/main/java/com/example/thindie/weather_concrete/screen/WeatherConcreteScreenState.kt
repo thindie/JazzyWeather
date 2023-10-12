@@ -32,6 +32,8 @@ internal fun WeatherConcreteScreenState(
             onEdit = {
 
             },
+            onRememberChanges = viewModel::onRememberChanges,
+            onClickConcreteDay = viewModel::onClickedConcreteWeekDay,
             onRemove = { viewModel.onDeleteLocation(it); onRemove() })
     }
 
