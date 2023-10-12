@@ -69,5 +69,6 @@
     <string name="text_temperature_precipitation_representation">"мм"</string>
     <string name="text_ultraviolet_index">"UV индекс"</string>
     <string name="text_field_edit">Изменить</string>
-
+    <string name="text_field_ok">Ок</string>
+    <string name="text_field_name_it_yourself">Назови по-своему</string>
 </resources>
