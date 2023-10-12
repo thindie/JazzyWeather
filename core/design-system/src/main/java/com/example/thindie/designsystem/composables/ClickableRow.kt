@@ -35,7 +35,7 @@ fun ClickAbleRow(
     Row(
         modifier = modifier
             .background(brush = rowColor)
-            .height(70.dp)
+            .height(50.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
