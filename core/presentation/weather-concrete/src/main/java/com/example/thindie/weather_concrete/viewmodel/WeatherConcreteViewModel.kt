@@ -4,12 +4,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thindie.designsystem.utils.dangerAbleAct
 import com.example.thindie.domain.entities.ForecastAble
+import com.example.thindie.domain.entities.ForecastDay
 import com.example.thindie.domain.entities.WeatherDaily
+import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.domain.usecases.DeleteWeatherSiteUseCase
 import com.example.thindie.domain.usecases.GetDailyWeatherUseCase
 import com.example.thindie.domain.usecases.ReserveWeatherInteractor
 import com.example.thindie.domain.usecases.timeusecases.GetHourUseCase
+import com.example.thindie.domain.usecases.timeusecases.GetHourlyWeatherOnConcreteDateUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetIncomingWeekByDaysUseCase
+import com.example.thindie.domain.usecases.timeusecases.GetSimpleDateUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTimeZoneUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTodayUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetWeekUseCase
@@ -21,7 +25,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
+@Suppress("LongParameterList")
 @HiltViewModel
 internal class WeatherConcreteViewModel @Inject constructor(
     private val getTimeZoneUseCase: GetTimeZoneUseCase,
@@ -32,16 +38,26 @@ internal class WeatherConcreteViewModel @Inject constructor(
     private val getHourUseCase: GetHourUseCase,
     private val getIncomingWeekByDaysUseCase: GetIncomingWeekByDaysUseCase,
     private val interactor: ReserveWeatherInteractor,
+    private val getSimpleDateUseCase: GetSimpleDateUseCase,
+    private val getHourlyWeatherOnConcreteDateUseCase: GetHourlyWeatherOnConcreteDateUseCase,
 ) :
     ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
+    private val _isHourlyForecastLoading = MutableStateFlow(true)
+    private val _concreteWeatherHourly = MutableStateFlow<WeatherHourly?>(null)
+
     private var lastFetchedForecastAble: ForecastAble? = null
 
     private val _concreteScreenState: MutableStateFlow<WeatherDaily?> =
         MutableStateFlow(null)
     val concreteScreenState: StateFlow<ConcreteWeatherScreenState> =
-        combine(_concreteScreenState.filterNotNull(), _isLoading) { concrete, loading ->
+        combine(
+            _concreteScreenState.filterNotNull(),
+            _isLoading,
+            _isHourlyForecastLoading,
+            _concreteWeatherHourly
+        ) { concrete, loading, hourlyLoading, hourlyWeather ->
 
             val today = getTodayUseCase()
             val currentWeek = getWeekUseCase(concrete.time)
@@ -51,12 +67,14 @@ internal class WeatherConcreteViewModel @Inject constructor(
 
             ConcreteWeatherScreenState(
                 weatherDaily = concrete,
+                concreteWeatherHourly = hourlyWeather,
                 isFreshForecast = true,
                 currentDay = today,
                 sunset = sunset,
                 sunrise = sunrise,
                 weekDays = currentWeek,
                 isLoading = loading,
+                isHourlyLoading = hourlyLoading,
                 namedWeekDays = currentWeekByDaysNaming
             )
         }
@@ -113,16 +131,35 @@ internal class WeatherConcreteViewModel @Inject constructor(
         timezone = getTimeZoneUseCase()
     )
 
+    fun onClickedConcreteWeekDay(timeInMillis: Long) {
+        _isHourlyForecastLoading.value = true
+        viewModelScope.launch {
+            val simpleDate = getSimpleDateUseCase(timeInMillis)
+            getHourlyWeatherOnConcreteDateUseCase.invoke(
+                forecastAble = lastFetchedForecastAble!!.timeZoneApproved(),
+                simpleDate
+            ).onSuccess {
+                _isHourlyForecastLoading.value = false
+                _concreteWeatherHourly.value = it
+            }.onFailure {
+                _isHourlyForecastLoading.value = false
+                _concreteWeatherHourly.value = null
+            }
+        }
+     }
+
 
     data class ConcreteWeatherScreenState(
         val weatherDaily: WeatherDaily? = null,
+        val concreteWeatherHourly: WeatherHourly? = null,
         val isFreshForecast: Boolean = true,
         val currentDay: Int = 1,
         val sunset: String = "",
         val sunrise: String = "",
         val weekDays: List<Int> = emptyList(),
-        val namedWeekDays: List<String> = emptyList(),
+        val namedWeekDays: List<ForecastDay> = emptyList(),
         val isLoading: Boolean = true,
+        val isHourlyLoading: Boolean = false,
     )
 
     data class CurrentScreenForecastAble(

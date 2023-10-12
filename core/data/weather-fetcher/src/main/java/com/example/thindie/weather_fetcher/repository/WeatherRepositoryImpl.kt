@@ -1,5 +1,6 @@
 package com.example.thindie.weather_fetcher.repository
 
+import android.util.Log
 import com.example.thindie.core.network.WeatherApiService
 import com.example.thindie.core.network.di.DispatchersIOModule
 import com.example.thindie.core.network.dto.WeatherDailyDto
@@ -37,6 +38,24 @@ internal class WeatherRepositoryImpl @Inject constructor(
     override suspend fun getDailyWeather(forecastAble: ForecastAble): Result<WeatherDaily> {
         return if (netWorkController.isAllowed()) {
             Result.success(getDaily(forecastAble))
+        } else Result.failure(IllegalStateException())
+    }
+
+    override suspend fun getDailyWeatherOnConcreteDate(
+        simpleIso8106: String,
+        forecastAble: ForecastAble,
+    ): Result<WeatherHourly> {
+        Log.d("SERVICE_TAG", simpleIso8106)
+        return if (netWorkController.isAllowed()) {
+            Result.success(
+                apiService.getHourlyWeatherByDate(
+                    iso8106String = simpleIso8106,
+                    latitude = forecastAble.getSightLatitude(),
+                    longitude = forecastAble.getSightLongitude(),
+                    timeZone = forecastAble.getTimeZone()
+                ).map()
+                    .map(forecastAble)
+            )
         } else Result.failure(IllegalStateException())
     }
 

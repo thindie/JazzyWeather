@@ -1,6 +1,7 @@
 package com.example.thindie.date_time_management.repository
 
 
+import android.util.Log
 import com.example.thindie.domain.entities.ForecastDay
 import java.text.SimpleDateFormat
 import java.util.*
@@ -12,7 +13,6 @@ import javax.inject.Singleton
 class WeekDaysProvider @Inject constructor(
     @Named("stringDay") private val dayOfWeek: SimpleDateFormat,
     @Named("simpleDate") private val simpleDate: SimpleDateFormat,
-    @Named("simple_8106") private val simpleDate8106: SimpleDateFormat,
     @Named("week_day") private val weekDayFormat: SimpleDateFormat,
     private val calendar: Calendar,
 ) {
@@ -35,7 +35,7 @@ class WeekDaysProvider @Inject constructor(
 
 
     fun getSimpleDateFromMillis(millis: Long): String {
-        return simpleDate8106.format(Date(millis))
+        return simpleDate.format(Date(millis))
     }
 
     fun getWeekInNumbers(listIso8106: List<String>): List<Int> {
