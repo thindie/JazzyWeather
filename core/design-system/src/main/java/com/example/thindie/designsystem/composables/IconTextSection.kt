@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -21,7 +21,7 @@ fun IconTextSection(
     modifier: Modifier,
     @DrawableRes icon: Int,
     title: String,
-    color: Color = MaterialTheme.colorScheme.onTertiary,
+    color: Color,
     style: TextStyle = MaterialTheme.typography.labelMedium,
 ) {
     Row(

@@ -1,7 +1,6 @@
 package com.example.thindie.designsystem.composables
 
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.spring
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,8 +12,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Text
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -46,7 +45,7 @@ fun VerticalIndicationColumn(
 
 
     LaunchedEffect(true) {
-        delay(Random.nextLong(until = 400))
+        delay(Random.nextLong(until = 1000))
         shouldAnimate.value = true
     }
 
@@ -66,16 +65,16 @@ fun VerticalIndicationColumn(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(height)
-                    .animateContentSize(animationSpec = spring())
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(customizer.getColorComponent())
-            )
+            AnimatedVisibility(visible = shouldAnimate.value) {
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(height)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(customizer.getColorComponent())
+                )
+            }
             Spacer(modifier = Modifier.size(4.dp))
-
         }
         Text(
             text = textLabel,

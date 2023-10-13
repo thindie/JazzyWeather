@@ -32,9 +32,22 @@ interface WeatherApiService {
         @Query(QUERY_CURRENT_WEATHER) boolean: Boolean = true,
     ): WeatherHourlyResponse
 
+    @GET(ENDPOINT)
+    suspend fun getHourlyWeatherByDate(
+        @Query(QUERY_PARAM_START_DATE) iso8106String: String,
+        @Query(QUERY_PARAM_END_DATE) iso8106StringEnd: String = iso8106String,
+        @Query(QUERY_PARAM_LATITUDE) latitude: Float,
+        @Query(QUERY_PARAM_LONGITUDE) longitude: Float,
+        @Query(QUERY_PARAM_HOURLY, encoded = true) hourly: String = HOURLY_NETWORK_QUERY,
+        @Query(QUERY_PARAM_WINDSPEED_UNIT) windSpeed: String = "ms",
+        @Query(QUERY_PARAM_TIMEZONE, encoded = true) timeZone: String,
+        @Query(QUERY_CURRENT_WEATHER) boolean: Boolean = true,
+    ): WeatherHourlyResponse
 
 }
 
+private const val QUERY_PARAM_START_DATE = "start_date"
+private const val QUERY_PARAM_END_DATE = "end_date"
 
 private const val QUERY_PARAM_LONGITUDE = "longitude"
 private const val QUERY_PARAM_LATITUDE = "latitude"

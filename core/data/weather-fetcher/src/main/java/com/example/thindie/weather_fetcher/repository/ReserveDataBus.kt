@@ -22,6 +22,13 @@ class ReserveDataBus @Inject constructor(
         return Result.success(daoDaily.getWeatherSite(forecastAble.getSight()).map())
     }
 
+    override suspend fun getDailyWeatherOnConcreteDate(
+        simpleIso8106: String,
+        forecastAble: ForecastAble,
+    ): Result<WeatherHourly> {
+        return Result.failure(error(""))
+    }
+
 
     override suspend fun getHourlyWeather(forecastAble: ForecastAble): Result<WeatherHourly> {
         return Result.success(daoHourly.getWeatherSite(forecastAble.getSight()).map())

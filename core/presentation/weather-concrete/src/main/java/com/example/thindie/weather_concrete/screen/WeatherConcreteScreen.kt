@@ -1,27 +1,36 @@
 package com.example.thindie.weather_concrete.screen
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.thindie.designsystem.LoadingOrShowContent
-import com.example.thindie.designsystem.theme.JazzyWeatherTheme
+import com.example.compose.JazzyWeatherTheme
+import com.example.thindie.designsystem.utils.TransGradientVertical
+import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.presentation.R
-import com.example.thindie.weather_concrete.components.DatePlanchette
-import com.example.thindie.weather_concrete.components.WeatherConcreteColors
-import com.example.thindie.weather_concrete.components.WeatherConcreteTitle
-import com.example.thindie.weather_concrete.components.WeatherNamedGraph
-import com.example.thindie.weather_concrete.components.graphcomposables.WeatherTemperatureGraphHigh
-import com.example.thindie.weather_concrete.components.graphcomposables.WeatherTemperatureGraphLow
+import com.example.thindie.weather_concrete.components.ConcreteCalendar
+import com.example.thindie.weather_concrete.components.ConcreteTitle
+import com.example.thindie.weather_concrete.components.HourlyUnit
+import com.example.thindie.weather_concrete.components.graphcomposables.WeatherGraph
 import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 
 @Composable
@@ -29,80 +38,83 @@ internal fun WeatherConcreteScreen(
     modifier: Modifier = Modifier,
     screenState: WeatherConcreteViewModel.ConcreteWeatherScreenState,
     onEdit: (String) -> Unit,
+    onRememberChanges: (WeatherDaily) -> Unit,
+    onClickConcreteDay: (Long) -> Unit,
+    getDecodedWeatherIcon: (Int) -> Int,
     onRemove: (String) -> Unit,
 ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(WeatherConcreteColors.backGroundColors),
-        ) {
+    var shouldShowAdditionalSection by remember {
+        mutableStateOf(false)
+    }
 
-            with(screenState) {
-                if (weatherDaily != null) {
-                    Spacer(modifier = modifier.height(20.dp))
-                    WeatherConcreteTitle(
-                        city = weatherDaily.place,
-                        timeSunset = sunset,
-                        timeSunrise = sunrise,
-                        timeZone = weatherDaily.timezone,
-                        latitude = weatherDaily.latitude,
-                        longitude = weatherDaily.longitude,
-                        elevation = weatherDaily.elevation,
-                        onRemove = onRemove,
-                        onEdit = onEdit
-                    )
-                    DatePlanchette(days = weekDays, currentDay = currentDay)
-                    LazyColumn {
-                        item {
-                            Column(
-                                modifier = modifier
-                                    .fillMaxHeight()
-                                    .fillMaxWidth()
-                            ) {
-                                WeatherTemperatureGraphLow(
-                                    graphValues = weatherDaily.apparentTemperatureMin,
-                                )
-                                WeatherTemperatureGraphHigh(graphValues = weatherDaily.apparentTemperatureMax)
-                                if (weatherDaily.rainSum.sum() != 0.0) {
-                                    WeatherNamedGraph(
-                                        graphValues = weatherDaily.rainSum,
-                                        titlePic = R.drawable.icon_water_drop,
-                                        positiveColor = WeatherConcreteColors.rainValue,
-                                        negativeColor = WeatherConcreteColors.rainValue,
+    var lastClickedSection by remember {
+        mutableLongStateOf(0L)
+    }
 
-                                        )
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surfaceTint.TransGradientVertical())
+            .fillMaxSize()
+            .padding(horizontal = 8.dp),
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+
+        with(screenState) {
+            if (weatherDaily != null) {
+                ConcreteTitle(
+                    weatherDaily = weatherDaily,
+                    onRememberChanges = onRememberChanges,
+                    sunrise = screenState.sunrise,
+                    sunset = screenState.sunset
+                )
+                ConcreteCalendar(
+                    digits = screenState.weekDays,
+                    days = screenState.namedWeekDays,
+                    onClickConcreteDay = { clickedOn ->
+                        shouldShowAdditionalSection = clickedOn != lastClickedSection
+                        lastClickedSection = clickedOn
+                        if (shouldShowAdditionalSection) onClickConcreteDay(clickedOn)
+                    }
+                )
+                AnimatedVisibility(visible = shouldShowAdditionalSection) {
+                    if (screenState.isHourlyLoading) CircularProgressIndicator()
+                    else {
+                        if (concreteWeatherHourly != null)
+                            LazyRow() {
+                                items(concreteWeatherHourly.getHourlyForecast()) {
+                                    HourlyUnit(
+                                        time = it.time,
+                                        oneHourWeather = it,
+                                        getDecodedWeatherCode = getDecodedWeatherIcon
+                                    )
                                 }
-                                if (weatherDaily.snowfallSum.sum() != 0.0) {
-                                    WeatherNamedGraph(
-                                        graphValues = weatherDaily.snowfallSum,
-                                        titlePic = R.drawable.icon_snowflake,
-                                        positiveColor = WeatherConcreteColors.rainValue,
-                                        negativeColor = WeatherConcreteColors.rainValue,
-                                    )
-
-                                }
-                                WeatherNamedGraph(
-                                    graphValues = weatherDaily.windSpeed10mMax,
-                                    titlePic = R.drawable.icon_windy,
-                                    positiveColor = WeatherConcreteColors.windValue,
-                                    negativeColor = WeatherConcreteColors.windValue,
-
-                                    )
-                                WeatherNamedGraph(
-                                    graphValues = weatherDaily.uvIndexMax,
-                                    titlePic = R.drawable.icon_ultraviolet,
-                                    positiveColor = WeatherConcreteColors.uvValue,
-                                    negativeColor = WeatherConcreteColors.uvValue,
-
-                                    )
                             }
-                        }
+                    }
+                }
+
+                LazyColumn(contentPadding = PaddingValues(vertical = 10.dp)) {
+                    item {
+                        WeatherGraph(
+                            list = weatherDaily.apparentTemperatureMax,
+                            graphIcon = R.drawable.icon_temp_high,
+                            iconTint = Color.Red,
+                            firstColorComponent = Color.Red,
+                            secondColorComponent = Color.Blue
+                        )
+                        WeatherGraph(
+                            list = weatherDaily.apparentTemperatureMin,
+                            graphIcon = R.drawable.icon_low_temp,
+                            iconTint = Color.Blue,
+                            firstColorComponent = Color.Red,
+                            secondColorComponent = Color.Blue
+                        )
                     }
                 }
             }
-
         }
+
     }
+}
 
 
 @Composable

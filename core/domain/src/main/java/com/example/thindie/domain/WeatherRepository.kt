@@ -8,6 +8,11 @@ import kotlinx.coroutines.flow.Flow
 interface WeatherRepository {
     suspend fun getDailyWeather(forecastAble: ForecastAble): Result<WeatherDaily>
 
+    suspend fun getDailyWeatherOnConcreteDate(
+        simpleIso8106: String,
+        forecastAble: ForecastAble,
+    ): Result<WeatherHourly>
+
     suspend fun getHourlyWeather(forecastAble: ForecastAble): Result<WeatherHourly>
 
     suspend fun getWeatherDailyList(): Result<List<WeatherDaily>>

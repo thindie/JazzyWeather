@@ -4,9 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.collectAsState
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import com.example.compose.JazzyWeatherTheme
+import com.example.jazzyweather.navigation.WeatherScreen
+import com.example.jazzyweather.themeChanger.ThemeChanger
 import com.example.thindie.designsystem.TransparentSystemBars
-import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,11 +22,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         mainViewModel.onStart()
         setContent {
-            JazzyWeatherTheme {
+            val darken = isSystemInDarkTheme()
+            val isSystemInDark = rememberSaveable() {
+                mutableStateOf(darken)
+            }
+            JazzyWeatherTheme(useDarkTheme = isSystemInDark.value) {
                 TransparentSystemBars()
                 WeatherApp(
                     viewModel = mainViewModel,
-                    weatherScreen = mainViewModel.destinationState.collectAsState().value
+                    weatherScreen = WeatherScreen.LOCATION_PICKER,
+                    themeChanger = {
+                        ThemeChanger {
+                            isSystemInDark.value = !isSystemInDark.value
+                        }
+                    }
                 )
             }
         }

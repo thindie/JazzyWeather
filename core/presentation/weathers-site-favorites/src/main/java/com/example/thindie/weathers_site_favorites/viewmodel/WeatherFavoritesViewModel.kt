@@ -5,8 +5,6 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thindie.designsystem.DecodeAble
-import com.example.thindie.designsystem.utils.act
-import com.example.thindie.designsystem.utils.dangerAbleAct
 import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.domain.usecases.ObserveHourlyWeatherListUseCase
 import com.example.thindie.domain.usecases.RequestHourlyWeatherListUseCase
@@ -17,61 +15,59 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 
 @HiltViewModel
 class WeatherFavoritesViewModel @Inject constructor(
-    private val observeHourlyWeatherListUseCase: ObserveHourlyWeatherListUseCase,
+    observeHourlyWeatherListUseCase: ObserveHourlyWeatherListUseCase,
     private val getCurrentHourOfDayUseCase: GetCurrentHourOfDayUseCase,
     private val getHourUseCase: GetHourUseCase,
     private val decodeAble: DecodeAble,
     private val requester: RequestHourlyWeatherListUseCase,
 ) :
     ViewModel() {
-    private var isAlreadyObserve = false
+
     private val _isLoading = MutableStateFlow(true)
-
-
-    private val _screenWeatherList =
-        MutableStateFlow(emptyList<WeatherHourly>())
-
-    val screenState = combine(_isLoading, _screenWeatherList) { loading, list ->
-        FavoriteWeatherSitesUiState(
-            list = list,
-            isLoading = loading,
-            currentHour = getCurrentHourOfDayUseCase(),
-            decodedWeather = decodeAble.decodeString(list.getCurrentWeatherCode()),
-            decodedWeatherDrawable = decodeAble.decodeDrawable(list.getCurrentWeatherCode())
-        )
-    }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000L),
-            FavoriteWeatherSitesUiState(list = emptyList(), isLoading = true)
-        )
+    val screenState =
+        combine(_isLoading,
+            observeHourlyWeatherListUseCase()
+                .onEmpty { _isLoading.value = true }
+                .onEach { _isLoading.value = false }
+                .filterNotNull()) { loading, list ->
+            FavoriteWeatherSitesUiState(
+                list = list.rawTimeTo24hHours(),
+                isLoading = loading,
+                currentHour = getCurrentHourOfDayUseCase(),
+                decodedWeather = decodeAble.decodeString(list.getCurrentWeatherCode()),
+                decodedWeatherDrawable = decodeAble.decodeDrawable(list.getCurrentWeatherCode())
+            )
+        }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5_000L),
+                FavoriteWeatherSitesUiState(list = emptyList(), isLoading = true)
+            )
 
     @Inject
     fun onStart() {
-        act {
-            if (!isAlreadyObserve) {
-                isAlreadyObserve = true
-                observeHourlyWeatherListUseCase
-                    .invoke()
-                    .onEach { list ->
-                        list.onStateRenew()
-                    }
-                    .launchIn(viewModelScope)
-            }
+        viewModelScope.launch {
+            requester()
         }
     }
 
     fun onSelectFavoriteWeatherPlacesScreen() {
-        dangerAbleAct {
+        viewModelScope.launch {
             requester()
         }
+    }
+
+    fun onDecodeWeatherCode(code: Int): Int {
+        return decodeAble.decodeDrawable(code)
     }
 
     private fun List<WeatherHourly>.getCurrentWeatherCode(): Int {
@@ -84,17 +80,6 @@ class WeatherFavoritesViewModel @Inject constructor(
         }
     }
 
-
-    private fun List<WeatherHourly>.onStateRenew() {
-        if (isEmpty()) {
-            _isLoading.value = true
-        } else {
-            _screenWeatherList.value = rawTimeTo24hHours()
-            _isLoading.value = false
-        }
-
-
-    }
 
     private fun List<WeatherHourly>.rawTimeTo24hHours(): List<WeatherHourly> {
         return map { weatherHourly ->

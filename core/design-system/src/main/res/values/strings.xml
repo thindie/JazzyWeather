@@ -69,5 +69,18 @@
     <string name="text_temperature_precipitation_representation">"мм"</string>
     <string name="text_ultraviolet_index">"UV индекс"</string>
     <string name="text_field_edit">Изменить</string>
+    <string name="text_field_ok">Ок</string>
+    <string name="text_field_name_it_yourself">Назови по-своему</string>
+    <string name="button_text_remember">"Вот какое место я знаю!"</string>
 
+    <string name="text_field_latitude">Широта</string>
+    <string name="text_field_longitude">Долгота</string>
+    <string name="text_field_button_know">"А я знаю координаты"</string>
+    <string name="text_field_button_know_not">"Вообще-то нет"</string>
+    <string name="text_field_button_know_perhaps">"Наверное"</string>
+    <string name="text_field_place">Место</string>
+    <string name="text_field_place_new">"Новое место:
+         %s"</string>
+
+    <string name="hint_input_field_edit">Набирай место..</string>
 </resources>

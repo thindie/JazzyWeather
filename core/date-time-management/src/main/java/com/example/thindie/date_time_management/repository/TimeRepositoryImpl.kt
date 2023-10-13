@@ -1,6 +1,7 @@
 package com.example.thindie.date_time_management.repository
 
 import com.example.thindie.domain.TimeRepository
+import com.example.thindie.domain.entities.ForecastDay
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -15,7 +16,7 @@ internal class TimeRepositoryImpl @Inject constructor(
     @Named("year") private val yearFormat: SimpleDateFormat,
     @Named("hour") private val hourFormat: SimpleDateFormat,
     @Named("ISO8601") private val isoFormat: SimpleDateFormat,
-    @Named("simpleDate") private val simpleDate: SimpleDateFormat,
+    private val weekDaysProvider: WeekDaysProvider,
 ) :
     TimeRepository {
     override fun getToday(): Int {
@@ -38,13 +39,7 @@ internal class TimeRepositoryImpl @Inject constructor(
     }
 
     override fun getWeekInNumbers(listIso8106: List<String>): List<Int> {
-        return listIso8106.map {
-            simpleDate.parse(it)
-        }.map {
-            if (it != null) {
-                weekDayFormat.format(it).toInt()
-            } else 0
-        }.take(7)
+        return weekDaysProvider.getWeekInNumbers(listIso8106)
     }
 
     override fun getCurrentWeekDay(): String {
@@ -64,5 +59,13 @@ internal class TimeRepositoryImpl @Inject constructor(
 
     override fun getTimeZoneId(): String {
         return calendar.timeZone.id
+    }
+
+    override fun getIncomingWeekByDays(): List<ForecastDay> {
+        return weekDaysProvider.returnWeekList()
+    }
+
+    override fun getSimpleDateFromMillis(millis: Long): String {
+        return weekDaysProvider.getSimpleDateFromMillis(millis)
     }
 }

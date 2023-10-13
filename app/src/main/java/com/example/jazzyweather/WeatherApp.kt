@@ -1,13 +1,11 @@
 package com.example.jazzyweather
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.example.jazzyweather.loadScreen.LoadingColors
 import com.example.jazzyweather.navigation.NavigationRow
 import com.example.jazzyweather.navigation.NavigationState
 import com.example.jazzyweather.navigation.WeatherScreen
@@ -22,16 +20,16 @@ fun WeatherApp(
     viewModel: MainViewModel,
     weatherScreen: WeatherScreen,
     state: NavigationState = rememberNavigationState(),
+    themeChanger: @Composable () -> Unit,
 ) {
 
     Scaffold(
-        bottomBar = { NavigationRow(state = state) }
+        bottomBar = { NavigationRow(state = state, clickAbleContent = themeChanger) }
     ) {
 
         val currentForecastAble = viewModel.forecastAbleState.collectAsState()
         NavHost(
             modifier = Modifier
-                .background(LoadingColors.titleColors)
                 .padding(it),
             navController = state.navHostController,
             startDestination = state

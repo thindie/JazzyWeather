@@ -3,11 +3,6 @@ package com.example.thindie.designsystem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.example.thindie.designsystem.animators.FloatAnimator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class SimpleVisualCustomizer(
     val initialValue: String,
@@ -15,7 +10,6 @@ class SimpleVisualCustomizer(
     private val positiveColor: Color,
     private val negativeColor: Color,
 ) : VisualCustomizer {
-
 
 
     @Composable

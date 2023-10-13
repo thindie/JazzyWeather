@@ -1,4 +1,4 @@
-package com.example.thindie.weather_concrete.components
+package com.example.thindie.location_presenter.components
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
