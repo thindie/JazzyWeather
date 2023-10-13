@@ -1,14 +1,17 @@
 package com.example.thindie.weather_concrete.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -21,10 +24,12 @@ import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.JazzyWeatherTheme
+import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.presentation.R
 import com.example.thindie.weather_concrete.components.ConcreteCalendar
 import com.example.thindie.weather_concrete.components.ConcreteTitle
+import com.example.thindie.weather_concrete.components.HourlyUnit
 import com.example.thindie.weather_concrete.components.graphcomposables.WeatherGraph
 import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 
@@ -35,6 +40,7 @@ internal fun WeatherConcreteScreen(
     onEdit: (String) -> Unit,
     onRememberChanges: (WeatherDaily) -> Unit,
     onClickConcreteDay: (Long) -> Unit,
+    getDecodedWeatherIcon: (Int) -> Int,
     onRemove: (String) -> Unit,
 ) {
     var shouldShowAdditionalSection by remember {
@@ -47,8 +53,9 @@ internal fun WeatherConcreteScreen(
 
     Column(
         modifier = modifier
-            .padding(horizontal = 8.dp)
-            .fillMaxSize(),
+            .background(MaterialTheme.colorScheme.surfaceTint.TransGradientVertical())
+            .fillMaxSize()
+            .padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
 
@@ -71,7 +78,18 @@ internal fun WeatherConcreteScreen(
                 )
                 AnimatedVisibility(visible = shouldShowAdditionalSection) {
                     if (screenState.isHourlyLoading) CircularProgressIndicator()
-                    else Text(text = screenState.concreteWeatherHourly?.place.orEmpty())
+                    else {
+                        if (concreteWeatherHourly != null)
+                            LazyRow() {
+                                items(concreteWeatherHourly.getHourlyForecast()) {
+                                    HourlyUnit(
+                                        time = it.time,
+                                        oneHourWeather = it,
+                                        getDecodedWeatherCode = getDecodedWeatherIcon
+                                    )
+                                }
+                            }
+                    }
                 }
 
                 LazyColumn(contentPadding = PaddingValues(vertical = 10.dp)) {
