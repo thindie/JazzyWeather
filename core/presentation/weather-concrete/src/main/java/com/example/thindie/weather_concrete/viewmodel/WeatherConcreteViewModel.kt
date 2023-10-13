@@ -2,6 +2,7 @@ package com.example.thindie.weather_concrete.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thindie.designsystem.DecodeAble
 import com.example.thindie.designsystem.utils.dangerAbleAct
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.ForecastDay
@@ -40,6 +41,7 @@ internal class WeatherConcreteViewModel @Inject constructor(
     private val interactor: ReserveWeatherInteractor,
     private val getSimpleDateUseCase: GetSimpleDateUseCase,
     private val getHourlyWeatherOnConcreteDateUseCase: GetHourlyWeatherOnConcreteDateUseCase,
+    private val decodeAble: DecodeAble,
 ) :
     ViewModel() {
 
@@ -67,7 +69,7 @@ internal class WeatherConcreteViewModel @Inject constructor(
 
             ConcreteWeatherScreenState(
                 weatherDaily = concrete,
-                concreteWeatherHourly = hourlyWeather,
+                concreteWeatherHourly = hourlyWeather?.rawTimeTo24hHours(),
                 isFreshForecast = true,
                 currentDay = today,
                 sunset = sunset,
@@ -83,6 +85,11 @@ internal class WeatherConcreteViewModel @Inject constructor(
                 SharingStarted.WhileSubscribed(5_000L),
                 ConcreteWeatherScreenState()
             )
+
+    fun onDecodeWeatherCode(code: Int): Int {
+        return decodeAble.decodeDrawable(code)
+    }
+
 
     fun onLoadConcreteScreen(forecastAble: ForecastAble?) {
         if (forecastAble != null && forecastAble != lastFetchedForecastAble) {
@@ -146,7 +153,14 @@ internal class WeatherConcreteViewModel @Inject constructor(
                 _concreteWeatherHourly.value = null
             }
         }
-     }
+
+    }
+
+    private fun WeatherHourly.rawTimeTo24hHours(): WeatherHourly {
+        return copy(time = time.map {
+            getHourUseCase(it)
+        })
+    }
 
 
     data class ConcreteWeatherScreenState(
@@ -160,6 +174,7 @@ internal class WeatherConcreteViewModel @Inject constructor(
         val namedWeekDays: List<ForecastDay> = emptyList(),
         val isLoading: Boolean = true,
         val isHourlyLoading: Boolean = false,
+        val hour: Int = 0,
     )
 
     data class CurrentScreenForecastAble(
@@ -186,3 +201,4 @@ internal class WeatherConcreteViewModel @Inject constructor(
 
     }
 }
+

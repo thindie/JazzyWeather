@@ -34,6 +34,7 @@ internal fun WeatherConcreteScreenState(
             },
             onRememberChanges = viewModel::onRememberChanges,
             onClickConcreteDay = viewModel::onClickedConcreteWeekDay,
+            getDecodedWeatherIcon = viewModel::onDecodeWeatherCode,
             onRemove = { viewModel.onDeleteLocation(it); onRemove() })
     }
 
