@@ -11,7 +11,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,69 +40,68 @@ internal fun ConcreteTitle(
     var temporaryChangedTitle by remember {
         mutableStateOf(weatherDaily.place)
     }
-    Surface {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .animateContentSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(text = temporaryChangedTitle)
+        Row(
+            modifier = modifier.fillMaxWidth(0.8f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text(text = temporaryChangedTitle)
-            Row(
-                modifier = modifier.fillMaxWidth(0.8f),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                IconTextSection(
-                    modifier = modifier,
-                    icon = R.drawable.icon_sunny,
-                    title = sunrise,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            IconTextSection(
+                modifier = modifier,
+                icon = R.drawable.icon_sunny,
+                title = sunrise,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            IconTextSection(
+                modifier = modifier,
+                icon = R.drawable.icon_moon_cresent,
+                title = sunset,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            IconTextSection(
+                modifier = modifier,
+                icon = R.drawable.icon_time_outline,
+                title = weatherDaily.timezone,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            IconButton(onClick = {
+                shouldShowAdditionalSections = !shouldShowAdditionalSections
+            }) {
+                Icon(
+                    painterResource(id = R.drawable.icon_information),
+                    contentDescription = null
                 )
-                IconTextSection(
-                    modifier = modifier,
-                    icon = R.drawable.icon_moon_cresent,
-                    title = sunset,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                IconTextSection(
-                    modifier = modifier,
-                    icon = R.drawable.icon_time_outline,
-                    title = weatherDaily.timezone,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                IconButton(onClick = {
-                    shouldShowAdditionalSections = !shouldShowAdditionalSections
-                }) {
-                    Icon(
-                        painterResource(id = R.drawable.icon_information),
-                        contentDescription = null
-                    )
-                }
             }
-            AnimatedVisibility(visible = shouldShowAdditionalSections) {
-                Row(
-                    modifier = modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    OutlinedTextField(
-                        value = temporaryChangedTitle,
-                        onValueChange = { temporaryChangedTitle = it },
-                        shape = MaterialTheme.shapes.large,
-                        placeholder = { Text(text = stringResource(R.string.text_field_name_it_yourself)) }
-                    )
-                    AnimatedVisibility(visible = temporaryChangedTitle.isNotBlank()) {
-                        OutlinedButton(
-                            onClick =
-                            {
-                                onRememberChanges(weatherDaily.copy(place = temporaryChangedTitle));
-                                shouldShowAdditionalSections = false
-                            },
-                        ) {
-                            Text(text = stringResource(R.string.text_field_ok))
-                        }
+        }
+        AnimatedVisibility(visible = shouldShowAdditionalSections) {
+            Row(
+                modifier = modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                OutlinedTextField(
+                    value = temporaryChangedTitle,
+                    onValueChange = { temporaryChangedTitle = it },
+                    shape = MaterialTheme.shapes.large,
+                    placeholder = { Text(text = stringResource(R.string.text_field_name_it_yourself)) }
+                )
+                AnimatedVisibility(visible = temporaryChangedTitle.isNotBlank()) {
+                    OutlinedButton(
+                        onClick =
+                        {
+                            onRememberChanges(weatherDaily.copy(place = temporaryChangedTitle));
+                            shouldShowAdditionalSections = false
+                        },
+                    ) {
+                        Text(text = stringResource(R.string.text_field_ok))
                     }
                 }
             }
