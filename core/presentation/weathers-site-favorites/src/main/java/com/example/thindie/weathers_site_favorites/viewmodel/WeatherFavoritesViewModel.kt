@@ -66,6 +66,10 @@ class WeatherFavoritesViewModel @Inject constructor(
         }
     }
 
+    fun onDecodeWeatherCode(code: Int): Int {
+        return decodeAble.decodeDrawable(code)
+    }
+
     private fun List<WeatherHourly>.getCurrentWeatherCode(): Int {
         val currentHour = getCurrentHourOfDayUseCase()
         return try {
