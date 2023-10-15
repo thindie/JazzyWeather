@@ -31,6 +31,8 @@ import com.example.thindie.weather_concrete.components.ConcreteCalendar
 import com.example.thindie.weather_concrete.components.ConcreteTitle
 import com.example.thindie.weather_concrete.components.HourlyUnit
 import com.example.thindie.weather_concrete.components.graphcomposables.WeatherGraph
+import com.example.thindie.weather_concrete.components.graphcomposables.rememberWeatherGraphState
+import com.example.thindie.weather_concrete.components.rememberCalendarState
 import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 
 @Composable
@@ -68,8 +70,10 @@ internal fun WeatherConcreteScreen(
                     sunset = screenState.sunset
                 )
                 ConcreteCalendar(
-                    digits = screenState.weekDays,
-                    days = screenState.namedWeekDays,
+                    state = rememberCalendarState(
+                        digits = screenState.weekDays,
+                        days = screenState.namedWeekDays
+                    ),
                     onClickConcreteDay = { clickedOn ->
                         shouldShowAdditionalSection = clickedOn != lastClickedSection
                         lastClickedSection = clickedOn
@@ -95,18 +99,24 @@ internal fun WeatherConcreteScreen(
                 LazyColumn(contentPadding = PaddingValues(vertical = 10.dp)) {
                     item {
                         WeatherGraph(
-                            list = weatherDaily.apparentTemperatureMax,
-                            graphIcon = R.drawable.icon_temp_high,
-                            iconTint = Color.Red,
-                            firstColorComponent = Color.Red,
-                            secondColorComponent = Color.Blue
+                            modifier,
+                            weatherGraphState = rememberWeatherGraphState(
+                                list = weatherDaily.apparentTemperatureMax,
+                                graphIcon = R.drawable.icon_temp_high,
+                                iconTint = Color.Red,
+                                firstColorComponent = Color.Red,
+                                secondColorComponent = Color.Blue
+                            )
                         )
                         WeatherGraph(
-                            list = weatherDaily.apparentTemperatureMin,
-                            graphIcon = R.drawable.icon_low_temp,
-                            iconTint = Color.Blue,
-                            firstColorComponent = Color.Red,
-                            secondColorComponent = Color.Blue
+                            modifier,
+                            weatherGraphState = rememberWeatherGraphState(
+                                list = weatherDaily.apparentTemperatureMin,
+                                graphIcon = R.drawable.icon_low_temp,
+                                iconTint = Color.Blue,
+                                firstColorComponent = Color.Red,
+                                secondColorComponent = Color.Blue
+                            )
                         )
                     }
                 }

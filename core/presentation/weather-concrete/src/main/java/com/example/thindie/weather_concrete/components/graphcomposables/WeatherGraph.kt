@@ -1,6 +1,5 @@
 package com.example.thindie.weather_concrete.components.graphcomposables
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,18 +22,17 @@ import kotlin.math.floor
 @Composable
 internal fun WeatherGraph(
     modifier: Modifier = Modifier,
-    @DrawableRes graphIcon: Int,
-    iconTint: Color,
-    list: List<Number>,
-    firstColorComponent: Color,
-    secondColorComponent: Color,
+    weatherGraphState: WeatherGraphState,
 ) {
-    val customizedList = list.toVisualCustomizersList(firstColorComponent, secondColorComponent)
+    val customizedList = weatherGraphState.list.toVisualCustomizersList(
+        weatherGraphState.firstColorComponent,
+        weatherGraphState.secondColorComponent
+    )
     Column {
         Icon(
-            painter = painterResource(id = graphIcon),
+            painter = painterResource(id = weatherGraphState.graphIcon),
             contentDescription = null,
-            tint = iconTint
+            tint = weatherGraphState.iconTint
         )
         LazyRow(
             modifier = modifier.fillMaxWidth(),
@@ -47,7 +44,7 @@ internal fun WeatherGraph(
                     rememberVerticalColumnState(
                         width = 40.dp,
                         customizer = customizer,
-                        textLabel = (floor(list[i].toDouble() * 100) / 100).toString()
+                        textLabel = (floor(weatherGraphState.list[i].toDouble() * 100) / 100).toString()
                     )
                 )
             }
