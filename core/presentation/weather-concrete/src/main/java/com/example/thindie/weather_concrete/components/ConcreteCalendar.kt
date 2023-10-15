@@ -20,8 +20,7 @@ import com.example.thindie.domain.entities.ForecastDay
 @Composable
 internal fun ConcreteCalendar(
     modifier: Modifier = Modifier,
-    digits: List<Int>,
-    days: List<ForecastDay>,
+    state: ConcreteCalendarState,
     onClickConcreteDay: (Long) -> Unit,
 ) {
 
@@ -32,7 +31,7 @@ internal fun ConcreteCalendar(
             modifier = modifier.fillMaxWidth(),
             userScrollEnabled = false
         ) {
-            itemsIndexed(days) { i, forecastDay ->
+            itemsIndexed(state.days) { i, forecastDay ->
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.SpaceEvenly,
@@ -40,7 +39,7 @@ internal fun ConcreteCalendar(
                         .clickable { onClickConcreteDay(forecastDay.inMillis) }
                 ) {
                     Text(text = forecastDay.weekDay)
-                    Text(text = digits[i].toString())
+                    Text(text = state.digits[i].toString())
                 }
             }
         }
