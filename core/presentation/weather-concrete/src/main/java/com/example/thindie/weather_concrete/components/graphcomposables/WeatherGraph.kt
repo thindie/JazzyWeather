@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.JazzyWeatherTheme
 import com.example.thindie.designsystem.composables.VerticalIndicationColumn
+import com.example.thindie.designsystem.composables.rememberVerticalColumnState
 import com.example.thindie.designsystem.utils.toVisualCustomizersList
 import kotlin.math.floor
 
@@ -43,9 +44,11 @@ internal fun WeatherGraph(
         ) {
             itemsIndexed(customizedList) { i, customizer ->
                 VerticalIndicationColumn(
-                    width = 40.dp,
-                    customizer = customizer,
-                    textLabel = (floor(list[i].toDouble() * 100) / 100).toString()
+                    rememberVerticalColumnState(
+                        width = 40.dp,
+                        customizer = customizer,
+                        textLabel = (floor(list[i].toDouble() * 100) / 100).toString()
+                    )
                 )
             }
         }

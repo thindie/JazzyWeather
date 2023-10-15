@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.composables.VerticalIndicationColumn
+import com.example.thindie.designsystem.composables.rememberVerticalColumnState
 import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.designsystem.utils.TransGradientVerticalInverse
 import com.example.thindie.designsystem.utils.toVisualCustomizersList
@@ -87,7 +88,12 @@ fun LoadingOrShowContent(
                         )
                     ) {
                         Spacer(modifier = Modifier.width(2.dp))
-                        VerticalIndicationColumn(customizer = it, width = 5.dp)
+                        VerticalIndicationColumn(
+                            rememberVerticalColumnState(
+                                width = 5.dp,
+                                customizer = it
+                            )
+                        )
                     }
 
                 }
