@@ -45,7 +45,7 @@ internal class LocationPickerViewModel @Inject constructor(
             locationsList = places,
             searchFieldState = input,
             focusedLocation = concrete,
-            isFocusedLocationAlreadyRemembered = isRemembered.contains(true)
+            isFocusedLocationAlreadyRemembered = isRemembered.contains(true),
         )
     }
         .stateIn(
@@ -58,11 +58,13 @@ internal class LocationPickerViewModel @Inject constructor(
         )
 
     fun onSearchReact(printedLine: String) {
+        searchField.value = printedLine
         if (printedLine.isBlank()) concreteLocation.value = null
         getLocation(printedLine)
-            .onEach {
-                searchField.tryEmit(printedLine)
-                locations.tryEmit(it)
+            .onEach { locationsList ->
+                if (locationsList.isNotEmpty()) {
+                    locations.value = locationsList
+                }
             }
             .launchIn(viewModelScope)
     }
@@ -90,6 +92,7 @@ internal class LocationPickerViewModel @Inject constructor(
 
     data class LocationsScreenState(
         val locationsList: List<WeatherLocation> = emptyList(),
+        val isLoading: Boolean = false,
         val searchFieldState: String,
         val isFocusedLocationAlreadyRemembered: Boolean = false,
         val focusedLocation: WeatherLocation? = null,
