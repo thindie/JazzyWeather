@@ -21,16 +21,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.thindie.designsystem.VisualCustomizer
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 
 @Composable
 fun VerticalIndicationColumn(
-    state: VerticalColumnStateHolder
+    state: VerticalColumnStateHolder,
 ) {
 
     val shouldAnimate = remember {
@@ -76,9 +74,7 @@ fun VerticalIndicationColumn(
         }
         Text(
             text = state.textLabel,
-            style = MaterialTheme.typography.labelMedium.copy(
-                MaterialTheme.colorScheme.onSurface
-            )
+            style = MaterialTheme.typography.labelMedium
         )
     }
 }
