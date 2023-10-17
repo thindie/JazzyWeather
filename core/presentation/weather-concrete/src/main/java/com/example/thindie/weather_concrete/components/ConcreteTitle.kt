@@ -23,7 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.compose.JazzyWeatherTheme
+import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.designsystem.composables.IconTextSection
 import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.presentation.R

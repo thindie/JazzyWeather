@@ -13,8 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.compose.JazzyWeatherTheme
-import com.example.thindie.domain.entities.ForecastDay
+import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 
 
 @Composable
