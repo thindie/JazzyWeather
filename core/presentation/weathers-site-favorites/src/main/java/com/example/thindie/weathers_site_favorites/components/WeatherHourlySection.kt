@@ -23,14 +23,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.compose.JazzyWeatherTheme
+import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.designsystem.utils.TransGradientVertical
-import com.example.thindie.designsystem.utils.TransGradientVerticalInverse
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.OneHourWeather
 import com.example.thindie.domain.entities.WeatherHourly
@@ -90,12 +90,15 @@ internal fun WeatherHourlySection(
 
             LazyRow(
                 state = state,
-                modifier = modifier.background(
-                    MaterialTheme
-                        .colorScheme
-                        .background
-                        .TransGradientVerticalInverse()
-                )
+                modifier = modifier
+                    .clip(MaterialTheme.shapes.small)
+                    .background(
+                        MaterialTheme
+                            .colorScheme
+                            .background
+                            .TransGradientVertical()
+                    )
+
             ) {
                 items(
                     hourly.getHourlyForecast(),
