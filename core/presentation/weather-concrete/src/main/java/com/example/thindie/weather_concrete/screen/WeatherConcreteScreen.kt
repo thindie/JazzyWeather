@@ -19,11 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.compose.JazzyWeatherTheme
+import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.presentation.R
@@ -55,7 +54,7 @@ internal fun WeatherConcreteScreen(
 
     Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.surfaceTint.TransGradientVertical())
+            .background(MaterialTheme.colorScheme.errorContainer.TransGradientVertical())
             .fillMaxSize()
             .padding(horizontal = 8.dp),
         verticalArrangement = Arrangement.SpaceEvenly
@@ -103,9 +102,9 @@ internal fun WeatherConcreteScreen(
                             weatherGraphState = rememberWeatherGraphState(
                                 list = weatherDaily.apparentTemperatureMax,
                                 graphIcon = R.drawable.icon_temp_high,
-                                iconTint = Color.Red,
-                                firstColorComponent = Color.Red,
-                                secondColorComponent = Color.Blue
+                                iconTint = MaterialTheme.colorScheme.error,
+                                firstColorComponent = MaterialTheme.colorScheme.error,
+                                secondColorComponent = MaterialTheme.colorScheme.surfaceTint
                             )
                         )
                         WeatherGraph(
@@ -113,9 +112,9 @@ internal fun WeatherConcreteScreen(
                             weatherGraphState = rememberWeatherGraphState(
                                 list = weatherDaily.apparentTemperatureMin,
                                 graphIcon = R.drawable.icon_low_temp,
-                                iconTint = Color.Blue,
-                                firstColorComponent = Color.Red,
-                                secondColorComponent = Color.Blue
+                                iconTint = MaterialTheme.colorScheme.surfaceTint,
+                                firstColorComponent = MaterialTheme.colorScheme.error,
+                                secondColorComponent = MaterialTheme.colorScheme.surfaceTint
                             )
                         )
                     }
