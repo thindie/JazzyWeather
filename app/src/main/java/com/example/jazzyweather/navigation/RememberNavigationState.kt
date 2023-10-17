@@ -7,7 +7,7 @@ import androidx.navigation.compose.rememberNavController
 @Composable
 fun rememberNavigationState(): NavigationState {
     val navController = rememberNavController()
-    return remember(navController) {
+    return remember() {
         NavigationState(navController)
     }
 }

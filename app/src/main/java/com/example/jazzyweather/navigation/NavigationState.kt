@@ -1,7 +1,9 @@
 package com.example.jazzyweather.navigation
 
+import androidx.compose.runtime.Stable
 import androidx.navigation.NavHostController
 
+@Stable
 class NavigationState(val navHostController: NavHostController) {
 
     val startDestination = destinations.find {
