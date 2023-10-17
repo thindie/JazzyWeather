@@ -1,6 +1,5 @@
 package com.example.thindie.weather_fetcher.repository
 
-import android.util.Log
 import com.example.thindie.core.network.WeatherApiService
 import com.example.thindie.core.network.di.DispatchersIOModule
 import com.example.thindie.core.network.dto.WeatherDailyDto
@@ -21,10 +20,10 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 @Singleton
 internal class WeatherRepositoryImpl @Inject constructor(
@@ -37,7 +36,9 @@ internal class WeatherRepositoryImpl @Inject constructor(
 ) : WeatherRepository {
     override suspend fun getDailyWeather(forecastAble: ForecastAble): Result<WeatherDaily> {
         return if (netWorkController.isAllowed()) {
-            Result.success(getDaily(forecastAble))
+            withContext(ioDispatcher) {
+                Result.success(getDaily(forecastAble))
+            }
         } else Result.failure(IllegalStateException())
     }
 
@@ -45,23 +46,27 @@ internal class WeatherRepositoryImpl @Inject constructor(
         simpleIso8106: String,
         forecastAble: ForecastAble,
     ): Result<WeatherHourly> {
-        Log.d("SERVICE_TAG", simpleIso8106)
+
         return if (netWorkController.isAllowed()) {
-            Result.success(
-                apiService.getHourlyWeatherByDate(
-                    iso8106String = simpleIso8106,
-                    latitude = forecastAble.getSightLatitude(),
-                    longitude = forecastAble.getSightLongitude(),
-                    timeZone = forecastAble.getTimeZone()
-                ).map()
-                    .map(forecastAble)
-            )
+            withContext(ioDispatcher) {
+                Result.success(
+                    apiService.getHourlyWeatherByDate(
+                        iso8106String = simpleIso8106,
+                        latitude = forecastAble.getSightLatitude(),
+                        longitude = forecastAble.getSightLongitude(),
+                        timeZone = forecastAble.getTimeZone()
+                    ).map()
+                        .map(forecastAble)
+                )
+            }
         } else Result.failure(IllegalStateException())
     }
 
     override suspend fun getHourlyWeather(forecastAble: ForecastAble): Result<WeatherHourly> {
         return if (netWorkController.isAllowed()) {
-            Result.success(getHourly(forecastAble))
+            withContext(ioDispatcher) {
+                Result.success(getHourly(forecastAble))
+            }
         } else Result.failure(IllegalStateException())
     }
 
@@ -69,11 +74,13 @@ internal class WeatherRepositoryImpl @Inject constructor(
         val dbList = getDailyListDbModels()
         val forecastAbleList = getForecastAble(dbList)
         return try {
-            val modelList = fetchAndGetDailyModelsList(forecastAbleList)
-            modelList.forEach { daily ->
-                dailyDao.upsertWeatherSite(daily.map())
+            withContext(ioDispatcher) {
+                val modelList = fetchAndGetDailyModelsList(forecastAbleList)
+                modelList.forEach { daily ->
+                    dailyDao.upsertWeatherSite(daily.map())
+                }
+                Result.success(modelList)
             }
-            Result.success(modelList)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -81,13 +88,14 @@ internal class WeatherRepositoryImpl @Inject constructor(
 
     override suspend fun requestWeatherHourly() {
         if (!fetchController.isAllowed()) return
-        delay(1000)
-        val dbModelList = dailyDao.getAllWeathersSite()
-        val forecastAbleList = getForecastAble(dbModelList)
-        if (forecastAbleList.isNotEmpty()) {
-            val updatedDbModelList = fetchAndGetHourlyDbModelsList(forecastAbleList)
-            updatedDbModelList.forEach { weatherHourlyDbModel ->
-                hourlyDao.upsertWeatherSite(weatherHourlyDbModel)
+        withContext(ioDispatcher) {
+            val dbModelList = dailyDao.getAllWeathersSite()
+            val forecastAbleList = getForecastAble(dbModelList)
+            if (forecastAbleList.isNotEmpty()) {
+                val updatedDbModelList = fetchAndGetHourlyDbModelsList(forecastAbleList)
+                updatedDbModelList.forEach { weatherHourlyDbModel ->
+                    hourlyDao.upsertWeatherSite(weatherHourlyDbModel)
+                }
             }
         }
     }
@@ -101,19 +109,23 @@ internal class WeatherRepositoryImpl @Inject constructor(
 
 
     override suspend fun deleteWeather(place: String) {
-        val daily = getDailyDbModelByPlace(place)
-        val hourly = getHourlyDbModelByPlace(place)
-        deleteDaily(daily)
-        deleteHourly(hourly)
+        withContext(ioDispatcher) {
+            val daily = getDailyDbModelByPlace(place)
+            val hourly = getHourlyDbModelByPlace(place)
+            deleteDaily(daily)
+            deleteHourly(hourly)
+        }
     }
 
     override suspend fun rememberWeatherLocation(forecastAble: ForecastAble) {
         if (netWorkController.isAllowed())
             try {
-                val dailyDbModel = getDailyDto(forecastAble).map(forecastAble).map()
-                val hourlyDbModel = getHourlyDto(forecastAble).map(forecastAble).map()
-                hourlyDao.upsertWeatherSite(hourlyDbModel)
-                dailyDao.upsertWeatherSite(dailyDbModel)
+                withContext(ioDispatcher) {
+                    val dailyDbModel = getDailyDto(forecastAble).map(forecastAble).map()
+                    val hourlyDbModel = getHourlyDto(forecastAble).map(forecastAble).map()
+                    hourlyDao.upsertWeatherSite(hourlyDbModel)
+                    dailyDao.upsertWeatherSite(dailyDbModel)
+                }
             } catch (_: Exception) {
             }
     }
@@ -122,7 +134,11 @@ internal class WeatherRepositoryImpl @Inject constructor(
     private suspend fun fetchAndGetDailyModelsList(list: List<ForecastAble>): List<WeatherDaily> {
         return if (netWorkController.isAllowed())
             list.mapIndexed { _, forecastAble ->
-                getDailyDto(forecastAble).map(forecastAble)
+                withContext(
+                    ioDispatcher
+                ) {
+                    getDailyDto(forecastAble).map(forecastAble)
+                }
             }
         else return emptyList()
     }
@@ -136,32 +152,39 @@ internal class WeatherRepositoryImpl @Inject constructor(
     }
 
     private suspend fun fetchAndGetHourlyDbModelsList(list: List<ForecastAble>): List<WeatherHourlyDbModel> {
-        return if (netWorkController.isAllowed()) list.map { getHourlyDto(it).map(forecastAble = it) }
-            .map {
-                it.map()
+        return if (netWorkController.isAllowed())
+            withContext(ioDispatcher) {
+                list.map { getHourlyDto(it).map(forecastAble = it) }
+                    .map {
+                        it.map()
+                    }
             }
         else return emptyList()
     }
 
     private suspend fun getHourlyDto(forecastAble: ForecastAble): WeatherHourlyDto {
-        return apiService.getHourlyWeather(
-            latitude = forecastAble.getSightLatitude(),
-            longitude = forecastAble.getSightLongitude(),
-            timeZone = forecastAble.getTimeZone(),
-        ).map()
+        return withContext(ioDispatcher) {
+            apiService.getHourlyWeather(
+                latitude = forecastAble.getSightLatitude(),
+                longitude = forecastAble.getSightLongitude(),
+                timeZone = forecastAble.getTimeZone(),
+            ).map()
+        }
     }
 
     private suspend fun getDailyDto(forecastAble: ForecastAble): WeatherDailyDto {
-        return apiService.getDailyWeather(
-            latitude = forecastAble.getSightLatitude(),
-            longitude = forecastAble.getSightLongitude(),
-            timeZone = forecastAble.getTimeZone(),
-        ).map()
+        return withContext(ioDispatcher) {
+            apiService.getDailyWeather(
+                latitude = forecastAble.getSightLatitude(),
+                longitude = forecastAble.getSightLongitude(),
+                timeZone = forecastAble.getTimeZone(),
+            ).map()
+        }
     }
 
 
     private suspend fun getDailyListDbModels(): List<WeatherDailyDbModel> {
-        return dailyDao.getAllWeathersSite()
+        return withContext(ioDispatcher) { dailyDao.getAllWeathersSite() }
     }
 
     private fun getForecastAble(list: List<WeatherDailyDbModel>): List<ForecastAble> {
@@ -189,7 +212,9 @@ internal class WeatherRepositoryImpl @Inject constructor(
 
     private suspend fun getHourlyDbModelByPlace(place: String): WeatherHourlyDbModel? {
         return try {
-            hourlyDao.getWeatherSite(place)
+            withContext(ioDispatcher) {
+                hourlyDao.getWeatherSite(place)
+            }
         } catch (_: Exception) {
             null
         }
@@ -197,7 +222,9 @@ internal class WeatherRepositoryImpl @Inject constructor(
 
     private suspend fun getDailyDbModelByPlace(place: String): WeatherDailyDbModel? {
         return try {
-            dailyDao.getWeatherSite(place)
+            withContext(ioDispatcher) {
+                dailyDao.getWeatherSite(place)
+            }
         } catch (_: Exception) {
             null
         }
@@ -206,7 +233,9 @@ internal class WeatherRepositoryImpl @Inject constructor(
     private suspend fun deleteHourly(dbModel: WeatherHourlyDbModel?) {
         try {
             if (dbModel != null) {
-                hourlyDao.deleteWeatherSite(dbModel)
+                withContext(ioDispatcher) {
+                    hourlyDao.deleteWeatherSite(dbModel)
+                }
             }
         } catch (_: Exception) {
         }
@@ -214,17 +243,24 @@ internal class WeatherRepositoryImpl @Inject constructor(
 
     private suspend fun deleteDaily(dbModel: WeatherDailyDbModel?) {
         if (dbModel != null) {
-            dailyDao.deleteWeatherSite(dbModel)
+            withContext(ioDispatcher) {
+                dailyDao.deleteWeatherSite(dbModel)
+            }
+
         }
     }
 
     private suspend fun getDaily(forecastAble: ForecastAble): WeatherDaily {
-        val dailyDto = getDailyDto(forecastAble)
-        return dailyDto.map(forecastAble)
+        return withContext(ioDispatcher) {
+            val dailyDto = getDailyDto(forecastAble)
+            dailyDto.map(forecastAble)
+        }
     }
 
     private suspend fun getHourly(forecastAble: ForecastAble): WeatherHourly {
-        val hourlyDto = getHourlyDto(forecastAble)
-        return hourlyDto.map(forecastAble)
+        return withContext(ioDispatcher) {
+            val hourlyDto = getHourlyDto(forecastAble)
+            hourlyDto.map(forecastAble)
+        }
     }
 }

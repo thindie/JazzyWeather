@@ -1,5 +1,6 @@
 package com.example.thindie.weather_fetcher.repository
 
+import com.example.thindie.core.localrawresources.di.DispatchersIOModule
 import com.example.thindie.database.room.WeatherDailyDao
 import com.example.thindie.database.room.WeatherDailyDbModel
 import com.example.thindie.database.room.WeatherHourlyDao
@@ -10,16 +11,19 @@ import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.weather_fetcher.mappers.map
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 
 class ReserveDataBus @Inject constructor(
     private val daoHourly: WeatherHourlyDao,
     private val daoDaily: WeatherDailyDao,
+    @DispatchersIOModule.IODispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : WeatherRepository {
     override suspend fun getDailyWeather(forecastAble: ForecastAble): Result<WeatherDaily> {
-        return Result.success(daoDaily.getWeatherSite(forecastAble.getSight()).map())
+        return dispatched { Result.success(daoDaily.getWeatherSite(forecastAble.getSight()).map()) }
     }
 
     override suspend fun getDailyWeatherOnConcreteDate(
@@ -31,11 +35,15 @@ class ReserveDataBus @Inject constructor(
 
 
     override suspend fun getHourlyWeather(forecastAble: ForecastAble): Result<WeatherHourly> {
-        return Result.success(daoHourly.getWeatherSite(forecastAble.getSight()).map())
+        return dispatched {
+            Result.success(
+                daoHourly.getWeatherSite(forecastAble.getSight()).map()
+            )
+        }
     }
 
     override suspend fun getWeatherDailyList(): Result<List<WeatherDaily>> {
-        return Result.success(daoDaily.getAllWeathersSite().map { it.map() })
+        return dispatched { Result.success(daoDaily.getAllWeathersSite().map { it.map() }) }
     }
 
     override suspend fun requestWeatherHourly() {}
@@ -46,23 +54,26 @@ class ReserveDataBus @Inject constructor(
 
 
     override suspend fun deleteWeather(place: String) {
-        daoDaily.deleteWeatherSite(daoDaily.getWeatherSite(place))
-        daoHourly.deleteWeatherSite(daoHourly.getWeatherSite(place))
+        dispatched {
+            daoDaily.deleteWeatherSite(daoDaily.getWeatherSite(place))
+            daoHourly.deleteWeatherSite(daoHourly.getWeatherSite(place))
+        }
     }
 
     override suspend fun rememberWeatherLocation(forecastAble: ForecastAble) {
 
-        val weatherDaily = getDailyDbModelByCoordinates(forecastAble)
-        val weatherHourly = getHourlyDbModelByCoordinates(forecastAble)
+
+        val weatherDaily = dispatched { getDailyDbModelByCoordinates(forecastAble) }
+        val weatherHourly = dispatched { getHourlyDbModelByCoordinates(forecastAble) }
 
         if (weatherDaily != null) {
             deleteDaily(weatherDaily)
-            reNewDaily(forecastAble, weatherDaily)
+            dispatched { reNewDaily(forecastAble, weatherDaily) }
         }
 
         if (weatherHourly != null) {
             deleteHourly(weatherHourly)
-            reNewHourly(forecastAble, weatherHourly)
+            dispatched { reNewHourly(forecastAble, weatherHourly) }
         }
 
     }
@@ -71,10 +82,12 @@ class ReserveDataBus @Inject constructor(
         forecastAble: ForecastAble,
     ): WeatherHourlyDbModel? {
         return try {
-            daoHourly.getWeatherSite(
-                forecastAble.getSightLatitude().toDouble(),
-                forecastAble.getSightLongitude().toDouble()
-            )
+            dispatched {
+                daoHourly.getWeatherSite(
+                    forecastAble.getSightLatitude().toDouble(),
+                    forecastAble.getSightLongitude().toDouble()
+                )
+            }
         } catch (_: Exception) {
             null
         }
@@ -83,20 +96,22 @@ class ReserveDataBus @Inject constructor(
     private suspend fun getDailyDbModelByCoordinates(
         forecastAble: ForecastAble,
     ): WeatherDailyDbModel? {
-        return try {
-            daoDaily.getWeatherSite(
-                forecastAble.getSightLatitude().toDouble(),
-                forecastAble.getSightLongitude().toDouble()
-            )
-        } catch (_: Exception) {
-            null
+        return dispatched {
+            try {
+                daoDaily.getWeatherSite(
+                    forecastAble.getSightLatitude().toDouble(),
+                    forecastAble.getSightLongitude().toDouble()
+                )
+            } catch (_: Exception) {
+                null
+            }
         }
     }
 
     private suspend fun deleteHourly(dbModel: WeatherHourlyDbModel?) {
         try {
             if (dbModel != null) {
-                daoHourly.deleteWeatherSite(dbModel)
+                dispatched { daoHourly.deleteWeatherSite(dbModel) }
             }
         } catch (_: Exception) {
         }
@@ -104,7 +119,7 @@ class ReserveDataBus @Inject constructor(
 
     private suspend fun deleteDaily(dbModel: WeatherDailyDbModel?) {
         if (dbModel != null) {
-            daoDaily.deleteWeatherSite(dbModel)
+            dispatched { daoDaily.deleteWeatherSite(dbModel) }
         }
     }
 
@@ -112,13 +127,20 @@ class ReserveDataBus @Inject constructor(
         forecastAble: ForecastAble,
         weatherDailyDbModel: WeatherDailyDbModel,
     ) {
-        daoDaily.upsertWeatherSite(weatherDailyDbModel.copy(forecastAble.getSight()))
+        dispatched { daoDaily.upsertWeatherSite(weatherDailyDbModel.copy(forecastAble.getSight())) }
+
     }
 
     private suspend fun reNewHourly(
         forecastAble: ForecastAble,
         weatherHourlyDbModel: WeatherHourlyDbModel,
     ) {
-        daoHourly.upsertWeatherSite(weatherHourlyDbModel.copy(forecastAble.getSight()))
+        dispatched { daoHourly.upsertWeatherSite(weatherHourlyDbModel.copy(forecastAble.getSight())) }
+    }
+
+    private suspend fun <T> dispatched(action: suspend () -> T): T {
+        return withContext(ioDispatcher) {
+            action.invoke()
+        }
     }
 }
