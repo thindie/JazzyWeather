@@ -6,10 +6,10 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlinx.coroutines.flow.Flow
 
-class ObserveHourlyWeatherListUseCase @Inject
-constructor(private val repository: ForecastAbleRepository<WeatherHourly>) {
-    operator fun invoke(): Flow<List<WeatherHourly>> {
-        return repository.observeForecastAbleList()
+class ObserveHourlyWeatherUseCase @Inject
+constructor( private val repository: ForecastAbleRepository<WeatherHourly>) {
+    operator fun invoke(): Flow<WeatherHourly> {
+        return repository.observeForecastAble()
     }
 
 }
