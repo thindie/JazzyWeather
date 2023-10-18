@@ -7,7 +7,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.thindie.designsystem.DecodeAble
 import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.domain.usecases.ObserveHourlyWeatherListUseCase
-import com.example.thindie.domain.usecases.RequestHourlyWeatherListUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetCurrentHourOfDayUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetHourUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,7 +27,6 @@ class WeatherFavoritesViewModel @Inject constructor(
     private val getCurrentHourOfDayUseCase: GetCurrentHourOfDayUseCase,
     private val getHourUseCase: GetHourUseCase,
     private val decodeAble: DecodeAble,
-    private val requester: RequestHourlyWeatherListUseCase,
 ) :
     ViewModel() {
 
@@ -68,7 +66,6 @@ class WeatherFavoritesViewModel @Inject constructor(
 
     fun onSelectFavoriteWeatherPlacesScreen() {
         viewModelScope.launch {
-            requester()
         }
     }
 

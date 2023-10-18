@@ -3,19 +3,16 @@ package com.example.jazzyweather
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jazzyweather.navigation.WeatherScreen
-import com.example.thindie.designsystem.utils.dangerAbleAct
 import com.example.thindie.domain.entities.ForecastAble
-import com.example.thindie.domain.usecases.ReserveWeatherInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val interactor: ReserveWeatherInteractor) :
+class MainViewModel @Inject constructor() :
     ViewModel() {
     private val _hottingTime = 4000L
     val hottingTime = _hottingTime.toInt()
@@ -26,13 +23,8 @@ class MainViewModel @Inject constructor(private val interactor: ReserveWeatherIn
     private val _forecastAbleState: MutableStateFlow<ForecastAble?> = MutableStateFlow(null)
     val forecastAbleState: StateFlow<ForecastAble?> = _forecastAbleState.asStateFlow()
     fun onStart() {
-        dangerAbleAct {
-            interactor
-                .getWeatherHourlyReserveList()
-                .onEach {
-                    if (it.isEmpty()) _destinationState.value = WeatherScreen.LOCATION_PICKER
-                }
-                .launchIn(this.viewModelScope)
+        viewModelScope.launch {
+
         }
     }
 
