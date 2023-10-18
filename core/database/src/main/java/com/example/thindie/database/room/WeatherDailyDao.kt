@@ -21,4 +21,7 @@ interface WeatherDailyDao {
 
     @Delete
     suspend fun deleteWeatherSite(weatherDailyDbModel: WeatherDailyDbModel)
+
+    @Query("DELETE FROM weather_daily WHERE place ==:place")
+    fun deleteWeatherSite(place: String)
 }

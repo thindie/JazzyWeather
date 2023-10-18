@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WeatherHourlyDao {
     @Query("SELECT * FROM weather_hourly ORDER BY place DESC")
-     fun observeAllWeathersSite(): Flow<List<WeatherHourlyDbModel>>
+    fun observeAllWeathersSite(): Flow<List<WeatherHourlyDbModel>>
 
     @Query("SELECT * FROM weather_hourly WHERE place LIKE :place LIMIT 1")
     suspend fun getWeatherSite(place: String): WeatherHourlyDbModel
@@ -22,4 +22,7 @@ interface WeatherHourlyDao {
 
     @Delete
     suspend fun deleteWeatherSite(weatherDailyDbModel: WeatherHourlyDbModel)
+
+    @Query("DELETE FROM weather_hourly WHERE place ==:place")
+    fun deleteWeatherSite(place: String)
 }
