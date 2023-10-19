@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -56,9 +55,8 @@ class WeatherFavoritesViewModel @Inject constructor(
     fun onStart() {
         viewModelScope.launch {
             observeHourlyWeatherListUseCase()
-                .onEmpty { _isLoading.value = true }
                 .onEach {
-                    if (it.isNotEmpty()) _isLoading.value = false
+                    _isLoading.value = false
                     _weathers.value = it
                 }.launchIn(this)
         }
