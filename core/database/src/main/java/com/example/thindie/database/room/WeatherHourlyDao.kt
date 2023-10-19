@@ -25,4 +25,7 @@ interface WeatherHourlyDao {
 
     @Query("DELETE FROM weather_hourly WHERE place ==:place")
     fun deleteWeatherSite(place: String)
+
+    @Query("SELECT (SELECT COUNT(*) FROM weather_hourly) == 0")
+    fun isEmpty(): Flow<Boolean>
 }
