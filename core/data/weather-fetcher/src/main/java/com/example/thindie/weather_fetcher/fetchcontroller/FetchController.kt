@@ -9,7 +9,7 @@ import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@Singleton
+
 @Named("fetchController")
 internal class FetchController @Inject constructor(
     @Named("networkController") private val networkController: RatificationObserver,
@@ -20,9 +20,13 @@ internal class FetchController @Inject constructor(
         return networkController
             .observeRatification()
             .map { networkPermission ->
-                FetchPermission(
-                    allowed = timeController.isAllowed() && networkPermission.isAllowed()
-                )
+                if (timeController.isAllowed()) {
+                    FetchPermission(allowed = networkPermission.isAllowed())
+                } else {
+                    FetchPermission(
+                        allowed = false
+                    )
+                }
             }
     }
 

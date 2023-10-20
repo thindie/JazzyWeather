@@ -5,6 +5,7 @@ import com.example.thindie.domain.RatificationObserver
 import com.example.thindie.weather_fetcher.fetchcontroller.FetchController
 import com.example.thindie.weather_fetcher.fetchcontroller.NetWorkController
 import com.example.thindie.weather_fetcher.fetchcontroller.TimeController
+import com.example.thindie.weather_fetcher.repository.WeatherFetchRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,5 +26,10 @@ internal interface RatificationAbleModule {
     @Binds
     @Named("timeController")
     fun bindTimeRatificationAble(controller: TimeController): RatificationAble
+
+    @Binds
+    @Named("volumeController")
+    fun bindRepoRatificationAble(controller: WeatherFetchRepositoryImpl): RatificationObserver
+
 
 }
