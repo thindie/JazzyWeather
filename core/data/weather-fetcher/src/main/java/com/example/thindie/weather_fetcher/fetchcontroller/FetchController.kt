@@ -1,21 +1,33 @@
 package com.example.thindie.weather_fetcher.fetchcontroller
 
 import com.example.thindie.domain.RatificationAble
+import com.example.thindie.domain.RatificationObserver
+import com.example.thindie.weather_fetcher.FetchPermission
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-@Singleton
+
 @Named("fetchController")
 internal class FetchController @Inject constructor(
-    @Named("networkController") private val networkController: RatificationAble,
+    @Named("networkController") private val networkController: RatificationObserver,
     @Named("timeController") private val timeController: RatificationAble,
-) : RatificationAble {
+) : RatificationObserver() {
 
-    override fun isAllowed(): Boolean {
-        return if (networkController.isAllowed())
-            timeController.isAllowed()
-        else false
+    override fun observeRatification(): Flow<RatificationAble> {
+        return networkController
+            .observeRatification()
+            .map { networkPermission ->
+                if (timeController.isAllowed()) {
+                    FetchPermission(allowed = networkPermission.isAllowed())
+                } else {
+                    FetchPermission(
+                        allowed = false
+                    )
+                }
+            }
     }
 
 }
