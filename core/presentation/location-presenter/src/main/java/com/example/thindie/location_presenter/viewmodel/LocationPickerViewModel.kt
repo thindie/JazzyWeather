@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thindie.domain.entities.WeatherLocation
 import com.example.thindie.domain.usecases.DeleteWeatherSiteUseCase
-import com.example.thindie.domain.usecases.GetLocationUseCase
+import com.example.thindie.domain.usecases.FetchWeatherUseCase
 import com.example.thindie.domain.usecases.ObserveHourlyWeatherListUseCase
-import com.example.thindie.domain.usecases.RememberWeatherSiteUseCase
+import com.example.thindie.domain.usecases.ObserveLocationUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTimeZoneUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -20,10 +20,10 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 internal class LocationPickerViewModel @Inject constructor(
-    private val getLocation: GetLocationUseCase,
+    private val getLocation: ObserveLocationUseCase,
     observeHourlyWeatherListUseCase: ObserveHourlyWeatherListUseCase,
     private val getTimeZoneUseCase: GetTimeZoneUseCase,
-    private val rememberWeatherSiteUseCase: RememberWeatherSiteUseCase,
+    private val fetchWeatherUseCase: FetchWeatherUseCase,
     private val deleteWeatherSiteUseCase: DeleteWeatherSiteUseCase,
 ) :
     ViewModel() {
@@ -86,7 +86,7 @@ internal class LocationPickerViewModel @Inject constructor(
 
     fun onClickAddFavorites(forecastAble: WeatherLocation) {
         viewModelScope.launch {
-            rememberWeatherSiteUseCase(forecastAble.copy(timezone = getTimeZoneUseCase()))
+            fetchWeatherUseCase(forecastAble.copy(timezone = getTimeZoneUseCase()))
         }
     }
 
