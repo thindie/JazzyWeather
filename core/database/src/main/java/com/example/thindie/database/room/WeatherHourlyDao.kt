@@ -11,6 +11,9 @@ interface WeatherHourlyDao {
     @Query("SELECT * FROM weather_hourly ORDER BY place DESC")
     fun observeAllWeathersSite(): Flow<List<WeatherHourlyDbModel>>
 
+    @Query("SELECT * FROM weather_hourly ORDER BY place DESC")
+    fun getAllWeathersSite(): List<WeatherHourlyDbModel>
+
     @Query("SELECT * FROM weather_hourly WHERE place LIKE :place LIMIT 1")
     fun getWeatherSite(place: String): WeatherHourlyDbModel
 
