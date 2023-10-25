@@ -5,7 +5,6 @@ import com.example.thindie.domain.RatificationObserver
 import com.example.thindie.weather_fetcher.FetchPermission
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
