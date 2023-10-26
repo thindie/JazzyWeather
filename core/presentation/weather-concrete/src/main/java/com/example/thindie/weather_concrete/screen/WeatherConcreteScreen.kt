@@ -3,7 +3,9 @@ package com.example.thindie.weather_concrete.screen
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -133,6 +135,7 @@ internal fun WeatherConcreteScreen(
                                     secondColorComponent = MaterialTheme.colorScheme.onSurface
                                 )
                             )
+                        Spacer(modifier = Modifier.height(80.dp))
                     }
                 }
             }
