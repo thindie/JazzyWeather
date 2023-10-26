@@ -24,6 +24,7 @@ fun rememberWeatherGraphState(
     secondColorComponent: Color,
 ): WeatherGraphState {
     return remember(list[0], list[2], list[4]) {
+
         WeatherGraphState(
             graphIcon = graphIcon,
             iconTint = iconTint,

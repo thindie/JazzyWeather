@@ -58,7 +58,7 @@ internal fun WeatherGraph(
                     rememberVerticalColumnState(
                         width = 40.dp,
                         customizer = customizer,
-                        textLabel = (floor(weatherGraphState.list[i].toDouble() * 100) / 100).toString()
+                        textLabel = weatherGraphState.list[i].toString()
                     )
                 )
             }
