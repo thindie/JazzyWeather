@@ -13,10 +13,7 @@ import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 internal fun WeatherConcreteScreenState(
     onClickNavigation: () -> ForecastAble?,
     viewModel: WeatherConcreteViewModel = hiltViewModel(),
-    onClickBack: () -> Unit,
-    onClickAll: () -> Unit,
     onRemove: () -> Unit,
-    onTitleComplete: () -> Unit = onRemove,
 ) {
     viewModel.onLoadConcreteScreen(onClickNavigation())
     val screenState =
@@ -29,9 +26,6 @@ internal fun WeatherConcreteScreenState(
     ) {
         WeatherConcreteScreen(
             screenState = screenState.value,
-            onEdit = {
-
-            },
             onRememberChanges = viewModel::onRememberChanges,
             onClickConcreteDay = viewModel::onClickedConcreteWeekDay,
             getDecodedWeatherIcon = viewModel::onDecodeWeatherCode,

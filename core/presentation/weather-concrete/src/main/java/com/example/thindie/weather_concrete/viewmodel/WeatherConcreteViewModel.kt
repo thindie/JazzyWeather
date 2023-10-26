@@ -1,5 +1,6 @@
 package com.example.thindie.weather_concrete.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thindie.designsystem.DecodeAble
@@ -121,6 +122,7 @@ internal class WeatherConcreteViewModel @Inject constructor(
         viewModelScope.launch {
             val simpleDate = getSimpleDateUseCase(timeInMillis)
             val currentForecastAble = forecastAbleEvent.value
+            Log.d("SERVICE_TAG", "Current forecastAble : ${currentForecastAble?.getSight().toString()}")
             if (currentForecastAble != null)
                 getHourlyWeatherByDateUseCase.invoke(
                     simpleDate, currentForecastAble.timeZoneApproved()

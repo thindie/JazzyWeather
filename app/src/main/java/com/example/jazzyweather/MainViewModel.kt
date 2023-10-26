@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.jazzyweather.navigation.WeatherScreen
 import com.example.thindie.domain.RatificationObserver
 import com.example.thindie.domain.entities.ForecastAble
+import com.example.thindie.domain.usecases.UpdateWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -15,12 +16,22 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @HiltViewModel
-class MainViewModel @Inject constructor(@Named("volumeController") private val controller: RatificationObserver) :
+class MainViewModel @Inject constructor(
+    @Named("volumeController") private val controller: RatificationObserver,
+    private val updateWeatherUseCase: UpdateWeatherUseCase,
+) :
     ViewModel() {
     private val _hottingTime = 4000L
     val hottingTime = _hottingTime
+
+    init {
+        viewModelScope.launch {
+            updateWeatherUseCase()
+        }
+    }
 
     private val _destinationState = controller.observeRatification()
         .onEmpty { WeatherScreen.LOCATION_PICKER }

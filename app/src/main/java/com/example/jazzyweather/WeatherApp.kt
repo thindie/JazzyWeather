@@ -51,8 +51,6 @@ fun WeatherApp(
                 onClickNavigation = {
                     currentForecastAble.value
                 },
-                onClickBack = state::back,
-                onClickAll = state::favoritesScreen,
                 onRemove = state::favoritesScreen,
             )
         }
