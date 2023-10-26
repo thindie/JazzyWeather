@@ -65,9 +65,9 @@ class MainActivity : ComponentActivity() {
                         weatherScreen = currentScreen.value,
                         state = navigationState,
                         themeChanger = {
-                            ThemeChanger {
+                            ThemeChanger(modifier = it, onClickChangeTheme = {
                                 isSystemInDark.value = !isSystemInDark.value
-                            }
+                            })
                         }
                     )
                 } else {
