@@ -1,10 +1,12 @@
 package com.example.thindie.location_presenter.components
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,15 +28,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.designsystem.utils.TransGradientVertical
+import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.WeatherLocation
 import com.example.thindie.presentation.R
 
+@OptIn(ExperimentalFoundationApi::class)
 @Suppress("LongParameterList")
 @Composable
 internal fun LocationPickerScreen(
     modifier: Modifier = Modifier,
     onSearchReact: (String) -> Unit,
     onFocusLocation: (WeatherLocation?) -> Unit,
+    onShowLocation: (ForecastAble) -> Unit,
     onRememberLocation: (WeatherLocation) -> Unit,
     fieldValue: String,
     locations: List<WeatherLocation>,
@@ -60,7 +65,10 @@ internal fun LocationPickerScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        AnimatedVisibility(visible = !shouldShowDirectCoordinatesInput.value) {
+        AnimatedVisibility(
+            visible = !shouldShowDirectCoordinatesInput.value,
+            modifier = modifier.padding(vertical = 12.dp)
+        ) {
             OutlinedTextField(
                 modifier = modifier
                     .padding(horizontal = 8.dp),
@@ -70,7 +78,10 @@ internal fun LocationPickerScreen(
                 placeholder = { Text(text = stringResource(id = R.string.hint_input_field_edit)) },
                 trailingIcon = {
                     AnimatedVisibility(visible = fieldValue.isNotBlank()) {
-                        IconButton(onClick = { onSearchReact("") }) {
+                        IconButton(
+                            onClick = { onSearchReact("") },
+                            modifier = modifier.padding(horizontal = 8.dp)
+                        ) {
                             Icon(
                                 painterResource(id = R.drawable.icon_cancel),
                                 contentDescription = null
@@ -82,26 +93,39 @@ internal fun LocationPickerScreen(
         }
 
 
-        AnimatedVisibility(visible = focusedLocation != null) {
-            if (focusedLocation != null) SelectedLocationPlanchette(
-                modifier = modifier,
-                isFocusedLocationRemembered = isFocusedLocationRemembered,
-                focusedLocation = focusedLocation,
-                onRememberLocation = onRememberLocation
-            )
-        }
+
         AnimatedVisibility(visible = fieldValue.isNotBlank()) {
-            LazyColumn {
-                items(locations, key = { it.hashCode() }) { weatherLocation ->
-                    LocationPickerUnit(location = weatherLocation) {
-                        onFocusLocation(weatherLocation)
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
+                stickyHeader {
+                    AnimatedVisibility(visible = focusedLocation != null) {
+                        if (focusedLocation != null) SelectedLocationPlanchette(
+                            modifier = modifier,
+                            isFocusedLocationRemembered = isFocusedLocationRemembered,
+                            focusedLocation = focusedLocation,
+                            onRememberLocation = onRememberLocation
+                        )
                     }
+                }
+                items(locations, key = { it.hashCode() }) { weatherLocation ->
+                    LocationPickerUnit(
+                        location = weatherLocation,
+                        onShowLocation = onShowLocation,
+                        onClickCard = {
+                            onFocusLocation(weatherLocation)
+                        })
                 }
             }
         }
         AnimatedVisibility(visible = shouldShowDirectCoordinatesInput.value) {
             CoordinatesInput(
-                onFocusLocation = onFocusLocation,
+                onFocusLocation = {
+                    onRememberLocation(it);
+                    onShowLocation(it)
+                },
                 onDismiss = { shouldShowDirectCoordinatesInput.value = false })
         }
 
