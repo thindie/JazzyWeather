@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.jazzyweather.navigation.WeatherScreen
 import com.example.thindie.domain.RatificationObserver
 import com.example.thindie.domain.entities.ForecastAble
+import com.example.thindie.domain.usecases.FetchWeatherUseCase
 import com.example.thindie.domain.usecases.UpdateWeatherUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 class MainViewModel @Inject constructor(
     @Named("volumeController") private val controller: RatificationObserver,
     private val updateWeatherUseCase: UpdateWeatherUseCase,
+    private val fetchWeatherUseCase: FetchWeatherUseCase,
 ) :
     ViewModel() {
     private val _hottingTime = 4000L
@@ -53,5 +55,11 @@ class MainViewModel @Inject constructor(
 
     fun onChoseForecastAble(forecastAble: ForecastAble) {
         _forecastAbleState.value = forecastAble
+    }
+
+    fun onRequestFetch(forecastAble: ForecastAble) {
+        viewModelScope.launch {
+            fetchWeatherUseCase.invoke(forecastAble)
+        }
     }
 }
