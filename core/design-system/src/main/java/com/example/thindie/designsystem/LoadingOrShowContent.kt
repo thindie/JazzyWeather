@@ -7,7 +7,6 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -27,7 +26,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.composables.VerticalIndicationColumn
 import com.example.thindie.designsystem.composables.rememberVerticalColumnState
-import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.designsystem.utils.TransGradientVerticalInverse
 import com.example.thindie.designsystem.utils.toVisualCustomizersList
 
@@ -42,13 +40,11 @@ fun LoadingOrShowContent(
     isLoading: Boolean,
     content: @Composable () -> Unit,
 ) {
-    val titleColors = if (isSystemInDarkTheme()) {
+    val titleColors =
         MaterialTheme
             .colorScheme
-            .surface.TransGradientVertical(MaterialTheme.colorScheme.primary)
-    } else {
-        MaterialTheme.colorScheme.primary.TransGradientVerticalInverse(MaterialTheme.colorScheme.surface)
-    }
+            .surface.TransGradientVerticalInverse()
+
     if (isLoading) {
 
         Column(
