@@ -32,18 +32,13 @@ fun WeatherFavoriteScreenState(
             .collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
 
     LoadingOrShowContent(
-        tint = MaterialTheme.colorScheme.surface,
+        tint = MaterialTheme.colorScheme.tertiary,
         isLoading = favoritesScreenState.value.isLoading
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    MaterialTheme
-                        .colorScheme
-                        .surfaceTint
-                        .TransGradientVertical()
-                )
+
         ) {
             LazyColumn(
             ) {

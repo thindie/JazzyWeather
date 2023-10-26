@@ -1,8 +1,6 @@
 package com.example.thindie.weather_concrete.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,11 +17,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
-import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.presentation.R
 import com.example.thindie.weather_concrete.components.ConcreteCalendar
@@ -38,7 +36,6 @@ import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 internal fun WeatherConcreteScreen(
     modifier: Modifier = Modifier,
     screenState: WeatherConcreteViewModel.ConcreteWeatherScreenState,
-    onEdit: (String) -> Unit,
     onRememberChanges: (WeatherDaily) -> Unit,
     onClickConcreteDay: (Long) -> Unit,
     getDecodedWeatherIcon: (Int) -> Int,
@@ -54,10 +51,8 @@ internal fun WeatherConcreteScreen(
 
     Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.errorContainer.TransGradientVertical())
             .fillMaxSize()
             .padding(horizontal = 8.dp),
-        verticalArrangement = Arrangement.SpaceEvenly
     ) {
 
         with(screenState) {
@@ -83,7 +78,7 @@ internal fun WeatherConcreteScreen(
                     if (screenState.isHourlyLoading) CircularProgressIndicator()
                     else {
                         if (concreteWeatherHourly != null)
-                            LazyRow() {
+                            LazyRow(modifier = Modifier.padding(vertical = 32.dp)) {
                                 items(concreteWeatherHourly.getHourlyForecast()) {
                                     HourlyUnit(
                                         time = it.time,
@@ -117,6 +112,27 @@ internal fun WeatherConcreteScreen(
                                 secondColorComponent = MaterialTheme.colorScheme.surfaceTint
                             )
                         )
+                        if (weatherDaily.precipitationSum.any { it > 0.0 })
+                            WeatherGraph(
+                                weatherGraphState = rememberWeatherGraphState(
+                                    graphIcon = R.drawable.icon_water_drop,
+                                    iconTint = MaterialTheme.colorScheme.inversePrimary,
+                                    list = weatherDaily.precipitationSum,
+                                    firstColorComponent = MaterialTheme.colorScheme.inversePrimary,
+                                    secondColorComponent = MaterialTheme.colorScheme.inversePrimary
+                                )
+                            )
+
+                        if (weatherDaily.snowfallSum.any { it > 0.0 })
+                            WeatherGraph(
+                                weatherGraphState = rememberWeatherGraphState(
+                                    graphIcon = R.drawable.icon_snowflake,
+                                    iconTint = MaterialTheme.colorScheme.inversePrimary,
+                                    list = weatherDaily.snowfallSum,
+                                    firstColorComponent = Color.White,
+                                    secondColorComponent = MaterialTheme.colorScheme.onSurface
+                                )
+                            )
                     }
                 }
             }
