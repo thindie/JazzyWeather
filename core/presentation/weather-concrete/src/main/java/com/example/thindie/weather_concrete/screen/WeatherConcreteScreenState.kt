@@ -21,7 +21,7 @@ internal fun WeatherConcreteScreenState(
             .concreteScreenState
             .collectAsStateWithLifecycle(minActiveState = Lifecycle.State.RESUMED)
     LoadingOrShowContent(
-        tint = MaterialTheme.colorScheme.onPrimary,
+        tint = MaterialTheme.colorScheme.secondary,
         isLoading = screenState.value.isLoading
     ) {
         WeatherConcreteScreen(
