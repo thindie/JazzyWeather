@@ -84,7 +84,7 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
             service.getHourlyWeatherByDate(
                 iso8106String = date,
                 latitude = forecastAble.getSightLatitude(),
-                longitude = forecastAble.getSightLatitude(),
+                longitude = forecastAble.getSightLongitude(),
                 timeZone = forecastAble.getTimeZone()
             ).map()
                 .map(forecastAble)
