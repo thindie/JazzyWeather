@@ -38,12 +38,7 @@ fun WeatherFavoriteScreenState(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    MaterialTheme
-                        .colorScheme
-                        .surfaceTint
-                        .TransGradientVertical()
-                )
+
         ) {
             LazyColumn(
             ) {
