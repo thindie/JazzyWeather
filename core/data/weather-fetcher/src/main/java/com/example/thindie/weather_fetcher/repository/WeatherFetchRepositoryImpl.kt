@@ -13,6 +13,7 @@ import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.weather_fetcher.FetchPermission
 import com.example.thindie.weather_fetcher.mappers.map
+import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Named
 import kotlinx.coroutines.CoroutineDispatcher
@@ -57,20 +58,23 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                     val latitude = forecastAble.getSightLatitude()
                     val longitude = forecastAble.getSightLongitude()
                     val timezone = forecastAble.getTimeZone()
-                    withContext(ioDispatcher) {
-                        service.getHourlyWeather(latitude, longitude, timeZone = timezone)
-                            .map()
-                            .map(forecastAble)
-                            .map()
-                            .apply { dao.upsertWeatherSite(this) }
-                    }
-                    withContext(ioDispatcher) {
-                        service.getDailyWeather(latitude, longitude, timeZone = timezone)
-                            .map()
-                            .map(forecastAble)
-                            .map()
-                            .apply { dailyDao.upsertWeatherSite(this) }
-                    }
+                    try {
+                        withContext(ioDispatcher) {
+                            service.getHourlyWeather(latitude, longitude, timeZone = timezone)
+                                .map()
+                                .map(forecastAble)
+                                .map()
+                                .apply { dao.upsertWeatherSite(this) }
+                        }
+                        withContext(ioDispatcher) {
+                            service.getDailyWeather(latitude, longitude, timeZone = timezone)
+                                .map()
+                                .map(forecastAble)
+                                .map()
+                                .apply { dailyDao.upsertWeatherSite(this) }
+                        }
+                    } catch (_: Exception){}
+
                 }
             }
     }
