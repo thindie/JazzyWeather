@@ -1,13 +1,30 @@
 package com.example.jazzyweather.navigation
 
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Stable
-class NavigationState(val navHostController: NavHostController) {
+class NavigationState(val navHostController: NavHostController, private val scope: CoroutineScope) {
+
+    var shouldShowNavigationBar by mutableStateOf(true)
+        private set
 
     val startDestination = destinations.find {
         navHostController.currentDestination?.route == it.destination()
+    }
+
+    private fun onNavigate() {
+        scope.launch {
+            shouldShowNavigationBar = false
+            delay(1000)
+            shouldShowNavigationBar = true
+        }
     }
 
     fun concreteScreen() {
@@ -27,6 +44,7 @@ class NavigationState(val navHostController: NavHostController) {
     }
 
     fun navigate(route: String) {
+        onNavigate()
         if (route == goBack) {
             back()
         } else {

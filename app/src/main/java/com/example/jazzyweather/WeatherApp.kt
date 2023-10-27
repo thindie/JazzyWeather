@@ -1,10 +1,14 @@
 package com.example.jazzyweather
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.compose.NavHost
 import com.example.jazzyweather.navigation.NavigationRow
 import com.example.jazzyweather.navigation.NavigationState
@@ -18,13 +22,14 @@ import com.example.thindie.weather_concrete.route.WeatherConcrete
 @Composable
 fun WeatherApp(
     viewModel: MainViewModel,
+
     weatherScreen: WeatherScreen,
     state: NavigationState = rememberNavigationState(),
-    themeChanger: @Composable () -> Unit,
+    themeChanger: @Composable (Modifier) -> Unit,
 ) {
 
     Scaffold(
-        bottomBar = { NavigationRow(state = state, clickAbleContent = themeChanger) }
+
     ) {
 
         val currentForecastAble = viewModel.forecastAbleState.collectAsState()
@@ -58,5 +63,13 @@ fun WeatherApp(
                 onRemove = state::favoritesScreen,
             )
         }
+        AnimatedVisibility(
+            state.shouldShowNavigationBar,
+            enter = slideIn(initialOffset = { IntOffset(x = 0, y = 0) }),
+            exit = fadeOut()
+        ) {
+            NavigationRow(state = state, clickAbleContent = themeChanger)
+        }
+
     }
 }
