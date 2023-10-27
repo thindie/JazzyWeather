@@ -34,7 +34,7 @@ internal fun SelectedLocationPlanchette(
     Surface(
         modifier = modifier
             .padding(horizontal = 8.dp)
-            .clip(MaterialTheme.shapes.extraLarge)
+            .clip(MaterialTheme.shapes.medium)
             .fillMaxWidth()
             .height(80.dp)
             .animateContentSize(),
@@ -46,7 +46,7 @@ internal fun SelectedLocationPlanchette(
             modifier = modifier
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+          //  horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
             AnimatedVisibility(visible = isFocusedLocationRemembered) {
