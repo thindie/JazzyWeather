@@ -52,7 +52,8 @@ internal fun SelectedLocationPlanchette(
             AnimatedVisibility(visible = isFocusedLocationRemembered) {
                 Icon(
                     painter = painterResource(id = R.drawable.nav_icon_favorite),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             }
 
