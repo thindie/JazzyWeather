@@ -45,7 +45,6 @@ internal class WeatherConcreteViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val isDailyLoading = MutableStateFlow(true)
     private val isHourlyLoading = MutableStateFlow(true)
 
     private val forecastAbleEvent = MutableStateFlow<ForecastAble?>(null)
@@ -94,7 +93,6 @@ internal class WeatherConcreteViewModel @Inject constructor(
 
         if (forecastAble != null) {
             forecastAbleEvent.value = forecastAble.timeZoneApproved()
-            //  isDailyLoading.value = true
         }
     }
 

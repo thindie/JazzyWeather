@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -26,7 +25,7 @@ class MainViewModel @Inject constructor(
     private val fetchWeatherUseCase: FetchWeatherUseCase,
 ) :
     ViewModel() {
-    private val _hottingTime = 4000L
+    private val _hottingTime = 1000L
     val hottingTime = _hottingTime
 
     init {
@@ -35,19 +34,19 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private val _destinationState = controller.observeRatification()
-        .onEmpty { WeatherScreen.LOCATION_PICKER }
+    val destinationState = controller.observeRatification()
         .map { permission ->
-            if (permission.isAllowed())
+            if (permission.isAllowed()) {
                 WeatherScreen.ALL
-            else WeatherScreen.LOCATION_PICKER
-        }
+            } else {
+                WeatherScreen.LOCATION_PICKER
+            }
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000L),
+            WeatherScreen.LOCATION_PICKER
+        )
 
-    val destinationState = _destinationState.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5_000L),
-        WeatherScreen.LOCATION_PICKER
-    )
 
     private val _forecastAbleState: MutableStateFlow<ForecastAble?> = MutableStateFlow(null)
     val forecastAbleState: StateFlow<ForecastAble?> = _forecastAbleState.asStateFlow()

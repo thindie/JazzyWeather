@@ -13,7 +13,6 @@ import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.weather_fetcher.FetchPermission
 import com.example.thindie.weather_fetcher.mappers.map
-import java.lang.Exception
 import javax.inject.Inject
 import javax.inject.Named
 import kotlinx.coroutines.CoroutineDispatcher
@@ -33,8 +32,8 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
 ) :
     RatificationObserver(), ForecastUpdateRepository {
     override fun observeRatification(): Flow<RatificationAble> {
-        return dao.isEmpty().map {
-            FetchPermission(it)
+        return dao.isEmpty().map { isEmpty ->
+            FetchPermission(isEmpty.not())
         }
     }
 
@@ -73,7 +72,8 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                                 .map()
                                 .apply { dailyDao.upsertWeatherSite(this) }
                         }
-                    } catch (_: Exception){}
+                    } catch (_: Exception) {
+                    }
 
                 }
             }
