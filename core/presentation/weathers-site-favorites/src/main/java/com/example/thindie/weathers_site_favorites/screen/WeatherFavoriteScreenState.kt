@@ -1,6 +1,5 @@
 package com.example.thindie.weathers_site_favorites.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,7 +14,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thindie.designsystem.LoadingOrShowContent
-import com.example.thindie.designsystem.utils.TransGradientVertical
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.weathers_site_favorites.components.WeatherHourlySection
 import com.example.thindie.weathers_site_favorites.viewmodel.WeatherFavoritesViewModel
