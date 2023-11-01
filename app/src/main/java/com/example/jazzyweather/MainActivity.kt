@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.jazzyweather.navigation.WeatherScreen
 import com.example.jazzyweather.navigation.rememberNavigationState
 import com.example.jazzyweather.themeChanger.ThemeChanger
+import com.example.thindie.designsystem.JazzyLandingScreen
 import com.example.thindie.designsystem.TransparentSystemBars
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                         }
                     )
                 } else {
-                    CircularProgressIndicator()
+                    JazzyLandingScreen(duration = mainViewModel.hottingTime.toInt())
                 }
             }
         }

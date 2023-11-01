@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
     private val fetchWeatherUseCase: FetchWeatherUseCase,
 ) :
     ViewModel() {
-    private val _hottingTime = 1000L
+    private val _hottingTime = 3000L
     val hottingTime = _hottingTime
 
     init {
