@@ -63,7 +63,8 @@ internal fun WeatherConcreteScreen(
                     weatherDaily = weatherDaily,
                     onRememberChanges = onRememberChanges,
                     sunrise = screenState.sunrise,
-                    sunset = screenState.sunset
+                    sunset = screenState.sunset,
+                    onDeletePlace = onRemove
                 )
                 ConcreteCalendar(
                     state = rememberCalendarState(

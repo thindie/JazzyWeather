@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
@@ -42,11 +44,14 @@ internal fun ConcreteTitle(
     sunset: String,
     sunrise: String,
     onRememberChanges: (WeatherDaily) -> Unit,
+    onDeletePlace: (String) -> Unit,
 ) {
     var shouldShowAdditionalSections by remember { mutableStateOf(false) }
     var temporaryChangedTitle by remember {
         mutableStateOf(weatherDaily.place)
     }
+
+    var shouldShowDeletePossibility by remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -57,52 +62,68 @@ internal fun ConcreteTitle(
             .animateContentSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = temporaryChangedTitle,
-            style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.W600),
-            overflow = TextOverflow.Ellipsis
+        ClickableText(
+            text = AnnotatedString(temporaryChangedTitle),
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.W600,
+                color = MaterialTheme.colorScheme.onSurface
+            ),
+            overflow = TextOverflow.Ellipsis,
+            onClick = { shouldShowDeletePossibility = !shouldShowDeletePossibility }
         )
-        Row(
-            modifier = modifier
-                .padding(vertical = 12.dp)
-                .fillMaxWidth(0.8f),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            IconTextSection(
-                modifier = modifier,
-                icon = R.drawable.icon_sunny,
-                title = sunrise,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            IconTextSection(
-                modifier = modifier,
-                icon = R.drawable.icon_moon_cresent,
-                title = sunset,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            IconTextSection(
-                modifier = modifier,
-                icon = R.drawable.icon_time_outline,
-                title = weatherDaily.timezone,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            IconButton(onClick = {
-                shouldShowAdditionalSections = !shouldShowAdditionalSections
-            }) {
+        AnimatedVisibility(visible = shouldShowDeletePossibility) {
+            IconButton(onClick = { onDeletePlace(temporaryChangedTitle) }) {
                 Icon(
-                    painterResource(id = R.drawable.icon_information),
+                    painter = painterResource(id = R.drawable.icon_delete),
                     contentDescription = null
                 )
             }
         }
-        AnimatedVisibility(visible = shouldShowAdditionalSections) {
+        AnimatedVisibility(visible = !shouldShowDeletePossibility) {
+            Row(
+                modifier = modifier
+                    .padding(vertical = 12.dp)
+                    .fillMaxWidth(0.8f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+
+                IconTextSection(
+                    modifier = modifier,
+                    icon = R.drawable.icon_sunny,
+                    title = sunrise,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                IconTextSection(
+                    modifier = modifier,
+                    icon = R.drawable.icon_moon_cresent,
+                    title = sunset,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                IconTextSection(
+                    modifier = modifier,
+                    icon = R.drawable.icon_time_outline,
+                    title = weatherDaily.timezone,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                IconButton(onClick = {
+                    shouldShowAdditionalSections = !shouldShowAdditionalSections
+                }) {
+                    Icon(
+                        painterResource(id = R.drawable.icon_information),
+                        contentDescription = null
+                    )
+                }
+            }
+
+        }
+        AnimatedVisibility(visible = shouldShowAdditionalSections && !shouldShowDeletePossibility) {
             Row(
                 modifier = modifier
                     .padding(vertical = 12.dp, horizontal = 20.dp)
                     .fillMaxWidth(),
-               // horizontalArrangement = Arrangement.SpaceEvenly,
-              //  verticalAlignment = Alignment.CenterVertically
+                // horizontalArrangement = Arrangement.SpaceEvenly,
+                //  verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
                     value = temporaryChangedTitle,
