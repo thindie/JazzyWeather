@@ -83,47 +83,55 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
     override suspend fun getHourlyWeatherByDate(
         date: String,
         forecastAble: ForecastAble,
-    ): WeatherHourly {
+    ): WeatherHourly? {
         return withContext(ioDispatcher) {
-            service.getHourlyWeatherByDate(
-                iso8106String = date,
-                latitude = forecastAble.getSightLatitude(),
-                longitude = forecastAble.getSightLongitude(),
-                timeZone = forecastAble.getTimeZone()
-            ).map()
-                .map(forecastAble)
-        }
+            try {
+                service.getHourlyWeatherByDate(
+                    iso8106String = date,
+                    latitude = forecastAble.getSightLatitude(),
+                    longitude = forecastAble.getSightLongitude(),
+                    timeZone = forecastAble.getTimeZone()
+                ).map()
+                    .map(forecastAble)
+            } catch (_: Exception) {
+                null
+            }
 
+        }
     }
 
 
     private suspend fun updateHourly() {
         withContext(ioDispatcher) {
-            dailyDao.getAllWeathersSite()
-                .forEach { weatherDbModel ->
-                    service.getDailyWeather(
-                        latitude = weatherDbModel.latitude.toFloat(),
-                        longitude = weatherDbModel.longitude.toFloat(),
-                        timeZone = weatherDbModel.timezone
-                    ).apply {
-                        map()
-                            .map(object : ForecastAble {
-                                override fun getSight() =
-                                    weatherDbModel.place
+            try {
+                dailyDao.getAllWeathersSite()
+                    .forEach { weatherDbModel ->
+                        service.getDailyWeather(
+                            latitude = weatherDbModel.latitude.toFloat(),
+                            longitude = weatherDbModel.longitude.toFloat(),
+                            timeZone = weatherDbModel.timezone
+                        ).apply {
+                            map()
+                                .map(object : ForecastAble {
+                                    override fun getSight() =
+                                        weatherDbModel.place
 
-                                override fun getSightLatitude() =
-                                    weatherDbModel.latitude.toFloat()
+                                    override fun getSightLatitude() =
+                                        weatherDbModel.latitude.toFloat()
 
-                                override fun getSightLongitude() =
-                                    weatherDbModel.longitude.toFloat()
+                                    override fun getSightLongitude() =
+                                        weatherDbModel.longitude.toFloat()
 
-                                override fun getTimeZone() = weatherDbModel.timezone
+                                    override fun getTimeZone() = weatherDbModel.timezone
 
-                            }).map().apply {
-                                dailyDao.upsertWeatherSite(this)
-                            }
+                                }).map().apply {
+                                    dailyDao.upsertWeatherSite(this)
+                                }
+                        }
                     }
-                }
+            } catch (_: Exception) {
+                return@withContext
+            }
         }
     }
 

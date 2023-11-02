@@ -120,7 +120,6 @@ internal class WeatherConcreteViewModel @Inject constructor(
         viewModelScope.launch {
             val simpleDate = getSimpleDateUseCase(timeInMillis)
             val currentForecastAble = forecastAbleEvent.value
-            Log.d("SERVICE_TAG", "Current forecastAble : ${currentForecastAble?.getSight().toString()}")
             if (currentForecastAble != null)
                 getHourlyWeatherByDateUseCase.invoke(
                     simpleDate, currentForecastAble.timeZoneApproved()
