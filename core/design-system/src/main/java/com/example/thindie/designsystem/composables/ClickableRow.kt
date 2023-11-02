@@ -30,13 +30,15 @@ fun ClickAbleRow(
     contentColor: Color,
     list: List<NavigationAble>,
     onClick: (String) -> Unit,
+    shackContent: @Composable (Modifier) -> Unit,
     clickAbleContent: @Composable (Modifier) -> Unit,
 ) {
 
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(bottom = 20.dp, start = 20.dp),
+            .padding(bottom = 20.dp, start = 15.dp, end = 15.dp)
+            ,
         contentAlignment = Alignment.BottomStart
     ) {
         repeat(list.size) {
@@ -54,9 +56,17 @@ fun ClickAbleRow(
                 )
             }
         }
+
+        shackContent(
+            Modifier
+                .padding(vertical = 12.dp, horizontal = 8.dp)
+                .offset(y = (-70).dp)
+        )
+
         clickAbleContent(
             modifier
                 .size(36.dp)
+
                 .offset(x = padding * list.size)
         )
     }
@@ -72,6 +82,6 @@ internal fun previewClickAbleRow() {
             rowColor = Brush.verticalGradient(listOf(Color.White, Color.Blue)),
             contentColor = Color.White,
             list = navList,
-            onClick = {}, clickAbleContent = {})
+            onClick = {}, clickAbleContent = {}, shackContent = {})
     }
 }
