@@ -6,12 +6,15 @@ import com.example.thindie.core.network.dto.dailydto.map
 import com.example.thindie.core.network.dto.hourlydto.map
 import com.example.thindie.database.room.WeatherDailyDao
 import com.example.thindie.database.room.WeatherHourlyDao
+import com.example.thindie.domain.EventTransmitter
 import com.example.thindie.domain.ForecastUpdateRepository
 import com.example.thindie.domain.RatificationAble
 import com.example.thindie.domain.RatificationObserver
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.WeatherHourly
+import com.example.thindie.weather_fetcher.EventKind
 import com.example.thindie.weather_fetcher.FetchPermission
+import com.example.thindie.weather_fetcher.mappers.KindEvent
 import com.example.thindie.weather_fetcher.mappers.map
 import javax.inject.Inject
 import javax.inject.Named
@@ -28,11 +31,15 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
     private val dailyDao: WeatherDailyDao,
     private val service: WeatherApiService,
     @Named("networkController") private val fetchController: RatificationObserver,
+    private val eventTransmitter: EventTransmitter<EventKind>,
     @DispatchersIOModule.IODispatcher private val ioDispatcher: CoroutineDispatcher,
 ) :
     RatificationObserver(), ForecastUpdateRepository {
     override fun observeRatification(): Flow<RatificationAble> {
         return dao.isEmpty().map { isEmpty ->
+            if (isEmpty) {
+                eventTransmitter.send(KindEvent(EventKind.EMPTY))
+            }
             FetchPermission(isEmpty.not())
         }
     }
@@ -44,6 +51,8 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                 if (ratification.isAllowed()) {
                     updateDaily()
                     updateHourly()
+                } else {
+                    eventTransmitter.send(KindEvent(EventKind.NET))
                 }
             }
             .collect()
@@ -73,10 +82,14 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                                 .apply { dailyDao.upsertWeatherSite(this) }
                         }
                     } catch (_: Exception) {
+                        eventTransmitter.send(KindEvent(EventKind.STUB))
                     }
 
+                } else {
+                    eventTransmitter.send(KindEvent(EventKind.NET))
                 }
             }
+
     }
 
 
@@ -94,6 +107,7 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                 ).map()
                     .map(forecastAble)
             } catch (_: Exception) {
+                eventTransmitter.send(KindEvent(EventKind.MAPPING))
                 null
             }
 
@@ -130,6 +144,7 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                         }
                     }
             } catch (_: Exception) {
+                eventTransmitter.send(KindEvent(EventKind.STUB))
                 return@withContext
             }
         }
@@ -137,31 +152,35 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
 
     private suspend fun updateDaily() {
         withContext(ioDispatcher) {
-            dao.getAllWeathersSite()
-                .forEach { weatherDbModel ->
-                    service.getHourlyWeather(
-                        latitude = weatherDbModel.latitude.toFloat(),
-                        longitude = weatherDbModel.longitude.toFloat(),
-                        timeZone = weatherDbModel.timezone
-                    ).apply {
-                        map()
-                            .map(object : ForecastAble {
-                                override fun getSight() =
-                                    weatherDbModel.place
+            try {
+                dao.getAllWeathersSite()
+                    .forEach { weatherDbModel ->
+                        service.getHourlyWeather(
+                            latitude = weatherDbModel.latitude.toFloat(),
+                            longitude = weatherDbModel.longitude.toFloat(),
+                            timeZone = weatherDbModel.timezone
+                        ).apply {
+                            map()
+                                .map(object : ForecastAble {
+                                    override fun getSight() =
+                                        weatherDbModel.place
 
-                                override fun getSightLatitude() =
-                                    weatherDbModel.latitude.toFloat()
+                                    override fun getSightLatitude() =
+                                        weatherDbModel.latitude.toFloat()
 
-                                override fun getSightLongitude() =
-                                    weatherDbModel.longitude.toFloat()
+                                    override fun getSightLongitude() =
+                                        weatherDbModel.longitude.toFloat()
 
-                                override fun getTimeZone() = weatherDbModel.timezone
+                                    override fun getTimeZone() = weatherDbModel.timezone
 
-                            }).map().apply {
-                                dao.upsertWeatherSite(this)
-                            }
+                                }).map().apply {
+                                    dao.upsertWeatherSite(this)
+                                }
+                        }
                     }
-                }
+            } catch (_: Exception) {
+                eventTransmitter.send(KindEvent(EventKind.STUB))
+            }
         }
     }
 
