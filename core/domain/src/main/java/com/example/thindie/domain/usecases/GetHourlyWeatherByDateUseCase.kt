@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetHourlyWeatherByDateUseCase @Inject
 constructor(private val repository: ForecastUpdateRepository) {
-    suspend operator fun invoke(date: String, forecastAble: ForecastAble): WeatherHourly {
+    suspend operator fun invoke(date: String, forecastAble: ForecastAble): WeatherHourly? {
         return repository.getHourlyWeatherByDate(date, forecastAble)
 
     }

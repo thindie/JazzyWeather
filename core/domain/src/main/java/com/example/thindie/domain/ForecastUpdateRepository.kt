@@ -8,6 +8,6 @@ interface ForecastUpdateRepository {
     suspend fun update()
     suspend fun fetchSite(forecastAble: ForecastAble)
 
-    suspend fun getHourlyWeatherByDate(date: String, forecastAble: ForecastAble): WeatherHourly
+    suspend fun getHourlyWeatherByDate(date: String, forecastAble: ForecastAble): WeatherHourly?
 
 }

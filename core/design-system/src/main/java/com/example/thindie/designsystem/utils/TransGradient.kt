@@ -17,3 +17,10 @@ fun Color.TransGradientVerticalInverse(color: Color = Color.Transparent): Brush 
         listOf(this, color)
     )
 }
+
+@Composable
+fun Color.Gradient(color1: Color, color2: Color): Brush {
+    return Brush.linearGradient(
+        listOf(this, color1, color2)
+    )
+}
