@@ -9,16 +9,12 @@ internal const val concrete = "concrete"
 
 fun NavGraphBuilder.WeatherConcrete(
     onClickNavigation: () -> ForecastAble?,
-    onClickBack: () -> Unit,
-    onClickAll: () -> Unit,
     onRemove: () -> Unit,
 ) {
     composable(route = concrete) {
         WeatherConcreteScreenState(
             onClickNavigation = onClickNavigation,
-            onClickBack = onClickBack,
-            onClickAll = onClickAll,
-            onRemove = onRemove
+            onRemove = onRemove,
         )
     }
 

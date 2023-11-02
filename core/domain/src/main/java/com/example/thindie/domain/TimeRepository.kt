@@ -1,5 +1,7 @@
 package com.example.thindie.domain
 
+import com.example.thindie.domain.entities.ForecastDay
+
 interface TimeRepository {
     fun getToday(): Int
     fun getCurrentHour(date: String): String
@@ -11,5 +13,9 @@ interface TimeRepository {
     fun getTimeZoneId(): String
 
     fun getCurrentHour(): Int
+
+    fun getIncomingWeekByDays(): List<ForecastDay>
+
+    fun getSimpleDateFromMillis(millis: Long): String
 
 }

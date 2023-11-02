@@ -3,34 +3,14 @@ package com.example.thindie.designsystem
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import com.example.thindie.designsystem.animators.FloatAnimator
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class SimpleVisualCustomizer(
     val initialValue: String,
     private val customizeValue: Float,
     private val positiveColor: Color,
     private val negativeColor: Color,
-    coroutineScope: CoroutineScope,
-    private val time: Int,
-) : FloatAnimator(), VisualCustomizer {
+) : VisualCustomizer {
 
-
-    init {
-        animate(scope = coroutineScope)
-    }
-
-    override val animationTime: Int
-        get() = time
-
-    override fun animate(scope: CoroutineScope) {
-        scope.launch {
-            delay(time.toLong()/3)
-            currentAnimationValue.floatValue = getShapeComponent()
-        }
-    }
 
     @Composable
     override fun getColorComponent(): Brush {

@@ -1,15 +1,13 @@
 package com.example.thindie.designsystem.composables
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.thindie.designsystem.NavigationAble
 import com.example.thindie.designsystem.navList
+import com.example.thindie.designsystem.theme.JazzyWeatherTheme
+
+private val padding = 100.dp
 
 @Composable
 fun ClickAbleRow(
@@ -29,44 +30,58 @@ fun ClickAbleRow(
     contentColor: Color,
     list: List<NavigationAble>,
     onClick: (String) -> Unit,
+    shackContent: @Composable (Modifier) -> Unit,
+    clickAbleContent: @Composable (Modifier) -> Unit,
 ) {
-    Row(
-        modifier = modifier
-            .background(brush = rowColor)
-            .height(70.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        LazyRow(
-            modifier = modifier
-                .fillMaxWidth(0.6f)
-                .fillMaxHeight(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            items(list) {
-                IconButton(onClick = { onClick(it.getRoute()) }) {
-                    Icon(
-                        painter = painterResource(id = it.getVision()),
-                        contentDescription = it.getRoute(),
-                        tint = contentColor
-                    )
-                }
-            }
 
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(bottom = 20.dp, start = 15.dp, end = 15.dp)
+            ,
+        contentAlignment = Alignment.BottomStart
+    ) {
+        repeat(list.size) {
+            FloatingActionButton(
+                onClick = { onClick(list[it].getRoute()) },
+                modifier = modifier
+                    .size(36.dp)
+                    .offset(x = padding * it),
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+            ) {
+                Icon(
+                    painter = painterResource(id = list[it].getVision()),
+                    contentDescription = list[it].getRoute(),
+                    tint = contentColor
+                )
+            }
         }
+
+        shackContent(
+            Modifier
+                .padding(vertical = 12.dp, horizontal = 8.dp)
+                .offset(y = (-70).dp)
+        )
+
+        clickAbleContent(
+            modifier
+                .size(36.dp)
+
+                .offset(x = padding * list.size)
+        )
     }
+
 }
+
 
 @Composable
 @Preview(showBackground = true, device = Devices.PIXEL_2)
 internal fun previewClickAbleRow() {
-    com.example.thindie.designsystem.theme.JazzyWeatherTheme {
+    JazzyWeatherTheme {
         ClickAbleRow(
             rowColor = Brush.verticalGradient(listOf(Color.White, Color.Blue)),
             contentColor = Color.White,
             list = navList,
-            onClick = {})
+            onClick = {}, clickAbleContent = {}, shackContent = {})
     }
 }
