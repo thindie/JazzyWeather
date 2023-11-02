@@ -44,5 +44,5 @@ fun ForecastAble.toFetchUnit(concreteTime: String?) = FetchUnit(
 )
 
 enum class EventKind {
-    NET, EMPTY, MAPPING, PARSING, STUB
+    NET, EMPTY, MAPPING, PARSING, STUB, CLOSE_EVENT
 }

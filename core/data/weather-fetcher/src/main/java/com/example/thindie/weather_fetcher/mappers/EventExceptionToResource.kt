@@ -15,6 +15,9 @@ fun EventClass<EventKind>.toRes(): EventClass<Int> {
         EventKind.MAPPING -> ResEvent(R.string.on_exception_params_not_valid)
         EventKind.PARSING -> ResEvent(R.string.on_exception_unexpected)
         EventKind.STUB -> ResEvent(R.string.on_exception_params_not_valid)
+        EventKind.CLOSE_EVENT -> {
+            ResEvent(0)
+        }
     }
 }
 
@@ -29,5 +32,4 @@ data class ResEvent(private val res: Int) : EventClass<Int> {
     override fun getEvent(): Int {
         return res
     }
-
-}
+ }

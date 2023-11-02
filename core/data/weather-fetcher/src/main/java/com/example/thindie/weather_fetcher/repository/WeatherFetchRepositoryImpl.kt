@@ -17,20 +17,18 @@ import com.example.thindie.weather_fetcher.FetchPermission
 import com.example.thindie.weather_fetcher.mappers.KindEvent
 import com.example.thindie.weather_fetcher.mappers.map
 import javax.inject.Inject
-import javax.inject.Named
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
+@Singleton
 internal class WeatherFetchRepositoryImpl @Inject constructor(
     private val dao: WeatherHourlyDao,
     private val dailyDao: WeatherDailyDao,
     private val service: WeatherApiService,
-    @Named("networkController") private val fetchController: RatificationObserver,
     private val eventTransmitter: EventTransmitter<EventKind>,
     @DispatchersIOModule.IODispatcher private val ioDispatcher: CoroutineDispatcher,
 ) :
@@ -45,50 +43,40 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
     }
 
     override suspend fun update() {
-        fetchController
-            .observeRatification()
-            .onEach { ratification ->
-                if (ratification.isAllowed()) {
-                    updateDaily()
-                    updateHourly()
-                } else {
-                    eventTransmitter.send(KindEvent(EventKind.NET))
-                }
-            }
-            .collect()
+        try {
+            updateDaily()
+            updateHourly()
+        } catch (_: Exception) {
+            eventTransmitter.send(KindEvent(EventKind.NET))
+            delay(3000)
+            eventTransmitter.send(KindEvent(EventKind.CLOSE_EVENT))
+        }
     }
 
     override suspend fun fetchSite(forecastAble: ForecastAble) {
-
-        fetchController.observeRatification()
-            .collectLatest {
-                if (it.isAllowed()) {
-                    val latitude = forecastAble.getSightLatitude()
-                    val longitude = forecastAble.getSightLongitude()
-                    val timezone = forecastAble.getTimeZone()
-                    try {
-                        withContext(ioDispatcher) {
-                            service.getHourlyWeather(latitude, longitude, timeZone = timezone)
-                                .map()
-                                .map(forecastAble)
-                                .map()
-                                .apply { dao.upsertWeatherSite(this) }
-                        }
-                        withContext(ioDispatcher) {
-                            service.getDailyWeather(latitude, longitude, timeZone = timezone)
-                                .map()
-                                .map(forecastAble)
-                                .map()
-                                .apply { dailyDao.upsertWeatherSite(this) }
-                        }
-                    } catch (_: Exception) {
-                        eventTransmitter.send(KindEvent(EventKind.STUB))
-                    }
-
-                } else {
-                    eventTransmitter.send(KindEvent(EventKind.NET))
-                }
+        val latitude = forecastAble.getSightLatitude()
+        val longitude = forecastAble.getSightLongitude()
+        val timezone = forecastAble.getTimeZone()
+        try {
+            withContext(ioDispatcher) {
+                service.getHourlyWeather(latitude, longitude, timeZone = timezone)
+                    .map()
+                    .map(forecastAble)
+                    .map()
+                    .apply { dao.upsertWeatherSite(this) }
             }
+            withContext(ioDispatcher) {
+                service.getDailyWeather(latitude, longitude, timeZone = timezone)
+                    .map()
+                    .map(forecastAble)
+                    .map()
+                    .apply { dailyDao.upsertWeatherSite(this) }
+            }
+        } catch (_: Exception) {
+            eventTransmitter.send(KindEvent(EventKind.NET))
+            delay(3000)
+            eventTransmitter.send(KindEvent(EventKind.CLOSE_EVENT))
+        }
 
     }
 
@@ -107,7 +95,9 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                 ).map()
                     .map(forecastAble)
             } catch (_: Exception) {
-                eventTransmitter.send(KindEvent(EventKind.MAPPING))
+                eventTransmitter.send(KindEvent(EventKind.NET))
+                delay(3000)
+                eventTransmitter.send(KindEvent(EventKind.CLOSE_EVENT))
                 null
             }
 
@@ -144,7 +134,9 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                         }
                     }
             } catch (_: Exception) {
-                eventTransmitter.send(KindEvent(EventKind.STUB))
+                eventTransmitter.send(KindEvent(EventKind.NET))
+                delay(3000)
+                eventTransmitter.send(KindEvent(EventKind.CLOSE_EVENT))
                 return@withContext
             }
         }
@@ -179,7 +171,9 @@ internal class WeatherFetchRepositoryImpl @Inject constructor(
                         }
                     }
             } catch (_: Exception) {
-                eventTransmitter.send(KindEvent(EventKind.STUB))
+                eventTransmitter.send(KindEvent(EventKind.NET))
+                delay(3000)
+                eventTransmitter.send(KindEvent(EventKind.CLOSE_EVENT))
             }
         }
     }
