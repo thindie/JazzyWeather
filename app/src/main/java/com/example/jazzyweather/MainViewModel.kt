@@ -7,6 +7,7 @@ import com.example.thindie.domain.RatificationObserver
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.usecases.FetchWeatherUseCase
 import com.example.thindie.domain.usecases.UpdateWeatherUseCase
+import com.example.thindie.domain.usecases.utilusecases.ObserveEventsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -23,6 +24,7 @@ class MainViewModel @Inject constructor(
     @Named("volumeController") private val controller: RatificationObserver,
     private val updateWeatherUseCase: UpdateWeatherUseCase,
     private val fetchWeatherUseCase: FetchWeatherUseCase,
+    observeEventsUseCase: ObserveEventsUseCase,
 ) :
     ViewModel() {
     private val _hottingTime = 3000L
@@ -33,6 +35,12 @@ class MainViewModel @Inject constructor(
             updateWeatherUseCase()
         }
     }
+
+
+    val eventsState =
+        observeEventsUseCase()
+            .map { it.getEvent() }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000L), 0)
 
     val destinationState = controller.observeRatification()
         .map { permission ->
@@ -61,4 +69,4 @@ class MainViewModel @Inject constructor(
             fetchWeatherUseCase.invoke(forecastAble)
         }
     }
-}
+ }

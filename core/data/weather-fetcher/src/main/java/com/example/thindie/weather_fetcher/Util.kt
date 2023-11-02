@@ -42,3 +42,7 @@ fun ForecastAble.toFetchUnit(concreteTime: String?) = FetchUnit(
     timezone = getTimeZone(),
     concreteTime = concreteTime
 )
+
+enum class EventKind {
+    NET, EMPTY, MAPPING, PARSING, STUB, CLOSE_EVENT
+}

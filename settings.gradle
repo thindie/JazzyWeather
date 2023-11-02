@@ -25,3 +25,5 @@ include ':core:presentation:location-presenter'
 include ':core:presentation:weathers-site-favorites'
 include ':core:presentation:weather-concrete'
 include ':core:date-time-management'
+
+include ':core:data:events-resources'
