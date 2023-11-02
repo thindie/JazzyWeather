@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="text_field_latitude">Широта</string>
-    <string name="text_field_longitude">Долгота</string>
-    <string name="text_field_button_know">"А я знаю координаты"</string>
-    <string name="text_field_button_know_not">"Вообще-то нет"</string>
-    <string name="text_field_button_know_perhaps">"Наверное"</string>
-    <string name="text_field_place">Место</string>
-    <string name="text_field_place_new">"Новое место:
-         %s"</string>
-
     <string name="hint_input_field_edit">Набирай место..</string>
-    <string name="on_exception_not_connected">Похоже, что нет связи с интернет</string>
-    <string name="on_information_is_empty">Похоже, что ничего пока не можем показать</string>
-    <string name="on_exception_params_not_valid">Похоже, что по вводным не получилось данных</string>
-    <string name="on_exception_unexpected">Какая-то беда с процессами. Бейте хозяина!</string>
+    <string name="on_exception_not_connected">Похоже, что нет связи с интернет"</string>
+    <string name="on_information_is_empty">"Пока что любимых мест нет"</string>
+    <string name="on_exception_params_not_valid">"Нет данных по этому запросу"</string>
+    <string name="on_exception_unexpected">"Какая-то беда с процессами. Бейте хозяина!"</string>
 </resources>
