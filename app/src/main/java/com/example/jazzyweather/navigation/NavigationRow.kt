@@ -3,12 +3,15 @@ package com.example.jazzyweather.navigation
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import com.example.thindie.designsystem.composables.ClickAbleRow
 import com.example.thindie.designsystem.utils.TransGradientVerticalInverse
 
 @Composable
-fun NavigationRow(state: NavigationState, clickAbleContent: @Composable (Modifier) -> Unit) {
+fun NavigationRow(
+    state: NavigationState,
+    clickAbleContent: @Composable (Modifier) -> Unit,
+    shackContent: @Composable (Modifier) -> Unit,
+) {
     if (state.shouldShowNavigationBar) {
         ClickAbleRow(
             rowColor = MaterialTheme.colorScheme.surfaceTint.TransGradientVerticalInverse(),
@@ -17,7 +20,8 @@ fun NavigationRow(state: NavigationState, clickAbleContent: @Composable (Modifie
             onClick = {
                 state.navigate(it)
             },
-            clickAbleContent = clickAbleContent
+            clickAbleContent = clickAbleContent,
+            shackContent = shackContent
         )
     }
 }
