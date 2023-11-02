@@ -4,12 +4,19 @@ import com.example.thindie.core.localrawresources.LocateAble
 import com.example.thindie.core.localrawresources.WeatherStoredLocationObserver
 import com.example.thindie.domain.LocationRepository
 import com.example.thindie.domain.entities.WeatherLocation
+import com.example.thindie.local_resorces_location_fetcher.di.DispatchersIOModule
 import com.example.thindie.local_resorces_location_fetcher.mapper.map
 import javax.inject.Inject
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
-internal class LocationRepositoryImpl @Inject constructor(private val locationObserver: WeatherStoredLocationObserver) :
+@Singleton
+internal class LocationRepositoryImpl @Inject constructor(
+    private val locationObserver: WeatherStoredLocationObserver,
+) :
     LocationRepository {
     override fun observeLocationCurrentRequest(currentRequest: String): Flow<List<WeatherLocation>> {
         return if (!currentRequest.isCoordinates()) {

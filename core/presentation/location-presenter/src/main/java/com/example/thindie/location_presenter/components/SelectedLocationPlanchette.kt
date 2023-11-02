@@ -8,21 +8,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.compose.JazzyWeatherTheme
 import com.example.thindie.designsystem.composables.IconTextSection
+import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.domain.entities.WeatherLocation
 import com.example.thindie.presentation.R
 
@@ -48,13 +46,14 @@ internal fun SelectedLocationPlanchette(
             modifier = modifier
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+          //  horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
             AnimatedVisibility(visible = isFocusedLocationRemembered) {
                 Icon(
                     painter = painterResource(id = R.drawable.nav_icon_favorite),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.tertiary
                 )
             }
 
@@ -78,9 +77,13 @@ internal fun SelectedLocationPlanchette(
                 color = MaterialTheme.colorScheme.onSurface
             )
 
-            OutlinedButton(onClick = { onRememberLocation(focusedLocation) }) {
-                Text(text = stringResource(id = R.string.text_label_expecting))
+            IconButton(onClick = { onRememberLocation(focusedLocation) }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.icon_save),
+                    contentDescription = null
+                )
             }
+
         }
     }
 }

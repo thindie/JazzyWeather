@@ -6,6 +6,7 @@ import com.example.thindie.core.local_raw_resources.R
 import com.example.thindie.core.localrawresources.LocateAble
 import com.example.thindie.core.localrawresources.LocationNameParser
 import com.example.thindie.core.localrawresources.WeatherStoredLocationObserver
+import com.example.thindie.core.localrawresources.di.DispatchersIOModule
 import com.example.thindie.core.localrawresources.ldo.LocationPropertiesLdo
 import com.example.thindie.core.localrawresources.parserules.CITY
 import com.example.thindie.core.localrawresources.parserules.COORDINATES_PATTERN_WITH_POINT
@@ -19,19 +20,23 @@ import com.google.gson.JsonObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import javax.inject.Inject
+import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flowOn
 
-
+@Singleton
 internal class WeatherStoredLocationObserverImpl @Inject constructor(
     private val application: Application,
-    private val locationNameParser: LocationNameParser
+    private val locationNameParser: LocationNameParser,
+    @DispatchersIOModule.IODispatcher private val dispatcherIO: CoroutineDispatcher,
 ) : WeatherStoredLocationObserver {
 
     override fun getLocationByCoordinates(locateAble: LocateAble): Flow<List<LocationPropertiesLdo>> {
         return filterByConditionsAndParseJsonObjectsAsFlow {
             asJsonObject.checkCoordinateConditions(locateAble)
-        }
+        }.flowOn(dispatcherIO)
     }
 
     override fun getLocationByStringTag(locationTag: String): Flow<List<LocationPropertiesLdo>> {
@@ -43,7 +48,7 @@ internal class WeatherStoredLocationObserverImpl @Inject constructor(
         } else {
             val preparedTagToSearch = locationNameParser.transcryptParseLocationName(locationTag)
             getLocationBySearchCity(preparedTagToSearch)
-        }
+        }.flowOn(dispatcherIO)
     }
 
     private fun getLocationBySearchCity(locationTag: String): Flow<List<LocationPropertiesLdo>> {
@@ -90,7 +95,7 @@ internal class WeatherStoredLocationObserverImpl @Inject constructor(
 
     private fun filterByConditionsAndParseJsonObjectsAsFlow(filterThem: JsonElement.() -> Boolean)
             : Flow<List<LocationPropertiesLdo>> {
-        return flow {
+        return flowOf(
             readResourcesJsonArray()
                 .asSequence()
                 .filter { element ->
@@ -105,14 +110,9 @@ internal class WeatherStoredLocationObserverImpl @Inject constructor(
                         )
                     )
                 }
-                .toList()
-                .apply {
-                    emit(this@apply)
-                }
-        }
+                .toList())
     }
 
 }
-
 
 

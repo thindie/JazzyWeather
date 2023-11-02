@@ -21,18 +21,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.thindie.designsystem.VisualCustomizer
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 
 @Composable
 fun VerticalIndicationColumn(
-    width: Dp,
-    customizer: VisualCustomizer,
-    textLabel: String = "",
+    state: VerticalColumnStateHolder,
 ) {
 
     val shouldAnimate = remember {
@@ -41,7 +37,7 @@ fun VerticalIndicationColumn(
 
     val height =
         if (!shouldAnimate.value) 0f
-        else customizer.getShapeComponent()
+        else state.customizer.getShapeComponent()
 
 
     LaunchedEffect(true) {
@@ -50,8 +46,8 @@ fun VerticalIndicationColumn(
     }
 
     val modifier: Modifier = Modifier
-        .width(width)
-        .heightIn(max = width * 4)
+        .width(state.width)
+        .heightIn(max = state.width * 4)
 
 
 
@@ -71,16 +67,14 @@ fun VerticalIndicationColumn(
                         .fillMaxWidth()
                         .fillMaxHeight(height)
                         .clip(RoundedCornerShape(10.dp))
-                        .background(customizer.getColorComponent())
+                        .background(state.customizer.getColorComponent())
                 )
             }
             Spacer(modifier = Modifier.size(4.dp))
         }
         Text(
-            text = textLabel,
-            style = MaterialTheme.typography.labelMedium.copy(
-                MaterialTheme.colorScheme.onSurface
-            )
+            text = state.textLabel,
+            style = MaterialTheme.typography.labelMedium
         )
     }
 }

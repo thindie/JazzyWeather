@@ -4,19 +4,22 @@ import com.example.thindie.domain.RatificationAble
 import javax.inject.Inject
 import javax.inject.Named
 
+
 @Named("timeController")
 internal class TimeController @Inject constructor() : RatificationAble {
 
-    private val halfHour = 1_800_000L
-
-
-    private var fromLastFetch: Long = 0L
-
-    private fun isInTime() = System.currentTimeMillis() - fromLastFetch > halfHour
+    private val halfHour = 10000L
+    private var fetchedAt = 0L
+    private var isAllowed = true
     override fun isAllowed(): Boolean {
-        return if (isInTime()) {
-            fromLastFetch = System.currentTimeMillis()
-            true
-        } else false
+        if (isAllowed) {
+            fetchedAt = System.currentTimeMillis()
+            isAllowed = false
+        } else {
+            if (System.currentTimeMillis() - fetchedAt > halfHour) {
+                isAllowed = true
+            }
+        }
+        return isAllowed
     }
 }

@@ -1,11 +1,11 @@
 package com.example.thindie.weather_concrete.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -23,21 +23,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.compose.JazzyWeatherTheme
-import com.example.thindie.designsystem.utils.TransGradientVertical
+import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.presentation.R
 import com.example.thindie.weather_concrete.components.ConcreteCalendar
 import com.example.thindie.weather_concrete.components.ConcreteTitle
 import com.example.thindie.weather_concrete.components.HourlyUnit
 import com.example.thindie.weather_concrete.components.graphcomposables.WeatherGraph
+import com.example.thindie.weather_concrete.components.graphcomposables.rememberWeatherGraphState
+import com.example.thindie.weather_concrete.components.rememberCalendarState
 import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
 
 @Composable
 internal fun WeatherConcreteScreen(
     modifier: Modifier = Modifier,
     screenState: WeatherConcreteViewModel.ConcreteWeatherScreenState,
-    onEdit: (String) -> Unit,
     onRememberChanges: (WeatherDaily) -> Unit,
     onClickConcreteDay: (Long) -> Unit,
     getDecodedWeatherIcon: (Int) -> Int,
@@ -53,10 +53,8 @@ internal fun WeatherConcreteScreen(
 
     Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.surfaceTint.TransGradientVertical())
             .fillMaxSize()
             .padding(horizontal = 8.dp),
-        verticalArrangement = Arrangement.SpaceEvenly
     ) {
 
         with(screenState) {
@@ -65,11 +63,14 @@ internal fun WeatherConcreteScreen(
                     weatherDaily = weatherDaily,
                     onRememberChanges = onRememberChanges,
                     sunrise = screenState.sunrise,
-                    sunset = screenState.sunset
+                    sunset = screenState.sunset,
+                    onDeletePlace = onRemove
                 )
                 ConcreteCalendar(
-                    digits = screenState.weekDays,
-                    days = screenState.namedWeekDays,
+                    state = rememberCalendarState(
+                        digits = screenState.weekDays,
+                        days = screenState.namedWeekDays
+                    ),
                     onClickConcreteDay = { clickedOn ->
                         shouldShowAdditionalSection = clickedOn != lastClickedSection
                         lastClickedSection = clickedOn
@@ -80,7 +81,7 @@ internal fun WeatherConcreteScreen(
                     if (screenState.isHourlyLoading) CircularProgressIndicator()
                     else {
                         if (concreteWeatherHourly != null)
-                            LazyRow() {
+                            LazyRow(modifier = Modifier.padding(vertical = 32.dp)) {
                                 items(concreteWeatherHourly.getHourlyForecast()) {
                                     HourlyUnit(
                                         time = it.time,
@@ -95,19 +96,47 @@ internal fun WeatherConcreteScreen(
                 LazyColumn(contentPadding = PaddingValues(vertical = 10.dp)) {
                     item {
                         WeatherGraph(
-                            list = weatherDaily.apparentTemperatureMax,
-                            graphIcon = R.drawable.icon_temp_high,
-                            iconTint = Color.Red,
-                            firstColorComponent = Color.Red,
-                            secondColorComponent = Color.Blue
+                            modifier,
+                            weatherGraphState = rememberWeatherGraphState(
+                                list = weatherDaily.apparentTemperatureMax,
+                                graphIcon = R.drawable.icon_temp_high,
+                                iconTint = MaterialTheme.colorScheme.error,
+                                firstColorComponent = MaterialTheme.colorScheme.error,
+                                secondColorComponent = MaterialTheme.colorScheme.surfaceTint
+                            )
                         )
                         WeatherGraph(
-                            list = weatherDaily.apparentTemperatureMin,
-                            graphIcon = R.drawable.icon_low_temp,
-                            iconTint = Color.Blue,
-                            firstColorComponent = Color.Red,
-                            secondColorComponent = Color.Blue
+                            modifier,
+                            weatherGraphState = rememberWeatherGraphState(
+                                list = weatherDaily.apparentTemperatureMin,
+                                graphIcon = R.drawable.icon_low_temp,
+                                iconTint = MaterialTheme.colorScheme.surfaceTint,
+                                firstColorComponent = MaterialTheme.colorScheme.error,
+                                secondColorComponent = MaterialTheme.colorScheme.surfaceTint
+                            )
                         )
+                        if (weatherDaily.precipitationSum.any { it > 0.0 })
+                            WeatherGraph(
+                                weatherGraphState = rememberWeatherGraphState(
+                                    graphIcon = R.drawable.icon_water_drop,
+                                    iconTint = MaterialTheme.colorScheme.inversePrimary,
+                                    list = weatherDaily.precipitationSum,
+                                    firstColorComponent = MaterialTheme.colorScheme.inversePrimary,
+                                    secondColorComponent = MaterialTheme.colorScheme.inversePrimary
+                                )
+                            )
+
+                        if (weatherDaily.snowfallSum.any { it > 0.0 })
+                            WeatherGraph(
+                                weatherGraphState = rememberWeatherGraphState(
+                                    graphIcon = R.drawable.icon_snowflake,
+                                    iconTint = MaterialTheme.colorScheme.inversePrimary,
+                                    list = weatherDaily.snowfallSum,
+                                    firstColorComponent = Color.White,
+                                    secondColorComponent = MaterialTheme.colorScheme.onSurface
+                                )
+                            )
+                        Spacer(modifier = Modifier.height(80.dp))
                     }
                 }
             }

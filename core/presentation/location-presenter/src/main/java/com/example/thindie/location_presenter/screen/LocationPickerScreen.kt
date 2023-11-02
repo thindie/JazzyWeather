@@ -28,7 +28,8 @@ internal fun LocationPickerScreenState(
         focusedLocation = state.value.focusedLocation,
         onFocusLocation = viewModel::onClickWeatherLocationCard,
         isFocusedLocationRemembered = state.value.isFocusedLocationAlreadyRemembered,
-        onRememberLocation = viewModel::onClickAddFavorites
+        onRememberLocation = viewModel::onClickAddFavorites,
+        onShowLocation = onClickConcrete
     )
 
 }

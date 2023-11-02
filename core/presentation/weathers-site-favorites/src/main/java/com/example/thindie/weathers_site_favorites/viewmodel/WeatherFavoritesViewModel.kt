@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.thindie.designsystem.DecodeAble
 import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.domain.usecases.ObserveHourlyWeatherListUseCase
-import com.example.thindie.domain.usecases.RequestHourlyWeatherListUseCase
+import com.example.thindie.domain.usecases.UpdateWeatherUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetCurrentHourOfDayUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetHourUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,54 +15,63 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onEmpty
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 
 @HiltViewModel
 class WeatherFavoritesViewModel @Inject constructor(
-    observeHourlyWeatherListUseCase: ObserveHourlyWeatherListUseCase,
+    private val observeHourlyWeatherListUseCase: ObserveHourlyWeatherListUseCase,
     private val getCurrentHourOfDayUseCase: GetCurrentHourOfDayUseCase,
     private val getHourUseCase: GetHourUseCase,
+    private val requestUpdate: UpdateWeatherUseCase,
     private val decodeAble: DecodeAble,
-    private val requester: RequestHourlyWeatherListUseCase,
 ) :
     ViewModel() {
 
     private val _isLoading = MutableStateFlow(true)
-    val screenState =
-        combine(_isLoading,
-            observeHourlyWeatherListUseCase()
-                .onEmpty { _isLoading.value = true }
-                .onEach { _isLoading.value = false }
-                .filterNotNull()) { loading, list ->
-            FavoriteWeatherSitesUiState(
-                list = list.rawTimeTo24hHours(),
-                isLoading = loading,
-                currentHour = getCurrentHourOfDayUseCase(),
-                decodedWeather = decodeAble.decodeString(list.getCurrentWeatherCode()),
-                decodedWeatherDrawable = decodeAble.decodeDrawable(list.getCurrentWeatherCode())
-            )
-        }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5_000L),
-                FavoriteWeatherSitesUiState(list = emptyList(), isLoading = true)
-            )
+    private val _weathers = MutableStateFlow(emptyList<WeatherHourly>())
+
+    val screenState = combine(
+        _isLoading,
+        _weathers,
+    )
+    { loading, list ->
+        FavoriteWeatherSitesUiState(
+            list = list.rawTimeTo24hHours(),
+            isLoading = loading,
+            currentHour = getCurrentHourOfDayUseCase(),
+            decodedWeather = decodeAble.decodeString(list.getCurrentWeatherCode()),
+            decodedWeatherDrawable = decodeAble.decodeDrawable(list.getCurrentWeatherCode())
+        )
+    }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000L),
+            FavoriteWeatherSitesUiState(list = emptyList(), isLoading = true)
+        )
 
     @Inject
     fun onStart() {
         viewModelScope.launch {
-            requester()
+            observeHourlyWeatherListUseCase()
+                .onEach {
+                    _isLoading.value = false
+                    _weathers.value = it
+                }.launchIn(this)
+        }
+    }
+
+    fun onRequestRefresh() {
+        viewModelScope.launch {
+            requestUpdate.invoke()
         }
     }
 
     fun onSelectFavoriteWeatherPlacesScreen() {
         viewModelScope.launch {
-            requester()
         }
     }
 

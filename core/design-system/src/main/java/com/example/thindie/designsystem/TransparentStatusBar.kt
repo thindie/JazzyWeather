@@ -7,9 +7,9 @@ import androidx.compose.runtime.DisposableEffect
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun TransparentSystemBars() {
+fun TransparentSystemBars(isInDarkTheme: Boolean) {
     val systemUiController = rememberSystemUiController()
-    val useDarkIcons = !isSystemInDarkTheme()
+    val useDarkIcons = !isInDarkTheme
     val color = MaterialTheme.colorScheme.surface
 
     DisposableEffect(systemUiController, useDarkIcons) {

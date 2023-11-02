@@ -1,18 +1,18 @@
 package com.example.thindie.weather_concrete.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.thindie.designsystem.DecodeAble
-import com.example.thindie.designsystem.utils.dangerAbleAct
 import com.example.thindie.domain.entities.ForecastAble
 import com.example.thindie.domain.entities.ForecastDay
 import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.domain.usecases.DeleteWeatherSiteUseCase
-import com.example.thindie.domain.usecases.GetDailyWeatherUseCase
-import com.example.thindie.domain.usecases.ReserveWeatherInteractor
+import com.example.thindie.domain.usecases.GetHourlyWeatherByDateUseCase
+import com.example.thindie.domain.usecases.ObserveDailyWeatherUseCase
+import com.example.thindie.domain.usecases.RememberChangesWeatherSiteUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetHourUseCase
-import com.example.thindie.domain.usecases.timeusecases.GetHourlyWeatherOnConcreteDateUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetIncomingWeekByDaysUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetSimpleDateUseCase
 import com.example.thindie.domain.usecases.timeusecases.GetTimeZoneUseCase
@@ -32,34 +32,31 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 internal class WeatherConcreteViewModel @Inject constructor(
     private val getTimeZoneUseCase: GetTimeZoneUseCase,
-    private val getDailyWeatherUseCase: GetDailyWeatherUseCase,
+    private val observeDailyWeatherUseCase: ObserveDailyWeatherUseCase,
     private val deleteWeatherSiteUseCase: DeleteWeatherSiteUseCase,
     private val getTodayUseCase: GetTodayUseCase,
     private val getWeekUseCase: GetWeekUseCase,
     private val getHourUseCase: GetHourUseCase,
     private val getIncomingWeekByDaysUseCase: GetIncomingWeekByDaysUseCase,
-    private val interactor: ReserveWeatherInteractor,
     private val getSimpleDateUseCase: GetSimpleDateUseCase,
-    private val getHourlyWeatherOnConcreteDateUseCase: GetHourlyWeatherOnConcreteDateUseCase,
     private val decodeAble: DecodeAble,
+    private val rememberChangesWeatherSiteUseCase: RememberChangesWeatherSiteUseCase,
+    private val getHourlyWeatherByDateUseCase: GetHourlyWeatherByDateUseCase,
 ) :
     ViewModel() {
 
-    private val _isLoading = MutableStateFlow(true)
-    private val _isHourlyForecastLoading = MutableStateFlow(true)
-    private val _concreteWeatherHourly = MutableStateFlow<WeatherHourly?>(null)
+    private val isHourlyLoading = MutableStateFlow(true)
 
-    private var lastFetchedForecastAble: ForecastAble? = null
+    private val forecastAbleEvent = MutableStateFlow<ForecastAble?>(null)
+    private val concreteHourly = MutableStateFlow<WeatherHourly?>(null)
+    private val concreteDaily = observeDailyWeatherUseCase(forecastAbleEvent.filterNotNull())
 
-    private val _concreteScreenState: MutableStateFlow<WeatherDaily?> =
-        MutableStateFlow(null)
+
     val concreteScreenState: StateFlow<ConcreteWeatherScreenState> =
         combine(
-            _concreteScreenState.filterNotNull(),
-            _isLoading,
-            _isHourlyForecastLoading,
-            _concreteWeatherHourly
-        ) { concrete, loading, hourlyLoading, hourlyWeather ->
+            concreteDaily,
+            concreteHourly,
+        ) { concrete, hourly ->
 
             val today = getTodayUseCase()
             val currentWeek = getWeekUseCase(concrete.time)
@@ -69,14 +66,14 @@ internal class WeatherConcreteViewModel @Inject constructor(
 
             ConcreteWeatherScreenState(
                 weatherDaily = concrete,
-                concreteWeatherHourly = hourlyWeather?.rawTimeTo24hHours(),
+                concreteWeatherHourly = hourly?.rawTimeTo24hHours(),
                 isFreshForecast = true,
                 currentDay = today,
                 sunset = sunset,
                 sunrise = sunrise,
                 weekDays = currentWeek,
-                isLoading = loading,
-                isHourlyLoading = hourlyLoading,
+                isLoading = false,
+                isHourlyLoading = false,
                 namedWeekDays = currentWeekByDaysNaming
             )
         }
@@ -86,49 +83,29 @@ internal class WeatherConcreteViewModel @Inject constructor(
                 ConcreteWeatherScreenState()
             )
 
+
     fun onDecodeWeatherCode(code: Int): Int {
         return decodeAble.decodeDrawable(code)
     }
 
 
     fun onLoadConcreteScreen(forecastAble: ForecastAble?) {
-        if (forecastAble != null && forecastAble != lastFetchedForecastAble) {
-            lastFetchedForecastAble = forecastAble
-            val innerForecastAble = forecastAble.timeZoneApproved()
 
-            dangerAbleAct {
-                _isLoading.value = true
-                getDailyWeatherUseCase(innerForecastAble)
-                    .onSuccess {
-                        renewScreenStateValue(it)
-                    }
-                    .onFailure {
-                        try {
-                            val reserveDaily = interactor.getDailyWeatherSite(innerForecastAble)
-                            renewScreenStateValue(reserveDaily)
-                        } catch (_: Exception) {
-
-                        }
-                    }
-            }
+        if (forecastAble != null) {
+            forecastAbleEvent.value = forecastAble.timeZoneApproved()
         }
     }
 
     fun onRememberChanges(daily: WeatherDaily) {
-        dangerAbleAct {
-            interactor.updateWeatherSite(daily)
+        viewModelScope.launch {
+            rememberChangesWeatherSiteUseCase.invoke(daily)
         }
     }
 
     fun onDeleteLocation(place: String) {
-        dangerAbleAct {
+        viewModelScope.launch {
             deleteWeatherSiteUseCase(place)
         }
-    }
-
-    private fun renewScreenStateValue(weatherDaily: WeatherDaily) {
-        _isLoading.value = false
-        _concreteScreenState.value = weatherDaily
     }
 
     private fun ForecastAble.timeZoneApproved() = CurrentScreenForecastAble(
@@ -139,19 +116,17 @@ internal class WeatherConcreteViewModel @Inject constructor(
     )
 
     fun onClickedConcreteWeekDay(timeInMillis: Long) {
-        _isHourlyForecastLoading.value = true
+        isHourlyLoading.value = true
         viewModelScope.launch {
             val simpleDate = getSimpleDateUseCase(timeInMillis)
-            getHourlyWeatherOnConcreteDateUseCase.invoke(
-                forecastAble = lastFetchedForecastAble!!.timeZoneApproved(),
-                simpleDate
-            ).onSuccess {
-                _isHourlyForecastLoading.value = false
-                _concreteWeatherHourly.value = it
-            }.onFailure {
-                _isHourlyForecastLoading.value = false
-                _concreteWeatherHourly.value = null
-            }
+            val currentForecastAble = forecastAbleEvent.value
+            if (currentForecastAble != null)
+                getHourlyWeatherByDateUseCase.invoke(
+                    simpleDate, currentForecastAble.timeZoneApproved()
+                ).apply {
+                    concreteHourly.value = this
+
+                }
         }
 
     }
