@@ -88,7 +88,7 @@ internal fun WeatherHourlySection(
             IconTextSection(
                 modifier = modifier.padding(start = 10.dp),
                 icon = R.drawable.icon_celsius,
-                title = hourly.getHourlyForecast()[currentHour].apparentTemperature.toString(),
+                title = hourly.getHourlyForecast()[currentHour].temperature2m.toString(),
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.headlineSmall
             )
@@ -127,7 +127,7 @@ internal fun WeatherHourlySection(
             ) {
                 items(
                     hourly.getHourlyForecast(),
-                    key = { it.hashCode() }) { item: OneHourWeather ->
+                    key = OneHourWeather::hashCode) { item: OneHourWeather ->
                     HourlyUnit(
                         time = item.time,
                         oneHourWeather = item,

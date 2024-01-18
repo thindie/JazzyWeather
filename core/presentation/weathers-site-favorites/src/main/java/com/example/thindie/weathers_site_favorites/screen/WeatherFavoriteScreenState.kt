@@ -30,6 +30,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.thindie.designsystem.LoadingOrShowContent
 import com.example.thindie.domain.entities.ForecastAble
+import com.example.thindie.domain.entities.WeatherHourly
 import com.example.thindie.weathers_site_favorites.components.WeatherHourlySection
 import com.example.thindie.weathers_site_favorites.viewmodel.WeatherFavoritesViewModel
 import kotlinx.coroutines.delay
@@ -81,7 +82,7 @@ fun WeatherFavoriteScreenState(
             }
             LazyColumn(
             ) {
-                items(favoritesScreenState.value.list) { weatherHourly ->
+                items(favoritesScreenState.value.list, key = WeatherHourly::hashCode) { weatherHourly ->
                     WeatherHourlySection(
                         hourly = weatherHourly,
                         onDecodeWeatherCode = viewModel::onDecodeWeatherCode,

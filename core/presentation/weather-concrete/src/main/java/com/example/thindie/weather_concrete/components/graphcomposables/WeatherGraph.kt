@@ -15,9 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.thindie.designsystem.composables.IconTextSection
 import com.example.thindie.designsystem.composables.VerticalIndicationColumn
 import com.example.thindie.designsystem.composables.rememberVerticalColumnState
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
@@ -40,11 +42,12 @@ internal fun WeatherGraph(
             .background(brush = MaterialTheme.colorScheme.primaryContainer.TransGradientVertical())
             .wrapContentSize()
     ) {
-        Icon(
+        IconTextSection(
             modifier = Modifier.padding(all = 12.dp),
-            painter = painterResource(id = weatherGraphState.graphIcon),
-            contentDescription = null,
-            tint = weatherGraphState.iconTint
+            icon = weatherGraphState.graphIcon,
+            title = stringResource(weatherGraphState.title),
+            color =weatherGraphState.iconTint,
+            style = MaterialTheme.typography.titleLarge
         )
         LazyRow(
             modifier = modifier

@@ -39,8 +39,10 @@ class MainActivity : ComponentActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
+
             var isFirstLaunch by rememberSaveable {
                 mutableStateOf(true)
             }

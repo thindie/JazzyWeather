@@ -17,8 +17,15 @@ class StringListTypeConverter {
 class DoubleListTypeConverter {
     @TypeConverter
     fun fromBase(converted: String): List<Double> {
-        return converted.split(separator).map { it.toDouble() }
+        return converted.split(separator).map {
+            try {
+                it.toDouble()
+            } catch (_: NumberFormatException) {
+                0.0
+            }
+        }
     }
+
 
     @TypeConverter
     fun toBase(list: List<Double>): String {
@@ -26,10 +33,17 @@ class DoubleListTypeConverter {
     }
 }
 
+
 class IntListTypeConverter {
     @TypeConverter
     fun fromBase(converted: String): List<Int> {
-        return converted.split(separator).map { it.toInt() }
+        return converted.split(separator).map {
+            try {
+                it.toInt()
+            } catch (_: NumberFormatException) {
+                0
+            }
+        }
     }
 
     @TypeConverter
