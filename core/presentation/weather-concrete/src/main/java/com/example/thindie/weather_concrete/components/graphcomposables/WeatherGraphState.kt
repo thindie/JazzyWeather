@@ -1,6 +1,7 @@
 package com.example.thindie.weather_concrete.components.graphcomposables
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -13,6 +14,7 @@ class WeatherGraphState(
     val list: List<Number>,
     val firstColorComponent: Color,
     val secondColorComponent: Color,
+    @StringRes val title: Int,
 )
 
 @Composable
@@ -22,6 +24,7 @@ fun rememberWeatherGraphState(
     list: List<Number>,
     firstColorComponent: Color,
     secondColorComponent: Color,
+   @StringRes title: Int,
 ): WeatherGraphState {
     return remember(list[0], list[2], list[4]) {
 
@@ -30,7 +33,8 @@ fun rememberWeatherGraphState(
             iconTint = iconTint,
             list = list,
             firstColorComponent = firstColorComponent,
-            secondColorComponent = secondColorComponent
+            secondColorComponent = secondColorComponent,
+            title = title
         )
     }
 }

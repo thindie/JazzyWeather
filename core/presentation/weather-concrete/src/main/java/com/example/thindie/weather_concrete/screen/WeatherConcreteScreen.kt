@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.util.toHalf
 import com.example.thindie.designsystem.theme.JazzyWeatherTheme
 import com.example.thindie.domain.entities.WeatherDaily
 import com.example.thindie.presentation.R
@@ -33,6 +34,8 @@ import com.example.thindie.weather_concrete.components.graphcomposables.WeatherG
 import com.example.thindie.weather_concrete.components.graphcomposables.rememberWeatherGraphState
 import com.example.thindie.weather_concrete.components.rememberCalendarState
 import com.example.thindie.weather_concrete.viewmodel.WeatherConcreteViewModel
+import java.text.DecimalFormat
+import java.text.NumberFormat
 
 @Composable
 internal fun WeatherConcreteScreen(
@@ -95,24 +98,19 @@ internal fun WeatherConcreteScreen(
 
                 LazyColumn(contentPadding = PaddingValues(vertical = 10.dp)) {
                     item {
+
                         WeatherGraph(
                             modifier,
                             weatherGraphState = rememberWeatherGraphState(
-                                list = weatherDaily.apparentTemperatureMax,
-                                graphIcon = R.drawable.icon_temp_high,
-                                iconTint = MaterialTheme.colorScheme.error,
-                                firstColorComponent = MaterialTheme.colorScheme.error,
-                                secondColorComponent = MaterialTheme.colorScheme.surfaceTint
-                            )
-                        )
-                        WeatherGraph(
-                            modifier,
-                            weatherGraphState = rememberWeatherGraphState(
-                                list = weatherDaily.apparentTemperatureMin,
                                 graphIcon = R.drawable.icon_low_temp,
-                                iconTint = MaterialTheme.colorScheme.surfaceTint,
+                                iconTint = MaterialTheme.colorScheme.onSurface,
+                                list = average(
+                                    weatherDaily.apparentTemperatureMin,
+                                    weatherDaily.apparentTemperatureMax
+                                ),
                                 firstColorComponent = MaterialTheme.colorScheme.error,
-                                secondColorComponent = MaterialTheme.colorScheme.surfaceTint
+                                secondColorComponent = MaterialTheme.colorScheme.surfaceTint,
+                                title = R.string.text_label_real_feel_max
                             )
                         )
                         if (weatherDaily.precipitationSum.any { it > 0.0 })
@@ -122,7 +120,8 @@ internal fun WeatherConcreteScreen(
                                     iconTint = MaterialTheme.colorScheme.inversePrimary,
                                     list = weatherDaily.precipitationSum,
                                     firstColorComponent = MaterialTheme.colorScheme.inversePrimary,
-                                    secondColorComponent = MaterialTheme.colorScheme.inversePrimary
+                                    secondColorComponent = MaterialTheme.colorScheme.inversePrimary,
+                                    title = R.string.text_label_real_feel_precip
                                 )
                             )
 
@@ -133,7 +132,8 @@ internal fun WeatherConcreteScreen(
                                     iconTint = MaterialTheme.colorScheme.inversePrimary,
                                     list = weatherDaily.snowfallSum,
                                     firstColorComponent = Color.White,
-                                    secondColorComponent = MaterialTheme.colorScheme.onSurface
+                                    secondColorComponent = MaterialTheme.colorScheme.onSurface,
+                                    title = R.string.text_label_real_feel_snow
                                 )
                             )
                         Spacer(modifier = Modifier.height(80.dp))
@@ -141,6 +141,13 @@ internal fun WeatherConcreteScreen(
                 }
             }
         }
+
+    }
+}
+
+private fun average(a1: List<Double>, a2: List<Double>): List<Double> {
+    return a1.zip(a2) { first: Double, second: Double ->
+        first.toInt().plus(second.toInt()).div(2.00)
 
     }
 }

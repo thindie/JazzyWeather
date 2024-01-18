@@ -81,6 +81,9 @@
     <string name="text_field_place">Место</string>
     <string name="text_field_place_new">"Новое место:
          %s"</string>
+    <string name="text_label_real_feel_max">real feel</string>
+    <string name="text_label_real_feel_precip">осадки</string>
+    <string name="text_label_real_feel_snow">снег</string>
 
     <string name="hint_input_field_edit">Набирай место..</string>
 </resources>

@@ -46,12 +46,12 @@ internal fun HourlyUnit(
     ) {
         Text(text = time)
 
-        val isPositive = oneHourWeather.apparentTemperature > 0.0
+        val isPositive = oneHourWeather.temperature2m > 0.0
 
         IconTextSection(
             modifier = modifier.padding(horizontal = 12.dp),
             icon = null,
-            title = oneHourWeather.apparentTemperature.toString(),
+            title = oneHourWeather.temperature2m.toString(),
             color = if (isPositive) Color.Red
             else Color.Blue,
             style = textStyle
